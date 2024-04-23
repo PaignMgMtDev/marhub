@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from '@mui/material';
 import CampTactics from '../camptactics/CampTactics';
+import '../dashlanding/DashLanding.css'
 
 export default function DashLanding() {
 

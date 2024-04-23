@@ -1,0 +1,12 @@
+.status-draft {
+    background-color: orange;
+    color: white
+  }
+  .status-active {
+    background-color: green;
+    color: white
+  }
+  .status-default {
+    background-color: grey;
+    color: white
+  }
