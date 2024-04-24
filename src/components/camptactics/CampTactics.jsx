@@ -1,8 +1,11 @@
  import React from 'react'
  import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from '@mui/material';
+import CampHeader from '../header/CampHeader';
  
- export default function CampTactics() {
+ export default function CampTactics({
+    campaignName
+ }) {
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -45,11 +48,18 @@ import { Button } from '@mui/material';
 
    return (
      <div>
+        <center>
+        <CampHeader
+        campaignName={campaignName}
+        />
+        </center>
         <DataGridPro checkboxSelection disableRowSelectionOnClick rows={rows} columns={columns} />
         <br/>
+        <div className="button-container">
         <Button 
         variant="contained"
-        color="primary">Configure Content Request</Button>
+        sx={{backgroundColor: "#FF7F50"}}>Configure Content Request</Button>
+        </div>
         </div>
      
    )
