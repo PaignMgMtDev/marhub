@@ -1,7 +1,6 @@
 import React from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from "@mui/material";
-import "../dashlanding/DashLanding.css";
 import Header from "../header/Header";
 
 

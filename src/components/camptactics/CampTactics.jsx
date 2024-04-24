@@ -1,11 +1,18 @@
- import React from 'react'
+ import React, { useState } from 'react'
  import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from '@mui/material';
 import CampHeader from '../header/CampHeader';
  
  export default function CampTactics({
-    campaignName
+    campaignName,
+    editTactics
  }) {
+
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    const handleSelectionChange = (selectionModel) => {
+        setSelectedRows(selectionModel);
+    };
 
     const getStatusClass = (status) => {
         switch (status) {
@@ -53,11 +60,13 @@ import CampHeader from '../header/CampHeader';
         campaignName={campaignName}
         />
         </center>
-        <DataGridPro checkboxSelection disableRowSelectionOnClick rows={rows} columns={columns} />
+        <DataGridPro checkboxSelection rows={rows} columns={columns} onRowSelectionModelChange={handleSelectionChange} />
         <br/>
-        <div className="button-container">
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button 
         variant="contained"
+        onClick={editTactics}
+        disabled={selectedRows.length === 0}
         sx={{backgroundColor: "#FF7F50"}}>Configure Content Request</Button>
         </div>
         </div>
