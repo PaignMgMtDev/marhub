@@ -40,7 +40,7 @@ export default function DashLanding({
       .then((data) => {
         setCampaignData(data["campaigns"]);
       });
-  }, [auth]);
+  }, [auth, setCampaignData]);
   
 
  
