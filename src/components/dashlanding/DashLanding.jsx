@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from "@mui/material";
 import Header from "../header/Header";
 
-
 export default function DashLanding({
-    handleCampaignClick
+  handleCampaignClick,
+  campaignData,
+  owner,
+  setCampaignData,
+  auth,
+  handleCampaignID
 }) {
   const getStatusClass = (status) => {
     switch (status) {
+      case "PLANNED":
+        return "status-planned";
       case "ACTIVE":
         return "status-active";
       case "DRAFT":
@@ -18,29 +24,34 @@ export default function DashLanding({
     }
   };
 
-  const rows = [
-    {
-      id: 1,
-      campName: "100 Days",
-      status: "ACTIVE",
-      owner: "Sarah S",
-      newcontent: "Add New Content",
-    },
-    {
-      id: 2,
-      campName: "101 Days",
-      status: "DRAFT",
-      owner: "Sarah S",
-      newcontent: "Add New Content",
-    },
-    {
-      id: 3,
-      campName: "102 Days",
-      status: "DRAFT",
-      owner: "Sarah S",
-      newcontent: "Add New Content",
-    },
-  ];
+  useEffect(() => {
+    fetch(
+      "https://campaign-app-api-staging.azurewebsites.net/api/v2/default/mihp/campaigns/",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${auth}`,
+          "Content-Type": "application/json",
+        },
+        redirect: "follow",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setCampaignData(data["campaigns"]);
+      });
+  }, [auth]);
+  
+
+ 
+
+  const rows = campaignData.map((campaign) => ({
+    id: campaign.id,
+    campName: campaign.name,
+    status: campaign.current_status.toUpperCase(),
+    owner: owner,
+    newcontent: "Add New Content",
+  }));
 
   const columns = [
     { field: "id", headerName: "ID", width: 150 },
@@ -48,34 +59,31 @@ export default function DashLanding({
       field: "campName",
       headerName: "Campaign Name",
       width: 300,
-    
     },
     {
       field: "status",
       headerName: "Status",
       width: 200,
       renderCell: (params) => (
-        <span className={getStatusClass(params.value)}>
-          {params.value}
-        </span>
+        <span className={getStatusClass(params.value)}>{params.value}</span>
       ),
     },
     { field: "owner", headerName: "Owner", width: 300 },
-    { field: "newcontent", headerName: "", width: 300, renderCell: (params) => (
+    {
+      field: "newcontent",
+      headerName: "",
+      width: 300,
+      renderCell: (params) => (
         <Button
           variant="link"
           color="primary"
-          onClick={() => handleCampaignClick(params.row.campName)}
+          onClick={() => {handleCampaignClick(params.row.campName); handleCampaignID(params.row.id)}}
         >
           {params.value}
         </Button>
-      ), },
+      ),
+    },
   ];
-
-  
-  
-
-  
 
   return (
     <div>
@@ -83,8 +91,7 @@ export default function DashLanding({
         <Header />
       </center>
       <div style={{ height: 400, width: "100%" }}>
-       <DataGridPro rows={rows} columns={columns} />
-       
+        <DataGridPro rows={rows} columns={columns} />
       </div>
     </div>
   );

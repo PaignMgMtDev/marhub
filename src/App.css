@@ -30,6 +30,16 @@
     margin: auto;
     
   }
+  .status-planned {
+    color: white;
+    background-color: #f5a504;
+    border-radius: 5px;
+    text-align: center;
+    display: block;
+    font-size: 0.875rem;
+    margin: auto;
+    
+  }
   
   
   .box {

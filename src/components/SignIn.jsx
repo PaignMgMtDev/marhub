@@ -17,16 +17,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const defaultTheme = createTheme();
 
-export default function SignIn({ handleSetAuth }) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-    handleSetAuth();
-  };
+export default function SignIn({ handleSubmit }) {
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
