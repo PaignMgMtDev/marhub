@@ -8,11 +8,14 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+  Typography,
+  IconButton
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
+import CloseIcon from "@mui/icons-material/Close";
 
-export default function EditTactics({ campaignName }) {
+export default function EditTactics({ campaignName, selectedRows, setSelectedRows }) {
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -26,7 +29,11 @@ export default function EditTactics({ campaignName }) {
       setOpenModal(false);
     };
 
-
+    const handleRemoveTactic = (tactic) => {
+        
+        const filteredTactics = selectedRows.filter(t => t !== tactic);
+        setSelectedRows(filteredTactics);
+      };
   return (
     <div>
       <center>
@@ -38,10 +45,14 @@ export default function EditTactics({ campaignName }) {
         <Paper style={{ padding: "20px", marginBottom: "20px" }}>
           <div className="tactic-selection">
             <h3>Selected Tactics</h3>
-            <div>Tactic 1</div>
-            <Button variant="outlined" color="primary">
-              Add/Remove Tactics
-            </Button>
+            {selectedRows.map((tactic) => (
+              <div key={tactic} style={{ display: 'flex', alignItems: 'center' }}>
+                <Typography style={{ marginRight: '8px' }}>{tactic}</Typography>
+                <IconButton onClick={() => handleRemoveTactic(tactic)} size="small">
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              </div>
+            ))}
           </div>
         </Paper>
 
