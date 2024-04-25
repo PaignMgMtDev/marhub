@@ -31,7 +31,7 @@ export default function CampTactics({
       .then((data) => {
         setTacticData(data["tactics"]);
       });
-  }, [auth]);
+  }, [auth, campaignID, setTacticData]);
   const getStatusClass = (status) => {
     switch (status) {
       case "PLANNED":
