@@ -80,7 +80,7 @@ export default function CampTactics({
         <Button
           variant="contained"
           onClick={editTactics}
-          disabled={selectedRows ? false : selectedRows.length === 0}
+          disabled={selectedRows.length === 0}
           sx={{ backgroundColor: "#FF7F50" }}
         >
           Configure Content Request
