@@ -47,6 +47,11 @@ export default function CampTactics({
 
   const columns = [
     {
+      field: "id",
+      headerName: "ID",
+      width: 300,
+    },
+    {
       field: "tactName",
       headerName: "Tactic Name",
       width: 300,
