@@ -211,7 +211,7 @@ export default function EditTactics({
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                {scrapeID}
+                Scrape ID: {scrapeID}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
