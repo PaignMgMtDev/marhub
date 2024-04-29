@@ -44,24 +44,32 @@ function App() {
     navigate("/edittactics");
   };
 
-  const tacticRows = tacticData.map((tactic) => ({ 
+  const tacticRows = tacticData.map((tactic) => ({
     id: tactic.id,
-tactName: tactic.name,
-status: tactic.current_status.toUpperCase(),
-startdate: tactic.planned_start_dt,
-enddate: tactic.planned_end_dt,
-language: tactic.language
-
-
-  }))
+    tactName: tactic.name,
+    status: tactic.current_status.toUpperCase(),
+    startdate: tactic.planned_start_dt,
+    enddate: tactic.planned_end_dt,
+    language: tactic.language,
+  }));
   const [selectedRows, setSelectedRows] = useState([]);
-
+  
   const handleSelectionChange = (selectionModel) => {
-    const selectedTacticNames = selectionModel.map(
-      (id) => tacticRows.find((row) => row.id === id)?.tactName
-    );
-    setSelectedRows(selectedTacticNames);
+    
+    const selectedTactics = selectionModel.map((id) => {
+      const row = tacticRows.find((row) => row.id === id);
+      return row ? { id: row.id, tactName: row.tactName } : null;
+    }).filter(tactic => tactic !== null); 
+  console.log(selectedTactics)
+    setSelectedRows(selectedTactics);
   };
+
+  // const handleSelectionChange = (selectionModel) => {
+  //   const selectedTacticNames = selectionModel.map(
+  //     (id) => tacticRows.find((row) => row.id === id)?.tactName
+  //   );
+  //   setSelectedRows(selectedTacticNames);
+  // };
 
   let navigate = useNavigate();
 
@@ -105,6 +113,7 @@ language: tactic.language
                 campaignName={campaignName}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
+                auth={auth}
               />
             }
           />

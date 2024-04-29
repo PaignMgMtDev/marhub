@@ -49,7 +49,7 @@ export default function DashLanding({
     id: campaign.id,
     campName: campaign.name,
     status: campaign.current_status.toUpperCase(),
-    owner: owner,
+    // owner: owner,
     newcontent: "Add New Content",
   }));
 
@@ -68,7 +68,7 @@ export default function DashLanding({
         <span className={getStatusClass(params.value)}>{params.value}</span>
       ),
     },
-    { field: "owner", headerName: "Owner", width: 300 },
+    // { field: "owner", headerName: "Owner", width: 300 },
     {
       field: "newcontent",
       headerName: "",
