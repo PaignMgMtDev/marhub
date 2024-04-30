@@ -127,9 +127,9 @@ export default function EditTactics({
           <FormControl component="fieldset">
             <FormLabel component="legend">Select a Placement Type</FormLabel>
             <RadioGroup value={placementID} onChange={handleSetPlacementType}>
-              <FormControlLabel value={2} control={<Radio />} label="Primary" />
+              <FormControlLabel value={3} control={<Radio />} label="Primary" />
               <FormControlLabel
-                value={3}
+                value={4}
                 control={<Radio />}
                 label="Secondary"
               />
@@ -211,7 +211,7 @@ export default function EditTactics({
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                {scrapeID}
+                Scrape ID: {scrapeID}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
