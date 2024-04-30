@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Paper,
   TextField,
@@ -32,7 +32,7 @@ export default function EditTactics({
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
   const [audience, setAudience] = useState("");
-  // const placementIdNumber = Number(placementID);
+  const [placementData, setPlacementData] = useState([])
 
   const handleSetPlacementType = (event) => {
     setPlacementID(event.target.value);
@@ -49,6 +49,41 @@ export default function EditTactics({
   const handleAudience = (event) => {
     setAudience(event.target.value);
   };
+
+  async function fetchPlacementTypes() {
+    const url = "https://campaign-app-api-staging.azurewebsites.net/api/contentframework/get-placement-types/";
+    const headers = new Headers({
+      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw",
+      "Content-Type": "application/json"
+    });
+  
+    const requestOptions = {
+      method: 'GET',
+      headers: headers,
+      redirect: 'follow'
+    };
+  
+    try {
+      const response = await fetch(url, requestOptions);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const result = await response.json();  // Assuming the response is JSON
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.error('Error fetching placement types:', error);
+    }
+  }
+  
+  useEffect(() => {
+    fetchPlacementTypes().then(data => {
+      if (data) {
+        setPlacementData(data)
+      }
+    });
+  }, []);
+
 
   const sendForm = () => {
     const tacticsIds = selectedRows.map((tactic) => tactic.id);
@@ -126,19 +161,17 @@ export default function EditTactics({
         <Paper style={{ padding: "20px", marginBottom: "20px" }}>
           <FormControl component="fieldset">
             <FormLabel component="legend">Select a Placement Type</FormLabel>
+            
             <RadioGroup value={placementID} onChange={handleSetPlacementType}>
-              <FormControlLabel value={3} control={<Radio />} label="Primary" />
-              <FormControlLabel
-                value={4}
-                control={<Radio />}
-                label="Secondary"
-              />
-              <FormControlLabel
-                value={4}
-                control={<Radio />}
-                label="Co Brand"
-              />
-            </RadioGroup>
+        {placementData.map((placement) => (
+          <FormControlLabel
+            key={placement.id}
+            value={placement.id}
+            control={<Radio />}
+            label={placement.placement_type_name}
+          />
+        ))}
+      </RadioGroup>
           </FormControl>
         </Paper>
 
