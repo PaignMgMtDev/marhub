@@ -32,7 +32,7 @@ export default function EditTactics({
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
   const [audience, setAudience] = useState("");
-  const [placementData, setPlacementData] = useState([])
+  const [placementData, setPlacementData] = useState([]);
 
   const handleSetPlacementType = (event) => {
     setPlacementID(event.target.value);
@@ -51,39 +51,40 @@ export default function EditTactics({
   };
 
   async function fetchPlacementTypes() {
-    const url = "https://campaign-app-api-staging.azurewebsites.net/api/contentframework/get-placement-types/";
+    const url =
+      "https://campaign-app-api-staging.azurewebsites.net/api/contentframework/get-placement-types/";
     const headers = new Headers({
-      "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw",
-      "Content-Type": "application/json"
+      Authorization:
+        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw",
+      "Content-Type": "application/json",
     });
-  
+
     const requestOptions = {
-      method: 'GET',
+      method: "GET",
       headers: headers,
-      redirect: 'follow'
+      redirect: "follow",
     };
-  
+
     try {
       const response = await fetch(url, requestOptions);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      const result = await response.json();  // Assuming the response is JSON
+      const result = await response.json(); // Assuming the response is JSON
       console.log(result);
       return result;
     } catch (error) {
-      console.error('Error fetching placement types:', error);
+      console.error("Error fetching placement types:", error);
     }
   }
-  
+
   useEffect(() => {
-    fetchPlacementTypes().then(data => {
+    fetchPlacementTypes().then((data) => {
       if (data) {
-        setPlacementData(data)
+        setPlacementData(data);
       }
     });
   }, []);
-
 
   const sendForm = () => {
     const tacticsIds = selectedRows.map((tactic) => tactic.id);
@@ -161,17 +162,17 @@ export default function EditTactics({
         <Paper style={{ padding: "20px", marginBottom: "20px" }}>
           <FormControl component="fieldset">
             <FormLabel component="legend">Select a Placement Type</FormLabel>
-            
+
             <RadioGroup value={placementID} onChange={handleSetPlacementType}>
-        {placementData.map((placement) => (
-          <FormControlLabel
-            key={placement.id}
-            value={placement.id}
-            control={<Radio />}
-            label={placement.placement_type_name}
-          />
-        ))}
-      </RadioGroup>
+              {placementData.map((placement) => (
+                <FormControlLabel
+                  key={placement.id}
+                  value={placement.id}
+                  control={<Radio />}
+                  label={placement.placement_type_name}
+                />
+              ))}
+            </RadioGroup>
           </FormControl>
         </Paper>
 

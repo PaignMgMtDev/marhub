@@ -34,10 +34,18 @@ function App() {
     setCampaignID(params);
   };
 
-  const handleCampaignClick = (params) => {
+  const [newContent, setNewContent] = useState(false);
+  const handleAddNewContent = (params) => {
     setCampaignName(params);
-
     navigate("/camptactics");
+    setNewContent(true);
+  };
+
+  const [rendition, setRendition] = useState(false);
+  const handleCreateRendition = (params) => {
+    setCampaignName(params);
+    navigate("/camptactics");
+    setRendition(true);
   };
 
   const editTactics = () => {
@@ -53,14 +61,15 @@ function App() {
     language: tactic.language,
   }));
   const [selectedRows, setSelectedRows] = useState([]);
-  
+
   const handleSelectionChange = (selectionModel) => {
-    
-    const selectedTactics = selectionModel.map((id) => {
-      const row = tacticRows.find((row) => row.id === id);
-      return row ? { id: row.id, tactName: row.tactName } : null;
-    }).filter(tactic => tactic !== null); 
-  console.log(selectedTactics)
+    const selectedTactics = selectionModel
+      .map((id) => {
+        const row = tacticRows.find((row) => row.id === id);
+        return row ? { id: row.id, tactName: row.tactName } : null;
+      })
+      .filter((tactic) => tactic !== null);
+    console.log(selectedTactics);
     setSelectedRows(selectedTactics);
   };
 
@@ -81,12 +90,13 @@ function App() {
             path="/dashlanding"
             element={
               <DashLanding
-                handleCampaignClick={handleCampaignClick}
+                handleAddNewContent={handleAddNewContent}
                 campaignData={campaignData}
                 owner={owner}
                 auth={auth}
                 setCampaignData={setCampaignData}
                 handleCampaignID={handleCampaignID}
+                handleCreateRendition={handleCreateRendition}
               />
             }
           />
@@ -103,6 +113,8 @@ function App() {
                 setTacticData={setTacticData}
                 tacticData={tacticData}
                 auth={auth}
+                rendition={rendition}
+                newContent={newContent}
               />
             }
           />

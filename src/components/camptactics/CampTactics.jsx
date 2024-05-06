@@ -11,10 +11,10 @@ export default function CampTactics({
   tacticRows,
   campaignID,
   auth,
-  setTacticData
+  setTacticData,
+  newContent,
+  rendition,
 }) {
-
-  
   useEffect(() => {
     fetch(
       `https://campaign-app-api-staging.azurewebsites.net/api/v2/default/mihp/campaign-${campaignID}/tactics/`,
@@ -82,14 +82,18 @@ export default function CampTactics({
       />
       <br />
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          variant="contained"
-          onClick={editTactics}
-          disabled={selectedRows.length === 0}
-          sx={{ backgroundColor: "#FF7F50" }}
-        >
-          Configure Content Request
-        </Button>
+        {newContent ? (
+          <Button
+            variant="contained"
+            onClick={editTactics}
+            disabled={selectedRows.length === 0}
+            sx={{ backgroundColor: "#FF7F50" }}
+          >
+            Configure Content Request
+          </Button>
+        ) : null}
+
+        {rendition ? <Button>Configure Rendition Request</Button> : null}
       </div>
     </div>
   );
