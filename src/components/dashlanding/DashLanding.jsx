@@ -4,12 +4,13 @@ import { Button } from "@mui/material";
 import Header from "../header/Header";
 
 export default function DashLanding({
-  handleCampaignClick,
+  handleAddNewContent,
   campaignData,
   owner,
   setCampaignData,
   auth,
-  handleCampaignID
+  handleCampaignID,
+  handleCreateRendition
 }) {
   const getStatusClass = (status) => {
     switch (status) {
@@ -51,6 +52,7 @@ export default function DashLanding({
     status: campaign.current_status.toUpperCase(),
     // owner: owner,
     newcontent: "Add New Content",
+    createrendition: "Create Rendition"
   }));
 
   const columns = [
@@ -77,7 +79,21 @@ export default function DashLanding({
         <Button
           variant="link"
           color="primary"
-          onClick={() => {handleCampaignClick(params.row.campName); handleCampaignID(params.row.id)}}
+          onClick={() => {handleAddNewContent(params.row.campName); handleCampaignID(params.row.id)}}
+        >
+          {params.value}
+        </Button>
+      ),
+    },
+    {
+      field: "createrendition",
+      headerName: "",
+      width: 300,
+      renderCell: (params) => (
+        <Button
+          variant="link"
+          color="primary"
+          onClick={() => {handleCreateRendition(params.row.campName); handleCampaignID(params.row.id)}}
         >
           {params.value}
         </Button>
