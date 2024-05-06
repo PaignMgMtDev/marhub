@@ -48,8 +48,20 @@ function App() {
     setRendition(true);
   };
 
+  const [tacticForm, setTacticForm] = useState(false);
   const editTactics = () => {
     navigate("/edittactics");
+    setTacticForm(true);
+  };
+
+  const backDash = () => {
+    navigate("/dashlanding");
+    setNewContent(false);
+    setRendition(false);
+  };
+  const backTact = () => {
+    navigate("/camptactics");
+    
   };
 
   const tacticRows = tacticData.map((tactic) => ({
@@ -115,6 +127,7 @@ function App() {
                 auth={auth}
                 rendition={rendition}
                 newContent={newContent}
+                backDash={backDash}
               />
             }
           />
@@ -126,6 +139,8 @@ function App() {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 auth={auth}
+                tacticForm={tacticForm}
+                backTact={backTact}
               />
             }
           />

@@ -14,6 +14,7 @@ export default function CampTactics({
   setTacticData,
   newContent,
   rendition,
+  backDash
 }) {
   useEffect(() => {
     fetch(
@@ -72,7 +73,10 @@ export default function CampTactics({
   return (
     <div>
       <center>
-        <CampHeader campaignName={campaignName} />
+        <CampHeader 
+        campaignName={campaignName} 
+        backDash={backDash}
+        />
       </center>
       <DataGridPro
         checkboxSelection
@@ -93,7 +97,14 @@ export default function CampTactics({
           </Button>
         ) : null}
 
-        {rendition ? <Button>Configure Rendition Request</Button> : null}
+        {rendition ? (
+        <Button
+        variant="contained"
+            onClick={editTactics}
+            disabled={selectedRows.length === 0}
+            sx={{ backgroundColor: "#FF7F50" }}
+        >Configure Rendition Request</Button>
+        ) : null}
       </div>
     </div>
   );
