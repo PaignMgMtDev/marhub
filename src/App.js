@@ -59,14 +59,15 @@ function App() {
     navigate("/dashlanding");
     setNewContent(false);
     setRendition(false);
+    
   };
   const backTact = () => {
     navigate("/camptactics");
-    
+   
   };
   const handleReqConfig = () => {
     navigate("/rendreqconfig");
-    
+    setTacticForm(true);
   };
 
   const tacticRows = tacticData.map((tactic) => ({
@@ -159,6 +160,7 @@ function App() {
                 setSelectedRows={setSelectedRows}
                 auth={auth}
                 backTact={backTact}
+                tacticForm={tacticForm}
               />
             }
           />
