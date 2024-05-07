@@ -5,6 +5,7 @@ import DashLanding from "./components/dashlanding/DashLanding";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
+import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
 
 function App() {
   const [owner, setOwner] = useState("");
@@ -48,8 +49,24 @@ function App() {
     setRendition(true);
   };
 
+  const [tacticForm, setTacticForm] = useState(false);
   const editTactics = () => {
     navigate("/edittactics");
+    setTacticForm(true);
+  };
+
+  const backDash = () => {
+    navigate("/dashlanding");
+    setNewContent(false);
+    setRendition(false);
+  };
+  const backTact = () => {
+    navigate("/camptactics");
+    
+  };
+  const handleReqConfig = () => {
+    navigate("/rendreqconfig");
+    
   };
 
   const tacticRows = tacticData.map((tactic) => ({
@@ -115,6 +132,8 @@ function App() {
                 auth={auth}
                 rendition={rendition}
                 newContent={newContent}
+                backDash={backDash}
+                handleReqConfig={handleReqConfig}
               />
             }
           />
@@ -126,6 +145,20 @@ function App() {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 auth={auth}
+                tacticForm={tacticForm}
+                backTact={backTact}
+              />
+            }
+          />
+          <Route
+            path="/rendreqconfig"
+            element={
+              <RendReqConfig
+                campaignName={campaignName}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                auth={auth}
+                backTact={backTact}
               />
             }
           />
