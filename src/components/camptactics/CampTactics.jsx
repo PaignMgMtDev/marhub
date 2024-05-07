@@ -14,7 +14,8 @@ export default function CampTactics({
   setTacticData,
   newContent,
   rendition,
-  backDash
+  backDash,
+  handleReqConfig
 }) {
   useEffect(() => {
     fetch(
@@ -100,7 +101,7 @@ export default function CampTactics({
         {rendition ? (
         <Button
         variant="contained"
-            onClick={editTactics}
+            onClick={handleReqConfig}
             disabled={selectedRows.length === 0}
             sx={{ backgroundColor: "#FF7F50" }}
         >Configure Rendition Request</Button>
