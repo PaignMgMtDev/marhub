@@ -1,47 +1,24 @@
 import React, { useState } from 'react';
 import {
   Paper,
-//   TextField,
-  FormControlLabel,
   Button,
-  FormControl,
-  FormLabel,
   Typography,
   IconButton,
   Grid,
-  Checkbox,
-  FormGroup,
+  Autocomplete,
+  TextField,
 } from '@mui/material';
 import CampHeader from '../header/CampHeader';
 import CloseIcon from '@mui/icons-material/Close';
 
 export default function Collaborators({
   campaignName,
-  selectedRows,
-  setSelectedRows,
   auth,
   tacticForm,
   backTact,
   rendition,
-  handleCollabs
 }) {
-  const [placementID, setPlacementID] = useState();
-//   const [description, setDescription] = useState("");
-//   const [localizationChecked, setLocalizationChecked] = useState(false);
-//   const [translationsChecked, setTranslationsChecked] = useState(false);
 
-//   const handleLocalizationChange = () =>
-//     setLocalizationChecked(!localizationChecked);
-//   const handleTranslationsChange = () =>
-//     setTranslationsChecked(!translationsChecked);
-
-  const handleSetPlacementType = (event) => {
-    setPlacementID(event.target.value);
-  };
-
-//   const handleDesc = (event) => {
-//     setDescription(event.target.value);
-//   };
 
   const [users, setUsers] = useState([
     {
@@ -57,10 +34,32 @@ export default function Collaborators({
         "user": "User 3"
     }
 ]);
+  
+const [attributes, setAttributes] = useState([    
+    {
+        "id": 1,
+        "attribute": "Attribute 1"
+    },
+    {
+        "id": 2,
+        "attribute": "Attribute 2"
+    },
+    {
+        "id": 3,
+        "attribute": "Attribute 3"
+    }
+]);
+
+const [addedAttributes, setAddedAttributes] = useState([])
+const handleAddedAttributes = (event, value) => {
+    const ids = value.map(item => item.id);
+setAddedAttributes(ids)
+}
+console.log(addedAttributes)
+
 
   const sendForm = () => {
-    const tacticsIds = selectedRows.map((tactic) => tactic.id);
-    const placementIdNumber = Number(placementID);
+    
     fetch("", {
       method: "POST",
       headers: {
@@ -68,15 +67,13 @@ export default function Collaborators({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        tactics: tacticsIds,
-        placement_type: placementIdNumber,
-        // placement_description: description,
+        
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        handleCollabs()
+        setAttributes(attributes)
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -132,22 +129,29 @@ export default function Collaborators({
 
   <Grid item >
     <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Select A Placement</FormLabel>
-        <FormGroup value={placementID} onChange={handleSetPlacementType}>
-          <FormControlLabel value="1" control={<Checkbox />} label="Primary" />
-          <FormControlLabel value="2" control={<Checkbox />} label="Secondary" />
-          <FormControlLabel value="3" control={<Checkbox />} label="Co Brand" />
-        </FormGroup>
-      </FormControl>
+    <Autocomplete
+        multiple
+        id="tags-standard"
+        onChange={handleAddedAttributes}
+        options={attributes}
+        getOptionLabel={(attributes) => attributes.attribute}    
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="standard"
+            label="Select Attributes"
+            placeholder=""
+          />
+        )}
+      />
     </Paper>
   </Grid>
 
   
 </Grid>
 
-      <Grid container justifyContent="flex-end" style={{ marginTop: 20, paddingRight: "155px" }}>
-        <Button variant="contained" sx={{ backgroundColor: "#FF7F50" }} onClick={sendForm}>Select Collaborators</Button>
+      <Grid container justifyContent="center" style={{ marginTop: 20, paddingRight: "155px" }}>
+        <Button variant="contained" sx={{ backgroundColor: "#FF7F50" }} onClick={sendForm}>Submit Rendition Request</Button>
       </Grid>
     </div>
   );
