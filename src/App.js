@@ -5,6 +5,8 @@ import DashLanding from "./components/dashlanding/DashLanding";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
+import Renditions from "./components/rendition/Renditions";
+import { apiBaseUrl } from "./api"
 
 function App() {
   const [owner, setOwner] = useState("");
@@ -18,7 +20,7 @@ function App() {
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw"
     );
     setOwner(data.get("email"));
-    handleSetDash();
+    // handleSetDash();
   };
 
   const handleSetDash = () => {
@@ -84,7 +86,7 @@ function App() {
 
   return (
     <div className="App">
-      {!auth ? null : (
+      {!auth ? <SignIn handleSubmit={handleSubmit} /> : (
         <Routes>
           <Route
             path="/dashlanding"
@@ -129,9 +131,17 @@ function App() {
               />
             }
           />
+          <Route
+            path="/renditions/:tactic"
+            loader={({ params }) => {
+              return fetch(`${apiBaseUrl}/api/contentframework/rendition-requests/${params.tactic}`);
+            }}
+            element={
+              <Renditions />
+            }
+          />
         </Routes>
       )}
-      {!auth ? <SignIn handleSubmit={handleSubmit} /> : null}
     </div>
   );
 }
