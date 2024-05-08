@@ -5,8 +5,7 @@ import DashLanding from "./components/dashlanding/DashLanding";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
-import Renditions from "./components/rendition/Renditions";
-import { apiBaseUrl } from "./api"
+import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
 
 function App() {
   const [owner, setOwner] = useState("");
@@ -20,7 +19,7 @@ function App() {
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw"
     );
     setOwner(data.get("email"));
-    // handleSetDash();
+    handleSetDash();
   };
 
   const handleSetDash = () => {
@@ -50,8 +49,29 @@ function App() {
     setRendition(true);
   };
 
+  const [tacticForm, setTacticForm] = useState(false);
   const editTactics = () => {
+    
     navigate("/edittactics");
+    setTacticForm(true);
+  };
+
+  const backDash = () => {
+    navigate("/dashlanding");
+    setNewContent(false);
+    setRendition(false);
+    
+  };
+  const backTact = () => {
+    navigate("/camptactics");
+   
+  };
+
+  
+  const handleReqConfig = () => {
+    navigate("/rendreqconfig");
+    setTacticForm(true);
+   
   };
 
   const tacticRows = tacticData.map((tactic) => ({
@@ -86,7 +106,7 @@ function App() {
 
   return (
     <div className="App">
-      {!auth ? <SignIn handleSubmit={handleSubmit} /> : (
+      {!auth ? null : (
         <Routes>
           <Route
             path="/dashlanding"
@@ -117,6 +137,8 @@ function App() {
                 auth={auth}
                 rendition={rendition}
                 newContent={newContent}
+                backDash={backDash}
+                handleReqConfig={handleReqConfig}
               />
             }
           />
@@ -128,20 +150,29 @@ function App() {
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 auth={auth}
+                tacticForm={tacticForm}
+                backTact={backTact}
+            
               />
             }
           />
           <Route
-            path="/renditions/:tactic"
-            loader={({ params }) => {
-              return fetch(`${apiBaseUrl}/api/contentframework/rendition-requests/${params.tactic}`);
-            }}
+            path="/rendreqconfig"
             element={
-              <Renditions />
+              <RendReqConfig
+                campaignName={campaignName}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                auth={auth}
+                backTact={backTact}
+                tacticForm={tacticForm}
+                rendition={rendition}
+              />
             }
           />
         </Routes>
       )}
+      {!auth ? <SignIn handleSubmit={handleSubmit} /> : null}
     </div>
   );
 }

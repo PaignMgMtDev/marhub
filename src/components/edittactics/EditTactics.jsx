@@ -24,6 +24,9 @@ export default function EditTactics({
   selectedRows,
   setSelectedRows,
   auth,
+  tacticForm,
+  backTact,
+ rendition
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [scrapeID, setScrapeID] = useState("");
@@ -133,7 +136,13 @@ export default function EditTactics({
   return (
     <div>
       <center>
-        <CampHeader campaignName={campaignName} />
+        <CampHeader 
+        campaignName={campaignName} 
+        tacticForm={tacticForm}
+        backTact={backTact}
+        rendition={rendition}
+       
+        />
       </center>
 
       <div className="content-container" style={{ padding: "20px" }}>

@@ -1,27 +1,59 @@
-import { Button } from '@mui/material'
-import React from 'react'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { 
+  Button, 
+  Box, 
+  // Typography 
+} from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export default function CampHeader({
-    campaignName
+  campaignName,
+  backDash,
+  tacticForm,
+  backTact,
+  rendition,
 }) {
-
-    let navigate = useNavigate();
-
-    const backDash = () => {
-        navigate("/dashlanding");
-    }
-
   return (
-    <div className="box">
-        <div className="top-nav">
-        <div className="label">
-        <Button onClick={backDash} variant='link'><div className="text-wrapper"><ArrowBackIcon/>{campaignName}</div></Button>
-        <br/>
-        {/* <Typography variant='caption'>Campaign</Typography> */}
-    </div>
-        </div>
-      </div>
-  )
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "start", // Adjust to start to align items to the top of the container
+        flexDirection: "column", // Change direction to column to stack vertically
+        minWidth: "1850px",
+        height: "auto", // Adjust height to auto to contain both elements comfortably
+        padding: "8px 16px",
+        borderBottom: "1px solid #ddd", // Adjust color as needed
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Optional shadow for styling
+        backgroundColor: "#fff", // Match the background to your theme
+      }}
+    >
+      <Button
+        onClick={tacticForm  ? backTact : backDash}
+        sx={{ color: "black", textTransform: "none", fontSize: "1rem" }}
+        startIcon={<ArrowBackIcon />}
+      >
+        {campaignName}
+      </Button>
+ 
+   
+        {/* <Typography
+          variant="caption"
+          sx={{ opacity: 0.7, paddingLeft: "35px" }}
+        >
+          Create Rendition Request
+        </Typography>
+      
+       
+       
+       
+        <Typography
+          variant="caption"
+          sx={{ opacity: 0.7, paddingLeft: "35px" }}
+        >
+          Add New Content
+        </Typography> */}
+       
+      
+    </Box>
+  );
 }
