@@ -274,7 +274,8 @@ export default function RendReqConfig({
   auth,
   tacticForm,
   backTact,
-  rendition
+  rendition,
+  handleCollabs
 }) {
   const [placementID, setPlacementID] = useState();
   const [description, setDescription] = useState("");
@@ -312,6 +313,7 @@ export default function RendReqConfig({
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+        
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -414,7 +416,7 @@ export default function RendReqConfig({
 </Grid>
 
       <Grid container justifyContent="flex-end" style={{ marginTop: 20, paddingRight: "155px" }}>
-        <Button variant="contained" sx={{ backgroundColor: "#FF7F50" }} onClick={sendForm}>Select Collaborators</Button>
+        <Button variant="contained" sx={{ backgroundColor: "#FF7F50" }} onClick={handleCollabs}>Select Collaborators</Button>
       </Grid>
     </div>
   );

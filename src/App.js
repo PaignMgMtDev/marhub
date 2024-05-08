@@ -6,6 +6,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
+import Collaborators from "./components/collaborators/Collaborators";
 
 function App() {
   const [owner, setOwner] = useState("");
@@ -74,6 +75,10 @@ function App() {
    
   };
 
+  const handleCollabs = () => {
+    navigate("/collaborators")
+  }
+
   const tacticRows = tacticData.map((tactic) => ({
     id: tactic.id,
     tactName: tactic.name,
@@ -91,16 +96,10 @@ function App() {
         return row ? { id: row.id, tactName: row.tactName } : null;
       })
       .filter((tactic) => tactic !== null);
-    console.log(selectedTactics);
+    
     setSelectedRows(selectedTactics);
   };
 
-  // const handleSelectionChange = (selectionModel) => {
-  //   const selectedTacticNames = selectionModel.map(
-  //     (id) => tacticRows.find((row) => row.id === id)?.tactName
-  //   );
-  //   setSelectedRows(selectedTacticNames);
-  // };
 
   let navigate = useNavigate();
 
@@ -167,6 +166,22 @@ function App() {
                 backTact={backTact}
                 tacticForm={tacticForm}
                 rendition={rendition}
+                handleCollabs={handleCollabs}
+              />
+            }
+          />
+          <Route
+            path="/collaborators"
+            element={
+              <Collaborators
+                campaignName={campaignName}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                auth={auth}
+                backTact={backTact}
+                tacticForm={tacticForm}
+                rendition={rendition}
+                handleCollabs={handleCollabs}
               />
             }
           />
