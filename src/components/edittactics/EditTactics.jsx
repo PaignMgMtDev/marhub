@@ -25,7 +25,8 @@ export default function EditTactics({
   setSelectedRows,
   auth,
   tacticForm,
-  backTact
+  backTact,
+ rendition
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [scrapeID, setScrapeID] = useState("");
@@ -139,6 +140,8 @@ export default function EditTactics({
         campaignName={campaignName} 
         tacticForm={tacticForm}
         backTact={backTact}
+        rendition={rendition}
+       
         />
       </center>
 

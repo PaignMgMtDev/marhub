@@ -15,7 +15,8 @@ export default function CampTactics({
   newContent,
   rendition,
   backDash,
-  handleReqConfig
+  handleReqConfig,
+  
 }) {
   useEffect(() => {
     fetch(
@@ -77,6 +78,8 @@ export default function CampTactics({
         <CampHeader 
         campaignName={campaignName} 
         backDash={backDash}
+        rendition={rendition}
+        newContent={newContent}
         />
       </center>
       <DataGridPro
