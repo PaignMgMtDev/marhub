@@ -17,7 +17,7 @@ function App() {
     const data = new FormData(event.currentTarget);
 
     setAuth(
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw"
+      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3Nzg4ODI4LCJpYXQiOjE3MTUxOTY4MjgsImp0aSI6ImZkNjg5NGFhNTUyMDQ4ODJiMTljNmUyZDFiYWU4ZTQ1IiwidXNlcl9pZCI6OH0.sdaoYw2uxSOoQWzWRboh_UoRwGCq9k8pt9_uPeaKmB8"
     );
     setOwner(data.get("email"));
     handleSetDash();
