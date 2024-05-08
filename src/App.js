@@ -51,6 +51,7 @@ function App() {
 
   const [tacticForm, setTacticForm] = useState(false);
   const editTactics = () => {
+    
     navigate("/edittactics");
     setTacticForm(true);
   };
@@ -65,9 +66,12 @@ function App() {
     navigate("/camptactics");
    
   };
+
+  
   const handleReqConfig = () => {
     navigate("/rendreqconfig");
     setTacticForm(true);
+   
   };
 
   const tacticRows = tacticData.map((tactic) => ({
@@ -148,6 +152,7 @@ function App() {
                 auth={auth}
                 tacticForm={tacticForm}
                 backTact={backTact}
+            
               />
             }
           />
@@ -161,6 +166,7 @@ function App() {
                 auth={auth}
                 backTact={backTact}
                 tacticForm={tacticForm}
+                rendition={rendition}
               />
             }
           />

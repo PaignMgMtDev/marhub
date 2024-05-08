@@ -274,6 +274,7 @@ export default function RendReqConfig({
   auth,
   tacticForm,
   backTact,
+  rendition
 }) {
   const [placementID, setPlacementID] = useState();
   const [description, setDescription] = useState("");
@@ -330,6 +331,7 @@ export default function RendReqConfig({
             campaignName={campaignName}
             tacticForm={tacticForm}
             backTact={backTact}
+            rendition={rendition}
           />
         </Grid>
       </Grid>
