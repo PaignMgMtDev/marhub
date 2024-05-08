@@ -6,6 +6,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
+import Rendition from "./components/rendition/Rendition";
 
 function App() {
   const [owner, setOwner] = useState("");
@@ -16,10 +17,10 @@ function App() {
     const data = new FormData(event.currentTarget);
 
     setAuth(
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw"
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3Nzc0NTUzLCJpYXQiOjE3MTUxODI1NTMsImp0aSI6IjFjNWVhMjAyMGM1MTQ0NzJiMjY4N2I0ZDJiYmYwMmIzIiwidXNlcl9pZCI6MX0.VTDf2K6LcM7TRUqMkLadu38vSPImG1eTr-wD0ZAvgIY"
     );
     setOwner(data.get("email"));
-    handleSetDash();
+    // handleSetDash();
   };
 
   const handleSetDash = () => {
@@ -168,6 +169,12 @@ function App() {
                 tacticForm={tacticForm}
                 rendition={rendition}
               />
+            }
+          />
+          <Route
+            path="/renditions/:tactic"
+            element={
+              <Rendition auth={auth} />
             }
           />
         </Routes>
