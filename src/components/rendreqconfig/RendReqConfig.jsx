@@ -295,30 +295,30 @@ export default function RendReqConfig({
     setDescription(event.target.value);
   };
 
-  const sendForm = () => {
-    const tacticsIds = selectedRows.map((tactic) => tactic.id);
-    const placementIdNumber = Number(placementID);
-    fetch("", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${auth}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        tactics: tacticsIds,
-        placement_type: placementIdNumber,
-        placement_description: description,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+  // const sendForm = () => {
+  //   const tacticsIds = selectedRows.map((tactic) => tactic.id);
+  //   const placementIdNumber = Number(placementID);
+  //   fetch("", {
+  //     method: "POST",
+  //     headers: {
+  //       Authorization: `Bearer ${auth}`,
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       tactics: tacticsIds,
+  //       placement_type: placementIdNumber,
+  //       placement_description: description,
+  //     }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
         
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // };
 
   const handleRemoveTactic = (tactic) => {
     const filteredTactics = selectedRows.filter((t) => t !== tactic);

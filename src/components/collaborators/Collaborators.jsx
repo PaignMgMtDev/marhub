@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Paper,
-  TextField,
+//   TextField,
   FormControlLabel,
   Button,
   FormControl,
@@ -26,22 +26,22 @@ export default function Collaborators({
   handleCollabs
 }) {
   const [placementID, setPlacementID] = useState();
-  const [description, setDescription] = useState("");
-  const [localizationChecked, setLocalizationChecked] = useState(false);
-  const [translationsChecked, setTranslationsChecked] = useState(false);
+//   const [description, setDescription] = useState("");
+//   const [localizationChecked, setLocalizationChecked] = useState(false);
+//   const [translationsChecked, setTranslationsChecked] = useState(false);
 
-  const handleLocalizationChange = () =>
-    setLocalizationChecked(!localizationChecked);
-  const handleTranslationsChange = () =>
-    setTranslationsChecked(!translationsChecked);
+//   const handleLocalizationChange = () =>
+//     setLocalizationChecked(!localizationChecked);
+//   const handleTranslationsChange = () =>
+//     setTranslationsChecked(!translationsChecked);
 
   const handleSetPlacementType = (event) => {
     setPlacementID(event.target.value);
   };
 
-  const handleDesc = (event) => {
-    setDescription(event.target.value);
-  };
+//   const handleDesc = (event) => {
+//     setDescription(event.target.value);
+//   };
 
   const [users, setUsers] = useState([
     {
@@ -70,7 +70,7 @@ export default function Collaborators({
       body: JSON.stringify({
         tactics: tacticsIds,
         placement_type: placementIdNumber,
-        placement_description: description,
+        // placement_description: description,
       }),
     })
       .then((response) => response.json())
