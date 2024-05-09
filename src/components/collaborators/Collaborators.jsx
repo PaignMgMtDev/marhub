@@ -3,13 +3,11 @@ import {
   Paper,
   Button,
   Typography,
-  IconButton,
   Grid,
   Autocomplete,
   TextField,
 } from '@mui/material';
 import CampHeader from '../header/CampHeader';
-import CloseIcon from '@mui/icons-material/Close';
 
 export default function Collaborators({
   campaignName,
@@ -21,38 +19,27 @@ export default function Collaborators({
 
 
   const [users, setUsers] = useState([]);
+  const [attributes, setAttributes] = useState([]);
   useEffect(() => {
-    fetch(
-      "https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborators/",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data["users"]);
-      });
+    fetch("https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborators/", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${auth}`,
+        "Content-Type": "application/json",
+      },
+      redirect: "follow",
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setUsers(data.collaborators);
+      
+      const allAttributes = data.collaborators.flatMap(collab => collab.attribute_values);
+      setAttributes(allAttributes);
+    });
   }, [auth]);
   
-const [attributes, setAttributes] = useState([    
-    {
-        "id": 1,
-        "attribute": "Attribute 1"
-    },
-    {
-        "id": 2,
-        "attribute": "Attribute 2"
-    },
-    {
-        "id": 3,
-        "attribute": "Attribute 3"
-    }
-]);
+  
+
 
 const [addedAttributes, setAddedAttributes] = useState([])
 const handleAddedAttributes = (event, value) => {
@@ -84,10 +71,10 @@ console.log(addedAttributes)
       });
   };
 
-  const handleRemoveUser = (user) => {
-    const filteredUsers = user.filter((t) => t !== user);
-    setUsers(filteredUsers);
-  };
+  // const handleRemoveUser = (user) => {
+  //   const filteredUsers = user.filter((t) => t !== user);
+  //   setUsers(filteredUsers);
+  // };
 
   return (
     <div>
@@ -114,17 +101,17 @@ console.log(addedAttributes)
         Select Collaborators
       </Typography>
       {users.map((user) => (
-        <Grid container key={user.id} alignItems="center" spacing={1}>
+        <Grid container key={user.user.id} alignItems="center" spacing={1}>
           <Grid item xs>
-            <Typography>{user.user}</Typography>
+            <Typography>{user.user.first_name}</Typography>
           </Grid>
           <Grid item>
-            <IconButton
+            {/* <IconButton
               onClick={() => handleRemoveUser(user)}
               size="small"
             >
               <CloseIcon />
-            </IconButton>
+            </IconButton> */}
           </Grid>
         </Grid>
       ))}
@@ -138,7 +125,7 @@ console.log(addedAttributes)
         id="tags-standard"
         onChange={handleAddedAttributes}
         options={attributes}
-        getOptionLabel={(attributes) => attributes.attribute}    
+        getOptionLabel={(attribute) => `${attribute.value} - Count: ${attribute.count}`}    
         renderInput={(params) => (
           <TextField
             {...params}
