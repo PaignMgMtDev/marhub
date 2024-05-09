@@ -249,8 +249,7 @@
 //   );
 // }
 
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Paper,
   TextField,
@@ -263,9 +262,9 @@ import {
   Grid,
   Checkbox,
   FormGroup,
-} from '@mui/material';
-import CampHeader from '../header/CampHeader';
-import CloseIcon from '@mui/icons-material/Close';
+} from "@mui/material";
+import CampHeader from "../header/CampHeader";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function RendReqConfig({
   campaignName,
@@ -275,7 +274,7 @@ export default function RendReqConfig({
   tacticForm,
   backTact,
   rendition,
-  handleCollabs
+  handleCollabs,
 }) {
   const [placementID, setPlacementID] = useState();
   const [description, setDescription] = useState("");
@@ -313,7 +312,7 @@ export default function RendReqConfig({
   //     .then((response) => response.json())
   //     .then((data) => {
   //       console.log(data);
-        
+
   //     })
   //     .catch((error) => {
   //       console.error("Error:", error);
@@ -327,9 +326,9 @@ export default function RendReqConfig({
 
   return (
     <div>
-        <Grid container justifyContent="center">
-         <Grid item>
-           <CampHeader
+      <Grid container justifyContent="center">
+        <Grid item>
+          <CampHeader
             campaignName={campaignName}
             tacticForm={tacticForm}
             backTact={backTact}
@@ -337,86 +336,118 @@ export default function RendReqConfig({
           />
         </Grid>
       </Grid>
-      
-<Grid
-  container
-  spacing={2}  
-//   justifyContent="center"
-  style={{ padding: 20, paddingTop: "25px" }}
->
-  <Grid item >
-    <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
-      <Typography variant="h6" gutterBottom>
-        Selected Tactics
-      </Typography>
-      {selectedRows.map((tactic) => (
-        <Grid container key={tactic.id} alignItems="center" spacing={1}>
-          <Grid item xs>
-            <Typography>{tactic.tactName}</Typography>
-          </Grid>
-          <Grid item>
-            <IconButton
-              onClick={() => handleRemoveTactic(tactic)}
-              size="small"
-            >
-              <CloseIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
-    </Paper>
-  </Grid>
 
-  <Grid item >
-    <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Select A Placement</FormLabel>
-        <FormGroup value={placementID} onChange={handleSetPlacementType}>
-          <FormControlLabel value="1" control={<Checkbox />} label="Primary" />
-          <FormControlLabel value="2" control={<Checkbox />} label="Secondary" />
-          <FormControlLabel value="3" control={<Checkbox />} label="Co Brand" />
-        </FormGroup>
-      </FormControl>
-    </Paper>
-  </Grid>
-
-  <Grid item >
-    <Paper sx={{ padding: 2, width: "800px" }}>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Typography variant="h6" gutterBottom>
-            Select Rendition Type
-          </Typography>
-          <FormControlLabel
-            control={<Checkbox checked={localizationChecked} onChange={handleLocalizationChange} />}
-            label="Localization"
-          />
-          <FormControlLabel
-            control={<Checkbox checked={translationsChecked} onChange={handleTranslationsChange} />}
-            label="Translations"
-          />
+      <Grid
+        container
+        spacing={2}
+        //   justifyContent="center"
+        style={{ padding: 20, paddingTop: "25px" }}
+      >
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <Typography variant="h6" gutterBottom>
+              Selected Tactics
+            </Typography>
+            {selectedRows.map((tactic) => (
+              <Grid container key={tactic.id} alignItems="center" spacing={1}>
+                <Grid item xs>
+                  <Typography>{tactic.tactName}</Typography>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    onClick={() => handleRemoveTactic(tactic)}
+                    size="small"
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ))}
+          </Paper>
         </Grid>
-        <Grid item xs={6}>
-          <Typography variant="h6" gutterBottom>
-            Rendition Description
-          </Typography>
-          <TextField
-            label="Description"
-            multiline
-            rows={4}
-            fullWidth
-            margin="normal"
-            value={description}
-            onChange={handleDesc}
-          />
+
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Select A Placement</FormLabel>
+              <FormGroup value={placementID} onChange={handleSetPlacementType}>
+                <FormControlLabel
+                  value="1"
+                  control={<Checkbox />}
+                  label="Primary"
+                />
+                <FormControlLabel
+                  value="2"
+                  control={<Checkbox />}
+                  label="Secondary"
+                />
+                <FormControlLabel
+                  value="3"
+                  control={<Checkbox />}
+                  label="Co Brand"
+                />
+              </FormGroup>
+            </FormControl>
+          </Paper>
+        </Grid>
+
+        <Grid item>
+          <Paper sx={{ padding: 2, width: "800px" }}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Typography variant="h6" gutterBottom>
+                  Select Rendition Type
+                </Typography>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={localizationChecked}
+                      onChange={handleLocalizationChange}
+                    />
+                  }
+                  label="Localization"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={translationsChecked}
+                      onChange={handleTranslationsChange}
+                    />
+                  }
+                  label="Translations"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="h6" gutterBottom>
+                  Rendition Description
+                </Typography>
+                <TextField
+                  label="Description"
+                  multiline
+                  rows={4}
+                  fullWidth
+                  margin="normal"
+                  value={description}
+                  onChange={handleDesc}
+                />
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
       </Grid>
-    </Paper>
-  </Grid>
-</Grid>
 
-      <Grid container justifyContent="flex-end" style={{ marginTop: 20, paddingRight: "155px" }}>
-        <Button variant="contained" sx={{ backgroundColor: "#FF7F50" }} onClick={handleCollabs}>Select Collaborators</Button>
+      <Grid
+        container
+        justifyContent="flex-end"
+        style={{ marginTop: 20, paddingRight: "155px" }}
+      >
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: "#FF7F50" }}
+          onClick={handleCollabs}
+        >
+          Select Collaborators
+        </Button>
       </Grid>
     </div>
   );
