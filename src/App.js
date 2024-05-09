@@ -13,16 +13,6 @@ function App() {
   const [owner, setOwner] = useState("");
   const [auth, setAuth] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    setAuth(
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3Nzg4ODI4LCJpYXQiOjE3MTUxOTY4MjgsImp0aSI6ImZkNjg5NGFhNTUyMDQ4ODJiMTljNmUyZDFiYWU4ZTQ1IiwidXNlcl9pZCI6OH0.sdaoYw2uxSOoQWzWRboh_UoRwGCq9k8pt9_uPeaKmB8"
-    );
-    setOwner(data.get("email"));
-    handleSetDash();
-  };
 
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
@@ -213,7 +203,7 @@ console.log(owner)
           />
         </Routes>
       )}
-      {!auth ? <SignIn handleSubmit={handleSubmit} getAccessToken={getAccessToken} /> : null}
+      {!auth ? <SignIn getAccessToken={getAccessToken} /> : null}
     </div>
   );
 }

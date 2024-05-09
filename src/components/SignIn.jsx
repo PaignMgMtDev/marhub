@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const defaultTheme = createTheme();
 
-export default function SignIn({ handleSubmit, getAccessToken }) {
+export default function SignIn({  getAccessToken }) {
   
   const [email, setEmail] = useState(null)
   const [emailError, setEmailError] = useState(null)

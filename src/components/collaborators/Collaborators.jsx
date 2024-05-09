@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Paper,
   Button,
@@ -20,20 +20,24 @@ export default function Collaborators({
 }) {
 
 
-  const [users, setUsers] = useState([
-    {
-        "id": 1,
-        "user": "User 1"
-    },
-    {
-        "id": 2,
-        "user": "User 2"
-    },
-    {
-        "id": 3,
-        "user": "User 3"
-    }
-]);
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    fetch(
+      "https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborators/",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${auth}`,
+          "Content-Type": "application/json",
+        },
+        redirect: "follow",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setUsers(data["users"]);
+      });
+  }, [auth]);
   
 const [attributes, setAttributes] = useState([    
     {
