@@ -15,6 +15,7 @@ import {
   DialogTitle,
   Typography,
   IconButton,
+  Grid,
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,7 +27,7 @@ export default function EditTactics({
   auth,
   tacticForm,
   backTact,
- rendition
+  rendition,
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [scrapeID, setScrapeID] = useState("");
@@ -135,107 +136,129 @@ export default function EditTactics({
   };
   return (
     <div>
-      <center>
-        <CampHeader 
-        campaignName={campaignName} 
-        tacticForm={tacticForm}
-        backTact={backTact}
-        rendition={rendition}
-       
-        />
-      </center>
+      <Grid container justifyContent="center">
+        <Grid item>
+          <CampHeader
+            campaignName={campaignName}
+            tacticForm={tacticForm}
+            backTact={backTact}
+            rendition={rendition}
+          />
+        </Grid>
+      </Grid>
 
-      <div className="content-container" style={{ padding: "20px" }}>
-        <Paper style={{ padding: "20px", marginBottom: "20px" }}>
-          <div className="tactic-selection">
-            <h3>Selected Tactics</h3>
-            {selectedRows.map((tactic) => (
-              <div
-                key={tactic.id}
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <Typography style={{ marginRight: "8px" }}>
-                  {tactic.tactName}
-                </Typography>
-                <IconButton
-                  onClick={() => handleRemoveTactic(tactic)}
-                  size="small"
+      <Grid
+        container
+        spacing={2}
+        //   justifyContent="center"
+        style={{ padding: 20, paddingTop: "25px" }}
+      >
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <div className="tactic-selection">
+              <h3>Selected Tactics</h3>
+              {selectedRows.map((tactic) => (
+                <div
+                  key={tactic.id}
+                  style={{ display: "flex", alignItems: "center" }}
                 >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              </div>
-            ))}
-          </div>
-        </Paper>
-
-        <Paper style={{ padding: "20px", marginBottom: "20px" }}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Select a Placement Type</FormLabel>
-
-            <RadioGroup value={placementID} onChange={handleSetPlacementType}>
-              {placementData.map((placement) => (
-                <FormControlLabel
-                  key={placement.id}
-                  value={placement.id}
-                  control={<Radio />}
-                  label={placement.placement_type_name}
-                />
+                  <Typography style={{ marginRight: "8px" }}>
+                    {tactic.tactName}
+                  </Typography>
+                  <IconButton
+                    onClick={() => handleRemoveTactic(tactic)}
+                    size="small"
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                </div>
               ))}
-            </RadioGroup>
-          </FormControl>
-        </Paper>
+            </div>
+          </Paper>
+        </Grid>
 
-        <Paper style={{ padding: "20px", marginBottom: "20px" }}>
-          <div className="placement-details">
-            <h3>Add Placement Details</h3>
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Select a Placement Type</FormLabel>
 
-            <TextField
-              value={startDate}
-              onChange={handleStartDate}
-              id="start-date"
-              label="Start"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              value={endDate}
-              onChange={handleEndDate}
-              id="end-date"
-              label="End"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+              <RadioGroup value={placementID} onChange={handleSetPlacementType}>
+                {placementData.map((placement) => (
+                  <FormControlLabel
+                    key={placement.id}
+                    value={placement.id}
+                    control={<Radio />}
+                    label={placement.placement_type_name}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Paper>
+        </Grid>
 
-            <TextField
-              id="description"
-              label="Description"
-              multiline
-              rows={4}
-              onChange={handleDesc}
-              value={description}
-            />
-          </div>
-        </Paper>
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <div className="placement-details">
+              <h3>Add Placement Details</h3>
 
-        <Paper style={{ padding: "20px", marginBottom: "20px" }}>
-          <div className="audience-definition">
-            <h3>Define the Audience</h3>
-            <TextField
-              onChange={handleAudience}
-              value={audience}
-              id="audience-details"
-              label="Audience details"
-              multiline
-              rows={4}
-            />
-          </div>
-        </Paper>
+              <TextField
+              sx={{paddingRight: "35px"}}
+                value={startDate}
+                onChange={handleStartDate}
+                id="start-date"
+                label="Start"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+              
+                value={endDate}
+                onChange={handleEndDate}
+                id="end-date"
+                label="End"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
 
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <TextField
+              sx={{paddingTop: "20px", width: "360px", }}
+                id="description"
+                placeholder="Description"
+                // multiline
+                // rows={4}
+                onChange={handleDesc}
+                value={description}
+              />
+            </div>
+          </Paper>
+        </Grid>
+
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <div className="audience-definition">
+              <h3>Define the Audience</h3>
+              <TextField
+              sx={{width: "360px"}}
+                onChange={handleAudience}
+                value={audience}
+                id="audience-details"
+                placeholder="Audience details"
+                // multiline
+                // rows={4}
+              />
+            </div>
+          </Paper>
+        </Grid>
+
+        <Grid
+        container
+        justifyContent="flex-end"
+        style={{ marginTop: 20, paddingRight: "155px" }}
+      >
           <Button
             variant="contained"
             sx={{ backgroundColor: "#FF7F50" }}
@@ -263,8 +286,8 @@ export default function EditTactics({
               </Button>
             </DialogActions>
           </Dialog>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }
