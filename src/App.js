@@ -9,6 +9,7 @@ import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
 import Collaborators from "./components/collaborators/Collaborators";
 
 function App() {
+  const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
   const [owner, setOwner] = useState("");
   const [auth, setAuth] = useState("");
 
@@ -23,6 +24,31 @@ function App() {
     handleSetDash();
   };
 
+  const getAccessToken = (e, email, password) => {
+    e.preventDefault();
+    console.log(email, password)
+    
+    const apiOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      redirect: "follow",
+    }
+    fetch(`${API_BASE_URL}/api/users/token/obtain/`, apiOptions)
+    .then((res) => res.json())
+    .then(data => {
+      data && setAuth(data?.access)
+    })
+    .catch(e => console.log(e))
+    setOwner(email)
+    handleSetDash()
+  }
+console.log(owner)
   const handleSetDash = () => {
     navigate("/dashlanding");
   };
@@ -187,7 +213,7 @@ function App() {
           />
         </Routes>
       )}
-      {!auth ? <SignIn handleSubmit={handleSubmit} /> : null}
+      {!auth ? <SignIn handleSubmit={handleSubmit} getAccessToken={getAccessToken} /> : null}
     </div>
   );
 }

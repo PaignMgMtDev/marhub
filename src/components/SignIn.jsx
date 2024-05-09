@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const defaultTheme = createTheme();
 
-export default function SignIn({ handleSubmit }) {
+export default function SignIn({ handleSubmit, getAccessToken }) {
   
   const [email, setEmail] = useState(null)
   const [emailError, setEmailError] = useState(null)
@@ -28,7 +28,7 @@ export default function SignIn({ handleSubmit }) {
 
   const handleEmailChange = (e) => {
     const input = e?.target?.value
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.(?:com|org|net)$/i;
     if(emailRegex.test(input)){
       setEmailError(false)
       setEmail(input)
@@ -71,7 +71,7 @@ export default function SignIn({ handleSubmit }) {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={(e) => getAccessToken(e, email, password)}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -110,6 +110,8 @@ export default function SignIn({ handleSubmit }) {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={email && password ? false : true}
+              // onSubmit={(e) => getAccessToken(e, email, password)}
             >
               Sign In
             </Button>
