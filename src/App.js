@@ -16,7 +16,7 @@ function App() {
 
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
-    console.log(email, password)
+    
     
     const apiOptions = {
       method: "POST",
@@ -38,7 +38,7 @@ function App() {
     setOwner(email)
     handleSetDash()
   }
-console.log(owner)
+
   const handleSetDash = () => {
     navigate("/dashlanding");
   };

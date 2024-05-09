@@ -54,45 +54,40 @@ export default function EditTactics({
     setAudience(event.target.value);
   };
 
-  
-  async function fetchPlacementTypes() {
-    const tacticsIds = selectedRows.map((tactic) => tactic.id);
-    const url =
-      "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
-    const headers = new Headers({
-      Authorization: `Bearer ${auth}`,
-      "Content-Type": "application/json",
-    });
-
-    const requestOptions = {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        tactics: tacticsIds,
-      }),
-      redirect: "follow",
-    };
-
-    try {
-      const response = await fetch(url, requestOptions);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const result = await response.json(); // Assuming the response is JSON
-      console.log(result);
-      return result;
-    } catch (error) {
-      console.error("Error fetching placement types:", error);
-    }
-  }
-
+ 
   useEffect(() => {
-    fetchPlacementTypes().then((data) => {
-      if (data) {
-        setPlacementData(data);
+    async function fetchPlacementTypes() {
+      const tacticsIds = selectedRows.map((tactic) => tactic.id);
+      const url = "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
+      const headers = new Headers({
+        Authorization: `Bearer ${auth}`,
+        "Content-Type": "application/json",
+      });
+  
+      const requestOptions = {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+          tactics: tacticsIds,
+        }),
+        redirect: "follow",
+      };
+  
+      try {
+        const response = await fetch(url, requestOptions);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log(result);
+        setPlacementData(result);
+      } catch (error) {
+        console.error("Error fetching placement types:", error);
       }
-    });
-  }, []);
+    }
+  
+    fetchPlacementTypes();
+  }, [selectedRows, auth]);
 
   const sendForm = () => {
     const tacticsIds = selectedRows.map((tactic) => tactic.id);
@@ -192,7 +187,7 @@ export default function EditTactics({
                     key={item.placement_type.id} 
                     value={item.placement_type.id} 
                     control={<Radio />}
-                    label={item.placement_type.placement_type_name} 
+                    label={item.placement_type.placement_type_name} // Access `placement_type_name` from `placement_type`
                   />
                 ))}
               </RadioGroup>
