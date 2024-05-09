@@ -249,7 +249,7 @@
 //   );
 // }
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Paper,
   TextField,
@@ -261,7 +261,8 @@ import {
   IconButton,
   Grid,
   Checkbox,
-  FormGroup,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import CloseIcon from "@mui/icons-material/Close";
@@ -280,6 +281,7 @@ export default function RendReqConfig({
   const [description, setDescription] = useState("");
   const [localizationChecked, setLocalizationChecked] = useState(false);
   const [translationsChecked, setTranslationsChecked] = useState(false);
+  const [placementData, setPlacementData] = useState([]);
 
   const handleLocalizationChange = () =>
     setLocalizationChecked(!localizationChecked);
@@ -294,30 +296,67 @@ export default function RendReqConfig({
     setDescription(event.target.value);
   };
 
-  // const sendForm = () => {
-  //   const tacticsIds = selectedRows.map((tactic) => tactic.id);
-  //   const placementIdNumber = Number(placementID);
-  //   fetch("", {
-  //     method: "POST",
-  //     headers: {
-  //       Authorization: `Bearer ${auth}`,
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       tactics: tacticsIds,
-  //       placement_type: placementIdNumber,
-  //       placement_description: description,
-  //     }),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log(data);
 
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //     });
-  // };
+  useEffect(() => {
+    async function fetchPlacementTypes() {
+      const tacticsIds = selectedRows.map((tactic) => tactic.id);
+      const url = "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
+      const headers = new Headers({
+        Authorization: `Bearer ${auth}`,
+        "Content-Type": "application/json",
+      });
+  
+      const requestOptions = {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+          tactics: tacticsIds,
+        }),
+        redirect: "follow",
+      };
+  
+      try {
+        const response = await fetch(url, requestOptions);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log(result);
+        setPlacementData(result);
+      } catch (error) {
+        console.error("Error fetching placement types:", error);
+      }
+    }
+  
+    fetchPlacementTypes();
+  }, [selectedRows, auth]);
+
+  const sendForm = () => {
+    const tacticsIds = selectedRows.map((tactic) => tactic.id);
+    const placementIdNumber = Number(placementID);
+    fetch("https://campaign-app-api-staging.azurewebsites.net/api/mihp/rendition-request/", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${auth}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        tactics: tacticsIds,
+        placement_type: placementIdNumber,
+        localization: localizationChecked,
+        translation: translationsChecked,
+        rendition_description: description,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        handleCollabs()
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
   const handleRemoveTactic = (tactic) => {
     const filteredTactics = selectedRows.filter((t) => t !== tactic);
@@ -370,23 +409,16 @@ export default function RendReqConfig({
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Select A Placement</FormLabel>
-              <FormGroup value={placementID} onChange={handleSetPlacementType}>
-                <FormControlLabel
-                  value="1"
-                  control={<Checkbox />}
-                  label="Primary"
-                />
-                <FormControlLabel
-                  value="2"
-                  control={<Checkbox />}
-                  label="Secondary"
-                />
-                <FormControlLabel
-                  value="3"
-                  control={<Checkbox />}
-                  label="Co Brand"
-                />
-              </FormGroup>
+              <RadioGroup value={placementID} onChange={handleSetPlacementType}>
+                {placementData.map((item) => (
+                  <FormControlLabel
+                    key={item.placement_type.id} 
+                    value={item.placement_type.id} 
+                    control={<Radio />}
+                    label={item.placement_type.placement_type_name} 
+                  />
+                ))}
+              </RadioGroup>
             </FormControl>
           </Paper>
         </Grid>
@@ -444,7 +476,7 @@ export default function RendReqConfig({
         <Button
           variant="contained"
           sx={{ backgroundColor: "#FF7F50" }}
-          onClick={handleCollabs}
+          onClick={sendForm}
         >
           Select Collaborators
         </Button>

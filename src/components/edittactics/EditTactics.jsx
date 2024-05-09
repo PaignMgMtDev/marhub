@@ -54,41 +54,40 @@ export default function EditTactics({
     setAudience(event.target.value);
   };
 
-  async function fetchPlacementTypes() {
-    const url =
-      "https://campaign-app-api-staging.azurewebsites.net/api/contentframework/get-placement-types/";
-    const headers = new Headers({
-      Authorization:
-        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw",
-      "Content-Type": "application/json",
-    });
-
-    const requestOptions = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow",
-    };
-
-    try {
-      const response = await fetch(url, requestOptions);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const result = await response.json(); // Assuming the response is JSON
-      console.log(result);
-      return result;
-    } catch (error) {
-      console.error("Error fetching placement types:", error);
-    }
-  }
-
+ 
   useEffect(() => {
-    fetchPlacementTypes().then((data) => {
-      if (data) {
-        setPlacementData(data);
+    async function fetchPlacementTypes() {
+      const tacticsIds = selectedRows.map((tactic) => tactic.id);
+      const url = "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
+      const headers = new Headers({
+        Authorization: `Bearer ${auth}`,
+        "Content-Type": "application/json",
+      });
+  
+      const requestOptions = {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+          tactics: tacticsIds,
+        }),
+        redirect: "follow",
+      };
+  
+      try {
+        const response = await fetch(url, requestOptions);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log(result);
+        setPlacementData(result);
+      } catch (error) {
+        console.error("Error fetching placement types:", error);
       }
-    });
-  }, []);
+    }
+  
+    fetchPlacementTypes();
+  }, [selectedRows, auth]);
 
   const sendForm = () => {
     const tacticsIds = selectedRows.map((tactic) => tactic.id);
@@ -183,12 +182,12 @@ export default function EditTactics({
               <FormLabel component="legend">Select a Placement Type</FormLabel>
 
               <RadioGroup value={placementID} onChange={handleSetPlacementType}>
-                {placementData.map((placement) => (
+                {placementData.map((item) => (
                   <FormControlLabel
-                    key={placement.id}
-                    value={placement.id}
+                    key={item.placement_type.id} 
+                    value={item.placement_type.id} 
                     control={<Radio />}
-                    label={placement.placement_type_name}
+                    label={item.placement_type.placement_type_name} // Access `placement_type_name` from `placement_type`
                   />
                 ))}
               </RadioGroup>
@@ -202,7 +201,7 @@ export default function EditTactics({
               <h3>Add Placement Details</h3>
 
               <TextField
-              sx={{paddingRight: "35px"}}
+                sx={{ paddingRight: "35px" }}
                 value={startDate}
                 onChange={handleStartDate}
                 id="start-date"
@@ -213,7 +212,6 @@ export default function EditTactics({
                 }}
               />
               <TextField
-              
                 value={endDate}
                 onChange={handleEndDate}
                 id="end-date"
@@ -225,7 +223,7 @@ export default function EditTactics({
               />
 
               <TextField
-              sx={{paddingTop: "20px", width: "360px", }}
+                sx={{ paddingTop: "20px", width: "360px" }}
                 id="description"
                 placeholder="Description"
                 // multiline
@@ -242,7 +240,7 @@ export default function EditTactics({
             <div className="audience-definition">
               <h3>Define the Audience</h3>
               <TextField
-              sx={{width: "360px"}}
+                sx={{ width: "360px" }}
                 onChange={handleAudience}
                 value={audience}
                 id="audience-details"
@@ -255,10 +253,10 @@ export default function EditTactics({
         </Grid>
 
         <Grid
-        container
-        justifyContent="flex-end"
-        style={{ marginTop: 20, paddingRight: "155px" }}
-      >
+          container
+          justifyContent="flex-end"
+          style={{ marginTop: 20, paddingRight: "155px" }}
+        >
           <Button
             variant="contained"
             sx={{ backgroundColor: "#FF7F50" }}
