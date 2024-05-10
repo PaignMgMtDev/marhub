@@ -39,13 +39,14 @@ export default function SignIn({  getAccessToken }) {
 
   const handlePasswordChange = (e) => {
     const input = e?.target?.value
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
-    if(passwordRegex.test(input)){
-      setPasswordError(false)
-      setPassword(input)
-    }else{
-      setPasswordError(true)
-    }
+    setPassword(input)
+    // const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
+    // if(passwordRegex.test(input)){
+    //   setPasswordError(false)
+    //   setPassword(input)
+    // }else{
+    //   setPasswordError(true)
+    // }
   }
 
   const emailErrorMessage = "Please input a valid email."
