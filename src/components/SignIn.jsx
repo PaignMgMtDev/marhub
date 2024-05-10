@@ -24,7 +24,7 @@ export default function SignIn({  getAccessToken }) {
   const [emailError, setEmailError] = useState(null)
 
   const [password, setPassword] = useState(null)
-  const [passwordError, setPasswordError] = useState(null)
+  // const [passwordError, setPasswordError] = useState(null)
 
   const handleEmailChange = (e) => {
     const input = e?.target?.value
@@ -99,8 +99,8 @@ export default function SignIn({  getAccessToken }) {
               id="password"
               autoComplete="current-password"
               onChange={(e) => handlePasswordChange(e)}
-              error={passwordError}
-              helperText={passwordError && passwordErrorMessage}
+              // error={passwordError}
+              // helperText={passwordError && passwordErrorMessage}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
