@@ -50,7 +50,7 @@ export default function SignIn({  getAccessToken }) {
   }
 
   const emailErrorMessage = "Please input a valid email."
-  const passwordErrorMessage = "Please input a valid password."
+  // const passwordErrorMessage = "Please input a valid password."
 
   return (
     <ThemeProvider theme={defaultTheme}>
