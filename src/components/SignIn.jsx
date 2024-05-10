@@ -24,7 +24,7 @@ export default function SignIn({  getAccessToken }) {
   const [emailError, setEmailError] = useState(null)
 
   const [password, setPassword] = useState(null)
-  const [passwordError, setPasswordError] = useState(null)
+  // const [passwordError, setPasswordError] = useState(null)
 
   const handleEmailChange = (e) => {
     const input = e?.target?.value
@@ -39,17 +39,18 @@ export default function SignIn({  getAccessToken }) {
 
   const handlePasswordChange = (e) => {
     const input = e?.target?.value
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
-    if(passwordRegex.test(input)){
-      setPasswordError(false)
-      setPassword(input)
-    }else{
-      setPasswordError(true)
-    }
+    setPassword(input)
+    // const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
+    // if(passwordRegex.test(input)){
+    //   setPasswordError(false)
+    //   setPassword(input)
+    // }else{
+    //   setPasswordError(true)
+    // }
   }
 
   const emailErrorMessage = "Please input a valid email."
-  const passwordErrorMessage = "Please input a valid password."
+  // const passwordErrorMessage = "Please input a valid password."
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -98,8 +99,8 @@ export default function SignIn({  getAccessToken }) {
               id="password"
               autoComplete="current-password"
               onChange={(e) => handlePasswordChange(e)}
-              error={passwordError}
-              helperText={passwordError && passwordErrorMessage}
+              // error={passwordError}
+              // helperText={passwordError && passwordErrorMessage}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
