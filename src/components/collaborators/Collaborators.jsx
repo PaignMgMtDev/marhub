@@ -103,7 +103,7 @@ console.log(addedAttributes)
       {users.map((user) => (
         <Grid container key={user.user.id} alignItems="center" spacing={1}>
           <Grid item xs>
-            <Typography>{user.user.first_name}</Typography>
+            <Button variant='link'>{user.user.first_name} {user.user.last_name}</Button>
           </Grid>
           <Grid item>
             {/* <IconButton
