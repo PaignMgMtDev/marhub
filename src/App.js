@@ -6,6 +6,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
+import Rendition from "./components/rendition/Rendition";
 import Collaborators from "./components/collaborators/Collaborators";
 
 function App() {
@@ -16,7 +17,6 @@ function App() {
 
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
-    
     
     const apiOptions = {
       method: "POST",
@@ -199,6 +199,12 @@ function App() {
                 rendition={rendition}
                 handleCollabs={handleCollabs}
               />
+            }
+          />
+          <Route
+            path="/renditions/:tactic"
+            element={
+              <Rendition auth={auth} />
             }
           />
         </Routes>

@@ -1,0 +1,65 @@
+@use './variables';
+@use './mixins';
+
+body{
+    position: relative;
+    background-color: whitesmoke;
+    margin: 0 !important;
+}
+
+.rendition{
+    @include mixins.default-grid;
+
+    &__backdrop{
+        background-color: whitesmoke !important;
+    }
+
+    .title-bar{
+        background-color: white;
+        margin-bottom: 1rem;
+
+        &__back{
+            color: black;
+        }
+
+        &__submit{
+            margin-left: auto;
+            text-transform: unset;
+        }
+    }
+
+    .treatment{
+        margin: 0 1rem;
+        border-radius: 0.7rem;
+        padding: 2rem 1rem;
+    }
+
+    .module{
+        cursor: pointer;
+        position: relative;
+        
+        &:hover{
+            outline: 2px solid coral;
+
+            .module__name{
+                display: block;
+            }
+        }
+
+        &__name{
+            display: none;
+            background-color: coral;
+            padding: 0.25rem 0.35rem;
+            position: absolute;
+            top: -1.9rem;
+            left: -0.15rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    .edit-form{
+        &__text-input{
+            width: 100%;
+        }
+    }
+}
