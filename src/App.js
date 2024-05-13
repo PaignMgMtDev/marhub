@@ -17,7 +17,7 @@ function App() {
 
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
-    
+
     const apiOptions = {
       method: "POST",
       headers: {
@@ -36,7 +36,7 @@ function App() {
     })
     .catch(e => console.log(e))
     setOwner(email)
-    handleSetDash()
+    // handleSetDash()
   }
 
   const handleSetDash = () => {
