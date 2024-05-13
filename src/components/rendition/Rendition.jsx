@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Button, Typography, Box, Stack, CircularProgress, Backdrop, Card, CardMedia, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { Button, Typography, Box, Stack, CircularProgress, Backdrop, Card, CardMedia, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { KeyboardBackspace, Link } from '@mui/icons-material';
 import { useParams } from "react-router-dom";
 // import { apiBaseUrl } from "../../api";
 import axios from 'axios';
-import Header from "../header/Header";
+// import Header from "../header/Header";
 import "./styles/rendition.scss";
 
 export default function Rendition({ auth }) {
@@ -20,14 +20,14 @@ export default function Rendition({ auth }) {
 
   const apiBaseUrl = 'https://campaign-app-api-staging.azurewebsites.net';
 
-  const authHeader = {
+  const authHeader = useMemo(() => ({
     headers: {
       Authorization: `Bearer ${auth}`,
       "Content-Type": "application/json",
     },
-  };
+  }), [auth]);
 
-  const loadRendition = async () => {
+  const loadRendition = useCallback(async () => {
     console.log('loading rendition...')
     try {
       let response = await axios.get(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`, authHeader)
@@ -39,7 +39,7 @@ export default function Rendition({ auth }) {
       console.log(err.message, err.code)
       setDataLoaded('error')
     }
-  };
+  }, [apiBaseUrl, tactic, authHeader]);
 
   const handleInputChange = (event, detailId) => {
     const { value } = event.target;
@@ -80,7 +80,7 @@ export default function Rendition({ auth }) {
     if (!dataLoaded) {
       loadRendition()
     }
-  }, [dataLoaded, tactic])
+  }, [dataLoaded, tactic, loadRendition])
 
   useEffect(() => {
     if (selectedModule.module_id) {
