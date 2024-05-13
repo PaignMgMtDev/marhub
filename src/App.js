@@ -6,11 +6,8 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
-<<<<<<< HEAD
 import Rendition from "./components/rendition/Rendition";
-=======
 import Collaborators from "./components/collaborators/Collaborators";
->>>>>>> 3861df6ec73a58998a5aff02305ce8994d6813b7
 
 function App() {
   const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
@@ -18,17 +15,8 @@ function App() {
   const [auth, setAuth] = useState("");
 
 
-<<<<<<< HEAD
-    setAuth(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3Nzc0NTUzLCJpYXQiOjE3MTUxODI1NTMsImp0aSI6IjFjNWVhMjAyMGM1MTQ0NzJiMjY4N2I0ZDJiYmYwMmIzIiwidXNlcl9pZCI6MX0.VTDf2K6LcM7TRUqMkLadu38vSPImG1eTr-wD0ZAvgIY"
-    );
-    setOwner(data.get("email"));
-    // handleSetDash();
-  };
-=======
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
-    
     
     const apiOptions = {
       method: "POST",
@@ -50,7 +38,6 @@ function App() {
     setOwner(email)
     handleSetDash()
   }
->>>>>>> 3861df6ec73a58998a5aff02305ce8994d6813b7
 
   const handleSetDash = () => {
     navigate("/dashlanding");
