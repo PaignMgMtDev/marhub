@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,8 +18,39 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const defaultTheme = createTheme();
 
-export default function SignIn({ handleSubmit }) {
+export default function SignIn({  getAccessToken }) {
   
+  const [email, setEmail] = useState(null)
+  const [emailError, setEmailError] = useState(null)
+
+  const [password, setPassword] = useState(null)
+  // const [passwordError, setPasswordError] = useState(null)
+
+  const handleEmailChange = (e) => {
+    const input = e?.target?.value
+    const emailRegex = /^[^\s@]+@[^\s@]+\.(?:com|org|net)$/i;
+    if(emailRegex.test(input)){
+      setEmailError(false)
+      setEmail(input)
+    }else{
+      setEmailError(true)
+    }
+  }
+
+  const handlePasswordChange = (e) => {
+    const input = e?.target?.value
+    setPassword(input)
+    // const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/;
+    // if(passwordRegex.test(input)){
+    //   setPasswordError(false)
+    //   setPassword(input)
+    // }else{
+    //   setPasswordError(true)
+    // }
+  }
+
+  const emailErrorMessage = "Please input a valid email."
+  // const passwordErrorMessage = "Please input a valid password."
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -40,7 +72,7 @@ export default function SignIn({ handleSubmit }) {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={(e) => getAccessToken(e, email, password)}
             noValidate
             sx={{ mt: 1 }}
           >
@@ -53,6 +85,9 @@ export default function SignIn({ handleSubmit }) {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={(e) => handleEmailChange(e)}
+              error={emailError}
+              helperText={emailError && emailErrorMessage}
             />
             <TextField
               margin="normal"
@@ -63,6 +98,9 @@ export default function SignIn({ handleSubmit }) {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(e) => handlePasswordChange(e)}
+              // error={passwordError}
+              // helperText={passwordError && passwordErrorMessage}
             />
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -73,6 +111,8 @@ export default function SignIn({ handleSubmit }) {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={email && password ? false : true}
+              // onSubmit={(e) => getAccessToken(e, email, password)}
             >
               Sign In
             </Button>

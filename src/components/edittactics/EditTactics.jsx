@@ -15,6 +15,7 @@ import {
   DialogTitle,
   Typography,
   IconButton,
+  Grid,
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,7 +27,7 @@ export default function EditTactics({
   auth,
   tacticForm,
   backTact,
- rendition
+  rendition,
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [scrapeID, setScrapeID] = useState("");
@@ -53,41 +54,40 @@ export default function EditTactics({
     setAudience(event.target.value);
   };
 
-  async function fetchPlacementTypes() {
-    const url =
-      "https://campaign-app-api-staging.azurewebsites.net/api/contentframework/get-placement-types/";
-    const headers = new Headers({
-      Authorization:
-        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2NjQ5MzgzLCJpYXQiOjE3MTQwNTczODMsImp0aSI6IjljN2Y3YjEwMDUwNjRhYzQ5YjJlOTQwNGI0YWUwOGI3IiwidXNlcl9pZCI6MTN9.NCTkmKTYQzpIl8xqtcxYWrK7gpt3cYBFiykoM7hkMRw",
-      "Content-Type": "application/json",
-    });
-
-    const requestOptions = {
-      method: "GET",
-      headers: headers,
-      redirect: "follow",
-    };
-
-    try {
-      const response = await fetch(url, requestOptions);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const result = await response.json(); // Assuming the response is JSON
-      console.log(result);
-      return result;
-    } catch (error) {
-      console.error("Error fetching placement types:", error);
-    }
-  }
-
+ 
   useEffect(() => {
-    fetchPlacementTypes().then((data) => {
-      if (data) {
-        setPlacementData(data);
+    async function fetchPlacementTypes() {
+      const tacticsIds = selectedRows.map((tactic) => tactic.id);
+      const url = "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
+      const headers = new Headers({
+        Authorization: `Bearer ${auth}`,
+        "Content-Type": "application/json",
+      });
+  
+      const requestOptions = {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+          tactics: tacticsIds,
+        }),
+        redirect: "follow",
+      };
+  
+      try {
+        const response = await fetch(url, requestOptions);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const result = await response.json();
+        console.log(result);
+        setPlacementData(result);
+      } catch (error) {
+        console.error("Error fetching placement types:", error);
       }
-    });
-  }, []);
+    }
+  
+    fetchPlacementTypes();
+  }, [selectedRows, auth]);
 
   const sendForm = () => {
     const tacticsIds = selectedRows.map((tactic) => tactic.id);
@@ -135,107 +135,128 @@ export default function EditTactics({
   };
   return (
     <div>
-      <center>
-        <CampHeader 
-        campaignName={campaignName} 
-        tacticForm={tacticForm}
-        backTact={backTact}
-        rendition={rendition}
-       
-        />
-      </center>
+      <Grid container justifyContent="center">
+        <Grid item>
+          <CampHeader
+            campaignName={campaignName}
+            tacticForm={tacticForm}
+            backTact={backTact}
+            rendition={rendition}
+          />
+        </Grid>
+      </Grid>
 
-      <div className="content-container" style={{ padding: "20px" }}>
-        <Paper style={{ padding: "20px", marginBottom: "20px" }}>
-          <div className="tactic-selection">
-            <h3>Selected Tactics</h3>
-            {selectedRows.map((tactic) => (
-              <div
-                key={tactic.id}
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <Typography style={{ marginRight: "8px" }}>
-                  {tactic.tactName}
-                </Typography>
-                <IconButton
-                  onClick={() => handleRemoveTactic(tactic)}
-                  size="small"
+      <Grid
+        container
+        spacing={2}
+        //   justifyContent="center"
+        style={{ padding: 20, paddingTop: "25px" }}
+      >
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <div className="tactic-selection">
+              <h3>Selected Tactics</h3>
+              {selectedRows.map((tactic) => (
+                <div
+                  key={tactic.id}
+                  style={{ display: "flex", alignItems: "center" }}
                 >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              </div>
-            ))}
-          </div>
-        </Paper>
-
-        <Paper style={{ padding: "20px", marginBottom: "20px" }}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Select a Placement Type</FormLabel>
-
-            <RadioGroup value={placementID} onChange={handleSetPlacementType}>
-              {placementData.map((placement) => (
-                <FormControlLabel
-                  key={placement.id}
-                  value={placement.id}
-                  control={<Radio />}
-                  label={placement.placement_type_name}
-                />
+                  <Typography style={{ marginRight: "8px" }}>
+                    {tactic.tactName}
+                  </Typography>
+                  <IconButton
+                    onClick={() => handleRemoveTactic(tactic)}
+                    size="small"
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                </div>
               ))}
-            </RadioGroup>
-          </FormControl>
-        </Paper>
+            </div>
+          </Paper>
+        </Grid>
 
-        <Paper style={{ padding: "20px", marginBottom: "20px" }}>
-          <div className="placement-details">
-            <h3>Add Placement Details</h3>
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Select a Placement Type</FormLabel>
 
-            <TextField
-              value={startDate}
-              onChange={handleStartDate}
-              id="start-date"
-              label="Start"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              value={endDate}
-              onChange={handleEndDate}
-              id="end-date"
-              label="End"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+              <RadioGroup value={placementID} onChange={handleSetPlacementType}>
+                {placementData.map((item) => (
+                  <FormControlLabel
+                    key={item.placement_type.id} 
+                    value={item.placement_type.id} 
+                    control={<Radio />}
+                    label={item.placement_type.placement_type_name} // Access `placement_type_name` from `placement_type`
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Paper>
+        </Grid>
 
-            <TextField
-              id="description"
-              label="Description"
-              multiline
-              rows={4}
-              onChange={handleDesc}
-              value={description}
-            />
-          </div>
-        </Paper>
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <div className="placement-details">
+              <h3>Add Placement Details</h3>
 
-        <Paper style={{ padding: "20px", marginBottom: "20px" }}>
-          <div className="audience-definition">
-            <h3>Define the Audience</h3>
-            <TextField
-              onChange={handleAudience}
-              value={audience}
-              id="audience-details"
-              label="Audience details"
-              multiline
-              rows={4}
-            />
-          </div>
-        </Paper>
+              <TextField
+                sx={{ paddingRight: "35px" }}
+                value={startDate}
+                onChange={handleStartDate}
+                id="start-date"
+                label="Start"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                value={endDate}
+                onChange={handleEndDate}
+                id="end-date"
+                label="End"
+                type="date"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
 
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <TextField
+                sx={{ paddingTop: "20px", width: "360px" }}
+                id="description"
+                placeholder="Description"
+                // multiline
+                // rows={4}
+                onChange={handleDesc}
+                value={description}
+              />
+            </div>
+          </Paper>
+        </Grid>
+
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <div className="audience-definition">
+              <h3>Define the Audience</h3>
+              <TextField
+                sx={{ width: "360px" }}
+                onChange={handleAudience}
+                value={audience}
+                id="audience-details"
+                placeholder="Audience details"
+                // multiline
+                // rows={4}
+              />
+            </div>
+          </Paper>
+        </Grid>
+
+        <Grid
+          container
+          justifyContent="flex-end"
+          style={{ marginTop: 20, paddingRight: "155px" }}
+        >
           <Button
             variant="contained"
             sx={{ backgroundColor: "#FF7F50" }}
@@ -263,8 +284,8 @@ export default function EditTactics({
               </Button>
             </DialogActions>
           </Dialog>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }

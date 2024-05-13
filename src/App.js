@@ -6,22 +6,51 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
+<<<<<<< HEAD
 import Rendition from "./components/rendition/Rendition";
+=======
+import Collaborators from "./components/collaborators/Collaborators";
+>>>>>>> 3861df6ec73a58998a5aff02305ce8994d6813b7
 
 function App() {
+  const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
   const [owner, setOwner] = useState("");
   const [auth, setAuth] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
+<<<<<<< HEAD
     setAuth(
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3Nzc0NTUzLCJpYXQiOjE3MTUxODI1NTMsImp0aSI6IjFjNWVhMjAyMGM1MTQ0NzJiMjY4N2I0ZDJiYmYwMmIzIiwidXNlcl9pZCI6MX0.VTDf2K6LcM7TRUqMkLadu38vSPImG1eTr-wD0ZAvgIY"
     );
     setOwner(data.get("email"));
     // handleSetDash();
   };
+=======
+  const getAccessToken = (e, email, password) => {
+    e.preventDefault();
+    
+    
+    const apiOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      redirect: "follow",
+    }
+    fetch(`${API_BASE_URL}/api/users/token/obtain/`, apiOptions)
+    .then((res) => res.json())
+    .then(data => {
+      data && setAuth(data?.access)
+    })
+    .catch(e => console.log(e))
+    setOwner(email)
+    handleSetDash()
+  }
+>>>>>>> 3861df6ec73a58998a5aff02305ce8994d6813b7
 
   const handleSetDash = () => {
     navigate("/dashlanding");
@@ -75,6 +104,10 @@ function App() {
    
   };
 
+  const handleCollabs = () => {
+    navigate("/collaborators")
+  }
+
   const tacticRows = tacticData.map((tactic) => ({
     id: tactic.id,
     tactName: tactic.name,
@@ -92,16 +125,10 @@ function App() {
         return row ? { id: row.id, tactName: row.tactName } : null;
       })
       .filter((tactic) => tactic !== null);
-    console.log(selectedTactics);
+    
     setSelectedRows(selectedTactics);
   };
 
-  // const handleSelectionChange = (selectionModel) => {
-  //   const selectedTacticNames = selectionModel.map(
-  //     (id) => tacticRows.find((row) => row.id === id)?.tactName
-  //   );
-  //   setSelectedRows(selectedTacticNames);
-  // };
 
   let navigate = useNavigate();
 
@@ -168,6 +195,22 @@ function App() {
                 backTact={backTact}
                 tacticForm={tacticForm}
                 rendition={rendition}
+                handleCollabs={handleCollabs}
+              />
+            }
+          />
+          <Route
+            path="/collaborators"
+            element={
+              <Collaborators
+                campaignName={campaignName}
+                selectedRows={selectedRows}
+                setSelectedRows={setSelectedRows}
+                auth={auth}
+                backTact={backTact}
+                tacticForm={tacticForm}
+                rendition={rendition}
+                handleCollabs={handleCollabs}
               />
             }
           />
@@ -179,7 +222,7 @@ function App() {
           />
         </Routes>
       )}
-      {!auth ? <SignIn handleSubmit={handleSubmit} /> : null}
+      {!auth ? <SignIn getAccessToken={getAccessToken} /> : null}
     </div>
   );
 }
