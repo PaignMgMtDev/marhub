@@ -14,8 +14,7 @@ function App() {
   const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
   const [owner, setOwner] = useState("");
   const [auth, setAuth] = useState("");
-
-
+  
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
     
@@ -146,7 +145,7 @@ function App() {
           setAuth("");
         } else {
           setAuth(token);
-          handleSetDash();
+          navigate("/dashlanding");
           // getOrgs(token)
         }
       } catch (error) {
@@ -157,7 +156,7 @@ function App() {
     if (token) {
       verifyToken(token);
     }
-  }, [API_BASE_URL]);
+  }, [API_BASE_URL,navigate]);
 
   useEffect(() => {
     Cookies.set("authentication", auth);
