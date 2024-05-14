@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import SignIn from "./components/SignIn";
 import DashLanding from "./components/dashlanding/DashLanding";
@@ -8,13 +8,13 @@ import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
 import Rendition from "./components/rendition/Rendition";
 import Collaborators from "./components/collaborators/Collaborators";
+import Cookies from "js-cookie";
 
 function App() {
   const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
   const [owner, setOwner] = useState("");
   const [auth, setAuth] = useState("");
-
-
+  
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
     
@@ -91,8 +91,11 @@ function App() {
    
   };
 
-  const handleCollabs = () => {
+
+  const [renditionDetails, setRenditionDetails] = useState(false);
+  const handleCollabs = (data) => {
     navigate("/collaborators")
+    setRenditionDetails(data);
   }
 
   const tacticRows = tacticData.map((tactic) => ({
@@ -118,6 +121,46 @@ function App() {
 
 
   let navigate = useNavigate();
+
+
+  useEffect(() => {
+
+    const token = Cookies.get("authentication");
+
+    async function verifyToken(token) {
+      try {
+        const response = await fetch(`https://campaign-app-api-staging.azurewebsites.net/api/users/token/verify/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+          redirect: "follow",
+        });
+
+        const data = await response.json();
+
+        if (data.detail) {
+          Cookies.remove("authentication");
+          setAuth("");
+        } else {
+          setAuth(token);
+          navigate("/dashlanding");
+          // getOrgs(token)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (token) {
+      verifyToken(token);
+    }
+  }, [API_BASE_URL,navigate]);
+
+  useEffect(() => {
+    Cookies.set("authentication", auth);
+  }, [auth]);
 
   return (
     <div className="App">
@@ -198,6 +241,7 @@ function App() {
                 tacticForm={tacticForm}
                 rendition={rendition}
                 handleCollabs={handleCollabs}
+                renditionDetails={renditionDetails}
               />
             }
           />
