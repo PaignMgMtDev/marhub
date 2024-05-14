@@ -123,40 +123,40 @@ function App() {
   let navigate = useNavigate();
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const token = Cookies.get("authentication");
+  //   const token = Cookies.get("authentication");
 
-    async function verifyToken(token) {
-      try {
-        const response = await fetch(`https://campaign-app-api-staging.azurewebsites.net/api/users/token/verify/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token }),
-          redirect: "follow",
-        });
+  //   async function verifyToken(token) {
+  //     try {
+  //       const response = await fetch(`https://campaign-app-api-staging.azurewebsites.net/api/users/token/verify/`, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ token }),
+  //         redirect: "follow",
+  //       });
 
-        const data = await response.json();
+  //       const data = await response.json();
 
-        if (data.detail) {
-          Cookies.remove("authentication");
-          setAuth("");
-        } else {
-          setAuth(token);
-          navigate("/dashlanding");
-          // getOrgs(token)
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  //       if (data.detail) {
+  //         Cookies.remove("authentication");
+  //         setAuth("");
+  //       } else {
+  //         setAuth(token);
+  //         navigate("/dashlanding");
+  //         // getOrgs(token)
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
 
-    if (token) {
-      verifyToken(token);
-    }
-  }, [API_BASE_URL,navigate]);
+  //   if (token) {
+  //     verifyToken(token);
+  //   }
+  // }, [API_BASE_URL,navigate]);
 
   useEffect(() => {
     Cookies.set("authentication", auth);
