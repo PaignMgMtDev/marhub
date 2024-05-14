@@ -49,10 +49,18 @@ setAddedAttributes(ids)
 console.log(addedAttributes)
 
 const [collaboratorSelected, setCollaboratorSelected] = useState([])
+const [selectedUserId, setSelectedUserId] = useState(null);
+
 const handleCollaboratorSelected = (user) => {
     const ids = user;
     setCollaboratorSelected(ids);
+    setSelectedUserId(user.user.id);
+    setAttributes(user.attribute_values)
 }
+
+
+
+
 
 // console.log(collaboratorSelected);
 
@@ -119,7 +127,14 @@ const handleCollaboratorSelected = (user) => {
       {users.map((user) => (
         <Grid container key={user.user.id} alignItems="center" spacing={1}>
           <Grid item xs>
-          <Button onClick={() => handleCollaboratorSelected(user)} variant='link'>{user.user.first_name} {user.user.last_name}</Button>
+          <Button onClick={() => handleCollaboratorSelected(user)} variant='link'
+          sx={{
+            backgroundColor: selectedUserId === user.user.id ? 'grey' : 'inherit', // Conditionally apply color
+            '&:hover': {
+              backgroundColor: 'lightgrey', // Hover effect
+            }
+          }}
+          >{user.user.first_name} {user.user.last_name}</Button>
           </Grid>
           <Grid item>
             {/* <IconButton
