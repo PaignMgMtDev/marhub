@@ -8,6 +8,7 @@ import {
   TextField,
 } from '@mui/material';
 import CampHeader from '../header/CampHeader';
+//import { Value } from 'sass';
 
 export default function Collaborators({
   campaignName,
@@ -15,9 +16,11 @@ export default function Collaborators({
   tacticForm,
   backTact,
   rendition,
+  renditionDetails
 }) {
 
 
+  console.log(renditionDetails);
   const [users, setUsers] = useState([]);
   const [attributes, setAttributes] = useState([]);
   useEffect(() => {
@@ -38,9 +41,6 @@ export default function Collaborators({
     });
   }, [auth]);
   
-  
-
-
 const [addedAttributes, setAddedAttributes] = useState([])
 const handleAddedAttributes = (event, value) => {
     const ids = value.map(item => item.id);
@@ -48,17 +48,33 @@ setAddedAttributes(ids)
 }
 console.log(addedAttributes)
 
+const [collaboratorSelected, setCollaboratorSelected] = useState([])
+const handleCollaboratorSelected = (user) => {
+    const ids = user;
+    setCollaboratorSelected(ids);
+}
+
+// console.log(collaboratorSelected);
+
+// console.log(JSON.stringify({
+//   "rendition_request": renditionDetails.rendition_request_log.id,
+//   "attribute_values": addedAttributes,
+//   "collaborator": collaboratorSelected.id
+// }));
+
 
   const sendForm = () => {
     
-    fetch("", {
+    fetch("https://campaign-app-api-staging.azurewebsites.net/api/mihp/rendition-collaborator/", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${auth}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        
+        "rendition_request": renditionDetails.rendition_request_log.id,
+        "attribute_values": addedAttributes,
+        "collaborator": collaboratorSelected.id
       }),
     })
       .then((response) => response.json())
@@ -103,7 +119,7 @@ console.log(addedAttributes)
       {users.map((user) => (
         <Grid container key={user.user.id} alignItems="center" spacing={1}>
           <Grid item xs>
-            <Button variant='link'>{user.user.first_name} {user.user.last_name}</Button>
+          <Button onClick={() => handleCollaboratorSelected(user)} variant='link'>{user.user.first_name} {user.user.last_name}</Button>
           </Grid>
           <Grid item>
             {/* <IconButton
@@ -125,7 +141,7 @@ console.log(addedAttributes)
         id="tags-standard"
         onChange={handleAddedAttributes}
         options={attributes}
-        getOptionLabel={(attribute) => `${attribute.value} - Count: ${attribute.count}`}    
+        getOptionLabel={(attribute) => `${attribute.id} - Count: ${attribute.count}`}    
         renderInput={(params) => (
           <TextField
             {...params}

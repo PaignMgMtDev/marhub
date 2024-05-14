@@ -91,8 +91,11 @@ function App() {
    
   };
 
-  const handleCollabs = () => {
+
+  const [renditionDetails, setRenditionDetails] = useState(false);
+  const handleCollabs = (data) => {
     navigate("/collaborators")
+    setRenditionDetails(data);
   }
 
   const tacticRows = tacticData.map((tactic) => ({
@@ -198,6 +201,7 @@ function App() {
                 tacticForm={tacticForm}
                 rendition={rendition}
                 handleCollabs={handleCollabs}
+                renditionDetails={renditionDetails}
               />
             }
           />

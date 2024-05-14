@@ -351,7 +351,7 @@ export default function RendReqConfig({
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        handleCollabs()
+        handleCollabs(data);
       })
       .catch((error) => {
         console.error("Error:", error);
