@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Button, Stack, Card, CardMedia, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Button, Stack, Card, CardMedia, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { Link } from '@mui/icons-material';
 import LoadingAnim from "./LoadingAnim";
 // import { apiBaseUrl } from "../../api";
@@ -7,7 +7,7 @@ import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function RenditionVersion({ versionId, authHeader, apiBaseUrl }) {
+export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersion }) {
 
   const [detailValues, setDetailValues] = useState({});
   const [placementVersion, setPlacementVersion] = useState({});
@@ -30,8 +30,8 @@ export default function RenditionVersion({ versionId, authHeader, apiBaseUrl }) 
   const loadVersion = useCallback(async () => {
     console.log('loading content ...');
     try {
-      let response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${versionId}/`, authHeader)
-      console.log(`${apiBaseUrl}/api/contentframework/placement-version-content/${versionId}/`)
+      let response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader)
+      console.log(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`)
       console.log(response.data)
       setPlacementVersion(response.data);
       setDataLoaded("success");
@@ -39,7 +39,7 @@ export default function RenditionVersion({ versionId, authHeader, apiBaseUrl }) 
       console.log(err.message, err.code)
       setDataLoaded("error");
     }
-  }, [apiBaseUrl, versionId, authHeader]);
+  }, [apiBaseUrl, selectedVersion.versionId, authHeader]);
 
   const handleInputChange = (event, detailId) => {
     const { value } = event.target;
@@ -90,9 +90,12 @@ export default function RenditionVersion({ versionId, authHeader, apiBaseUrl }) 
         const destinationUrl = destinationUrlKey ? detail[destinationUrlKey] : "";
         const textKey = Object.keys(detail).find(key => (key.includes("text") && key !== "context"));
         const textContent = textKey ? detail[textKey] : "";
+        const typeKey = Object.keys(detail).find(key => key.includes("type")); // Assuming detail_type key includes "type"
+        const detailType = typeKey ? detail[typeKey] : ""; // Extract detail_type value
         newDetailValues[detail.detail_id] = {
           text: textContent,
           destinationUrl: destinationUrl,
+          detailType: detailType, // Store the detail_type
         };
       });
       setDetailValues(newDetailValues);
@@ -110,15 +113,8 @@ export default function RenditionVersion({ versionId, authHeader, apiBaseUrl }) 
         <LoadingAnim />
       }
       {dataLoaded &&
-        <>
-          <Stack className="edit__display">
-            <CardMedia
-              className="module__image"
-              component="img"
-              image={placementVersion.image}
-              alt=""
-            />
-          </Stack>
+        <Stack className="edit__display">
+          <Typography className="edit__heading">{selectedVersion.versionName}</Typography>
           <Stack className="edit-form" component="form" noValidate autoComplete="off">
             {placementVersion.content_details.map((detail) => {
 
@@ -190,7 +186,7 @@ export default function RenditionVersion({ versionId, authHeader, apiBaseUrl }) 
               <Button className="edit-form__button edit-form__button_confirm" onClick={submitRenditionVersion}>Confirm</Button>
             </Stack>
           </Stack>
-        </>
+        </Stack>
       }
     </Card>
   );

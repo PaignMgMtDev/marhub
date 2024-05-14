@@ -12,7 +12,7 @@ import "./styles/rendition.scss";
 export default function Rendition({ auth, requestId }) {
   const [treatment, setTreatment] = useState({});
   const [selectedModule, setSelectedModule] = useState({});
-  const [selectedVersionId, setSelectedVersionId] = useState('');
+  const [selectedVersion, setSelectedVersion] = useState(null); // Single object to hold version details
   const [step, setStep] = useState(0);
   const { tactic } = useParams();
 
@@ -39,11 +39,20 @@ export default function Rendition({ auth, requestId }) {
     }
   }, [apiBaseUrl, tactic, authHeader]);
 
+  const selectVersion = (versionId, versionName, versionNumber) => {
+    setSelectedVersion({ versionId, versionName, versionNumber }); // Update selectedVersion
+    setStep(3);
+  }
+
   useEffect(() => {
-    if (step===0) {
+    if (step === 0) {
       loadTreatment();
     }
   }, [step, tactic, loadTreatment]);
+
+  useEffect(() => {
+    console.log(step)
+  }, [step]);
 
   return (
     <Box className="rendition" component="main">
@@ -84,20 +93,20 @@ export default function Rendition({ auth, requestId }) {
             <Card className="versions">
               <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
               <List className="versions__list">
-                {selectedModule.rendition_versions.map((renditionVersion) => (
+                {selectedModule.rendition_versions.map((renditionVersion, i) => (
                   <ListItem key={renditionVersion.placement_version_id} className="versions__item" disablePadding>
-                    <ListItemButton onClick={() => { setSelectedVersionId(renditionVersion?.placement_version_id); setStep(3); }} className="versions__version-button">
+                    <ListItemButton onClick={()=>selectVersion(renditionVersion?.placement_version_id, renditionVersion?.placement_version_name, i+1)} className="versions__version-button">
                       <ListItemText className="versions__text" primary={renditionVersion?.placement_version_name} />
                     </ListItemButton>
                   </ListItem>
                 ))}
               </List>
               <Stack className="versions__button-row" direction="row">
-                <Button className="versions__add" variant="text" onClick={() => { setSelectedVersionId(selectedModule.placement_version_id); setStep(3); }}>Add Rendition</Button>
+                <Button className="versions__add" variant="text" onClick={()=>selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, 1)}>Add Rendition</Button>
               </Stack>
             </Card>
           }
-          {step === 3 && <RenditionVersion authHeader={authHeader} versionId={selectedVersionId} apiBaseUrl={apiBaseUrl} />}
+          {step === 3 && <RenditionVersion apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} />}
         </Box>
       }
     </Box>
