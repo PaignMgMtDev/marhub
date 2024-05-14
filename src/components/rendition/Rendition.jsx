@@ -1,22 +1,20 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { Button, Typography, Box, Stack, CircularProgress, Backdrop, Card, CardMedia, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { KeyboardBackspace, Link } from '@mui/icons-material';
+import { Button, Typography, Box, Stack, Card, CardMedia, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { KeyboardBackspace } from '@mui/icons-material';
 import { useParams } from "react-router-dom";
+import RenditionVersion from "./RenditionVersion";
+import LoadingAnim from "./LoadingAnim";
 // import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function Rendition({ auth }) {
-
-  const [dataLoaded, setDataLoaded] = useState('');
-  const [rendition, setRendition] = useState({});
+export default function Rendition({ auth, requestId }) {
+  const [treatment, setTreatment] = useState({});
   const [selectedModule, setSelectedModule] = useState({});
-  const [detailValues, setDetailValues] = useState({});
-  const [linkEdit, setLinkEdit] = useState('');
-  const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
+  const [selectedVersionId, setSelectedVersionId] = useState('');
+  const [step, setStep] = useState(0);
   const { tactic } = useParams();
-  
 
   const apiBaseUrl = 'https://campaign-app-api-staging.azurewebsites.net';
 
@@ -27,109 +25,49 @@ export default function Rendition({ auth }) {
     },
   }), [auth]);
 
-  const loadRendition = useCallback(async () => {
-    console.log('loading rendition...')
+  const loadTreatment = useCallback(async () => {
+    console.log('loading treatment...');
     try {
-      let response = await axios.get(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`, authHeader)
-      console.log(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`)
-      console.log(response.data)
-      setRendition(response.data)
-      setDataLoaded('success')
+      let response = await axios.get(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`, authHeader);
+      console.log(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`);
+      console.log(response.data);
+      setTreatment(response.data);
+      setStep(1);
     } catch (err) {
-      console.log(err.message, err.code)
-      setDataLoaded('error')
+      console.log(err.message, err.code);
+      setStep(-1);
     }
   }, [apiBaseUrl, tactic, authHeader]);
 
-  const handleInputChange = (event, detailId) => {
-    const { value } = event.target;
-    setDetailValues((prevValues) => {
-      const existingDetail = prevValues[detailId];
-      if (existingDetail) {
-        return {
-          ...prevValues,
-          [detailId]: {
-            ...existingDetail,
-            text: value,
-          },
-        };
-      } else {
-        return {
-          ...prevValues,
-          [detailId]: {
-            text: value,
-            destinationUrl: "",
-          },
-        };
-      }
-    });
-  };
-
-  const handleUrlChange = (event, detailId) => {
-    const { value } = event.target;
-    setDetailValues((prevValues) => ({
-      ...prevValues,
-      [detailId]: {
-        ...prevValues[detailId],
-        destinationUrl: value,
-      },
-    }));
-  };
-
   useEffect(() => {
-    if (!dataLoaded) {
-      loadRendition()
+    if (step===0) {
+      loadTreatment();
     }
-  }, [dataLoaded, tactic, loadRendition])
-
-  useEffect(() => {
-    if (selectedModule.module_id) {
-      const newDetailValues = {};
-      selectedModule.content_details.forEach(detail => {
-        const destinationUrlKey = Object.keys(detail).find(key => key.includes("destination_url"));
-        const destinationUrl = destinationUrlKey ? detail[destinationUrlKey] : "";
-        const textKey = Object.keys(detail).find(key => (key.includes("text") && key !== "context"));
-        const textContent = textKey ? detail[textKey] : "";
-        newDetailValues[detail.detail_id] = {
-          text: textContent,
-          destinationUrl: destinationUrl,
-        };
-      });
-      setDetailValues(newDetailValues);
-    }
-  }, [selectedModule]);
-
-  useEffect(() => {
-    console.log(detailValues)
-  }, [detailValues])
-
+  }, [step, tactic, loadTreatment]);
 
   return (
     <Box className="rendition" component="main">
-      {!rendition?.vehicle_shells &&
-        <Backdrop className="rendition__backdrop" open={true} >
-          <CircularProgress size="40vw" color="primary" className="rendition__loading" />
-        </Backdrop>
+      {step === 0 &&
+        <LoadingAnim />
       }
-      {rendition?.vehicle_shells &&
+      {step > 0 && 
         <Box className="rendition__display">
           <Stack className="title-bar" direction="row" component="section">
-            <Button className="title-bar__back" onClick={()=>setSelectedModule({})}>
+            <Button className="title-bar__back" onClick={() => { setSelectedModule({}); setStep(1); }}>
               <KeyboardBackspace className="title-bar__back-icon" />
             </Button>
-            <Typography className="title-bar__title" variant="h6">{rendition.vehicle_shells[0].vehicle_shell_name}</Typography>
+            <Typography className="title-bar__title" variant="h6">{treatment.vehicle_shells[0].vehicle_shell_name}</Typography>
             <Button className="title-bar__submit" variant="text">Submit</Button>
           </Stack>
-          {!selectedModule?.module_id &&
+          {step === 1 &&
             <Card className="treatment" component="section">
               <Stack className="treatment__display">
-                {Object.keys(rendition.vehicle_shells[0].module_coordinates).map((coordinate) => {
-                  const vehicleShell = rendition.vehicle_shells[0];
+                {Object.keys(treatment.vehicle_shells[0].module_coordinates).map((coordinate) => {
+                  const vehicleShell = treatment.vehicle_shells[0];
                   const module = vehicleShell.module_coordinates[coordinate];
-
                   return (
-                    <Box className="module" key={module.module_id} onClick={() => setSelectedModule(module)}>
-                      <Typography className="module__name">{module.name}</Typography>
+                    <Box className="module" key={module.module_id} onClick={() => { setSelectedModule(module); setStep(2); }}>
+                      <Typography className="module__name">{module.placement_version_name}</Typography>
                       <CardMedia
                         className="module__image"
                         component="img"
@@ -142,82 +80,24 @@ export default function Rendition({ auth }) {
               </Stack>
             </Card>
           }
-          {selectedModule?.module_id &&
-            <Card className="edit" component="section">
-              <Stack className="edit__display">
-                <CardMedia
-                  className="module__image"
-                  component="img"
-                  image={selectedModule.image}
-                  alt=""
-                />
-              </Stack>
-              <Stack className="edit-form" component="form" noValidate autoComplete="off">
-                {selectedModule.content_details.map((detail) => {
-
-                  return(
-                    <Stack className="edit-form__input-row" direction="row" key={detail.detail_id}>
-                      <TextField
-                        className="edit-form__text-input"
-                        label={detail.detail_name}
-                        value={detailValues[detail.detail_id]?.text || ""}
-                        onChange={(event) => handleInputChange(event, detail.detail_id)}
-                      />
-                      <Button className="edit-form__link-button" onClick={()=>{setLinkEdit(detail.detail_id);setOriginalDestinationUrl(detailValues[detail.detail_id].destinationUrl)}}>
-                        <Link className="edit-form__link-icon" />
-                      </Button>
-                      <Dialog
-                        className="link-popup"
-                        open={linkEdit === detail.detail_id}
-                        onClose={()=>setLinkEdit('')}
-                        PaperProps={{
-                          component: 'form',
-                        }}
-                      >
-                        <DialogTitle className="link-popup__title">{detail.detail_name} Destination URL</DialogTitle>
-                        <DialogContent className="link-popup__content">
-                          <TextField
-                            className="link-popup__input"
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="destination-url"
-                            name="destination-url"
-                            label="Destination URL"
-                            fullWidth
-                            variant="standard"
-                            value={detailValues[detail.detail_id]?.destinationUrl || ""}
-                            onChange={(event) => handleUrlChange(event, detail.detail_id)}
-                          />
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={()=> {
-                            setLinkEdit('');
-                            setDetailValues((prevValues) => ({
-                              ...prevValues,
-                              [detail.detail_id]: {
-                                ...prevValues[detail.detail_id],
-                                destinationUrl: originalDestinationUrl, // Revert to the original value
-                              },
-                            }));
-                          }} color="primary">
-                            Cancel
-                          </Button>
-                          <Button onClick={() => {
-                            setLinkEdit('');
-                            // Save the changes
-                          }} color="primary">
-                            Save
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </Stack>
-                  );
-                })}
+          {step === 2 &&
+            <Card className="versions">
+              <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
+              <List className="versions__list">
+                {selectedModule.rendition_versions.map((renditionVersion) => (
+                  <ListItem key={renditionVersion.placement_version_id} className="versions__item" disablePadding>
+                    <ListItemButton onClick={() => { setSelectedVersionId(renditionVersion?.placement_version_id); setStep(3); }} className="versions__version-button">
+                      <ListItemText className="versions__text" primary={renditionVersion?.placement_version_name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+              <Stack className="versions__button-row" direction="row">
+                <Button className="versions__add" variant="text" onClick={() => { setSelectedVersionId(selectedModule.placement_version_id); setStep(3); }}>Add Rendition</Button>
               </Stack>
             </Card>
           }
-
+          {step === 3 && <RenditionVersion authHeader={authHeader} versionId={selectedVersionId} apiBaseUrl={apiBaseUrl} />}
         </Box>
       }
     </Box>
