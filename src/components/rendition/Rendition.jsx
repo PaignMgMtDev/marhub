@@ -1,23 +1,20 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { Button, Typography, Box, Stack, CircularProgress, Backdrop, Card, CardMedia, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { KeyboardBackspace, Link } from '@mui/icons-material';
+import { Button, Typography, Box, Stack, Card, CardMedia, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { KeyboardBackspace } from '@mui/icons-material';
 import { useParams } from "react-router-dom";
 import RenditionVersion from "./RenditionVersion";
+import LoadingAnim from "./LoadingAnim";
 // import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function Rendition({ auth }) {
-
-  const [dataLoaded, setDataLoaded] = useState('');
+export default function Rendition({ auth, requestId }) {
   const [treatment, setTreatment] = useState({});
-  const [selectedPlacementVersion, setSelectedPlacementVersion] = useState({});
-  const [detailValues, setDetailValues] = useState({});
-  const [linkEdit, setLinkEdit] = useState('');
-  const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
+  const [selectedModule, setSelectedModule] = useState({});
+  const [selectedVersionId, setSelectedVersionId] = useState('');
+  const [step, setStep] = useState(0);
   const { tactic } = useParams();
-  
 
   const apiBaseUrl = 'https://campaign-app-api-staging.azurewebsites.net';
 
@@ -28,122 +25,48 @@ export default function Rendition({ auth }) {
     },
   }), [auth]);
 
-  const submitRendition = async () => {
-    console.log('submitting rendition...')
-    try {
-      let response = await axios.post(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`, authHeader)
-      console.log(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`)
-      console.log(response.data)
-      setTreatment(response.data)
-      setDataLoaded('success')
-    } catch (err) {
-      console.log(err.message, err.code)
-      setDataLoaded('error')
-    }
-  }
-
   const loadTreatment = useCallback(async () => {
-    console.log('loading treatment...')
+    console.log('loading treatment...');
     try {
-      let response = await axios.get(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`, authHeader)
-      console.log(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`)
-      console.log(response.data)
-      setTreatment(response.data)
-      setDataLoaded('success')
+      let response = await axios.get(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`, authHeader);
+      console.log(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`);
+      console.log(response.data);
+      setTreatment(response.data);
+      setStep(1);
     } catch (err) {
-      console.log(err.message, err.code)
-      setDataLoaded('error')
+      console.log(err.message, err.code);
+      setStep(-1);
     }
   }, [apiBaseUrl, tactic, authHeader]);
 
-  const handleInputChange = (event, detailId) => {
-    const { value } = event.target;
-    setDetailValues((prevValues) => {
-      const existingDetail = prevValues[detailId];
-      if (existingDetail) {
-        return {
-          ...prevValues,
-          [detailId]: {
-            ...existingDetail,
-            text: value,
-          },
-        };
-      } else {
-        return {
-          ...prevValues,
-          [detailId]: {
-            text: value,
-            destinationUrl: "",
-          },
-        };
-      }
-    });
-  };
-
-  const handleUrlChange = (event, detailId) => {
-    const { value } = event.target;
-    setDetailValues((prevValues) => ({
-      ...prevValues,
-      [detailId]: {
-        ...prevValues[detailId],
-        destinationUrl: value,
-      },
-    }));
-  };
-
   useEffect(() => {
-    if (!dataLoaded) {
-      loadTreatment()
+    if (step===0) {
+      loadTreatment();
     }
-  }, [dataLoaded, tactic, loadTreatment])
-
-  useEffect(() => {
-    if (selectedPlacementVersion.module_id) {
-      const newDetailValues = {};
-      selectedPlacementVersion.content_details.forEach(detail => {
-        const destinationUrlKey = Object.keys(detail).find(key => key.includes("destination_url"));
-        const destinationUrl = destinationUrlKey ? detail[destinationUrlKey] : "";
-        const textKey = Object.keys(detail).find(key => (key.includes("text") && key !== "context"));
-        const textContent = textKey ? detail[textKey] : "";
-        newDetailValues[detail.detail_id] = {
-          text: textContent,
-          destinationUrl: destinationUrl,
-        };
-      });
-      setDetailValues(newDetailValues);
-    }
-  }, [selectedPlacementVersion]);
-
-  useEffect(() => {
-    console.log(detailValues)
-  }, [detailValues])
-
+  }, [step, tactic, loadTreatment]);
 
   return (
     <Box className="rendition" component="main">
-      {!treatment?.vehicle_shells &&
-        <Backdrop className="rendition__backdrop" open={true} >
-          <CircularProgress size="40vw" color="primary" className="rendition__loading" />
-        </Backdrop>
+      {step === 0 &&
+        <LoadingAnim />
       }
-      {treatment?.vehicle_shells &&
+      {step > 0 && 
         <Box className="rendition__display">
           <Stack className="title-bar" direction="row" component="section">
-            <Button className="title-bar__back" onClick={()=>setSelectedPlacementVersion({})}>
+            <Button className="title-bar__back" onClick={() => { setSelectedModule({}); setStep(1); }}>
               <KeyboardBackspace className="title-bar__back-icon" />
             </Button>
             <Typography className="title-bar__title" variant="h6">{treatment.vehicle_shells[0].vehicle_shell_name}</Typography>
             <Button className="title-bar__submit" variant="text">Submit</Button>
           </Stack>
-          {!selectedPlacementVersion?.module_id &&
+          {step === 1 &&
             <Card className="treatment" component="section">
               <Stack className="treatment__display">
                 {Object.keys(treatment.vehicle_shells[0].module_coordinates).map((coordinate) => {
                   const vehicleShell = treatment.vehicle_shells[0];
                   const module = vehicleShell.module_coordinates[coordinate];
-
                   return (
-                    <Box className="module" key={module.module_id} onClick={() => setSelectedPlacementVersion(module)}>
+                    <Box className="module" key={module.module_id} onClick={() => { setSelectedModule(module); setStep(2); }}>
                       <Typography className="module__name">{module.placement_version_name}</Typography>
                       <CardMedia
                         className="module__image"
@@ -157,10 +80,24 @@ export default function Rendition({ auth }) {
               </Stack>
             </Card>
           }
-          {selectedPlacementVersion?.module_id &&
-            <RenditionVersion authHeader={authHeader} placementVersion={selectedPlacementVersion} apiBaseUrl={apiBaseUrl} />
+          {step === 2 &&
+            <Card className="versions">
+              <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
+              <List className="versions__list">
+                {selectedModule.rendition_versions.map((renditionVersion) => (
+                  <ListItem key={renditionVersion.placement_version_id} className="versions__item" disablePadding>
+                    <ListItemButton onClick={() => { setSelectedVersionId(renditionVersion?.placement_version_id); setStep(3); }} className="versions__version-button">
+                      <ListItemText className="versions__text" primary={renditionVersion?.placement_version_name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+              <Stack className="versions__button-row" direction="row">
+                <Button className="versions__add" variant="text" onClick={() => { setSelectedVersionId(selectedModule.placement_version_id); setStep(3); }}>Add Rendition</Button>
+              </Stack>
+            </Card>
           }
-
+          {step === 3 && <RenditionVersion authHeader={authHeader} versionId={selectedVersionId} apiBaseUrl={apiBaseUrl} />}
         </Box>
       }
     </Box>
