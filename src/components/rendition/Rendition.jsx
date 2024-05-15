@@ -14,6 +14,7 @@ export default function Rendition({ auth, requestId }) {
   const [selectedModule, setSelectedModule] = useState({});
   const [selectedVersion, setSelectedVersion] = useState(null); // Single object to hold version details
   const [step, setStep] = useState(0);
+  const [detailValues, setDetailValues] = useState({});
   const { tactic } = useParams();
 
   const apiBaseUrl = 'https://campaign-app-api-staging.azurewebsites.net';
@@ -38,6 +39,18 @@ export default function Rendition({ auth, requestId }) {
       setStep(-1);
     }
   }, [apiBaseUrl, tactic, authHeader]);
+
+  const submitRenditionVersion = async () => {
+    console.log('submitting rendition...')
+    try {
+      // let response = await axios.post(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`, authHeader)
+      // console.log(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`)
+      // console.log(response.data)
+      // setTreatment(response.data)
+    } catch (err) {
+      console.log(err.message, err.code)
+    }
+  }
 
   const selectVersion = (versionId, versionName, versionNumber) => {
     setSelectedVersion({ versionId, versionName, versionNumber }); // Update selectedVersion
@@ -106,7 +119,7 @@ export default function Rendition({ auth, requestId }) {
               </Stack>
             </Card>
           }
-          {step === 3 && <RenditionVersion apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} />}
+          {step === 3 && <RenditionVersion apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} />}
         </Box>
       }
     </Box>

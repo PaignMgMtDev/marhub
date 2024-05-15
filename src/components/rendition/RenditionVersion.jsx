@@ -1,31 +1,18 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Button, Stack, Card, CardMedia, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Button, Stack, Card, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, CircularProgress } from "@mui/material";
 import { Link } from '@mui/icons-material';
-import LoadingAnim from "./LoadingAnim";
 // import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersion }) {
+export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersion, setStep, detailValues, setDetailValues }) {
 
-  const [detailValues, setDetailValues] = useState({});
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
   const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
-  const [dataLoaded, setDataLoaded] = useState("");
-
-  const submitRenditionVersion = async () => {
-    console.log('submitting rendition...')
-    try {
-      // let response = await axios.post(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`, authHeader)
-      // console.log(`${apiBaseUrl}/api/contentframework/mihp/rendition-request/${tactic}`)
-      // console.log(response.data)
-      // setTreatment(response.data)
-    } catch (err) {
-      console.log(err.message, err.code)
-    }
-  }
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [originalValues, setOriginalValues] = useState(null);
 
   const loadVersion = useCallback(async () => {
     console.log('loading content ...');
@@ -34,108 +21,155 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
       console.log(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`)
       console.log(response.data)
       setPlacementVersion(response.data);
-      setDataLoaded("success");
+      setDataLoaded(true);
     } catch (err) {
       console.log(err.message, err.code)
-      setDataLoaded("error");
+      setDataLoaded(false);
     }
   }, [apiBaseUrl, selectedVersion.versionId, authHeader]);
+
+  useEffect(() => {
+    if (!dataLoaded) {
+      loadVersion();
+    }
+  }, [dataLoaded, loadVersion]);
+
+  useEffect(() => {
+    if (placementVersion.content_details && !detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]) {
+      const newDetailValues = { ...detailValues };
+      const versionId = selectedVersion.versionId;
+      const versionNumber = selectedVersion.versionNumber;
+      const originalValuesCopy = { ...originalValues };
+
+      if (!newDetailValues[versionId]) {
+        newDetailValues[versionId] = {};
+      }
+
+      if (!newDetailValues[versionId][versionNumber]) {
+        newDetailValues[versionId][versionNumber] = {};
+      }
+
+      placementVersion.content_details.forEach(detail => {
+        const destinationUrlKey = Object.keys(detail).find(key => key.includes("destination_url"));
+        const destinationUrl = destinationUrlKey ? detail[destinationUrlKey] : "";
+        const textKey = Object.keys(detail).find(key => {
+          return (
+            (key.includes("text") || key.includes("img_url") || key.includes("html_code")) &&
+            key !== "context"
+          );
+        });
+        const textContent = textKey ? detail[textKey] : "";
+        const typeKey = Object.keys(detail).find(key => key.includes("type"));
+        const detailType = typeKey ? detail[typeKey] : "";
+
+        newDetailValues[versionId][versionNumber][detail.detail_id] = {
+          text: textContent,
+          destinationUrl: destinationUrl,
+          detailType: detailType,
+        };
+
+        // Save original values when component first loads
+        if (!originalValuesCopy) {
+          originalValuesCopy[detail.detail_id] = {
+            text: textContent,
+            destinationUrl: destinationUrl,
+            detailType: detailType,
+          };
+        }
+      });
+
+      setDetailValues(newDetailValues);
+      if (!originalValues) {
+        setOriginalValues(originalValuesCopy);
+      }
+    }
+  }, [placementVersion, setDetailValues, detailValues, selectedVersion.versionId, selectedVersion.versionNumber, originalValues]);
 
   const handleInputChange = (event, detailId) => {
     const { value } = event.target;
     setDetailValues((prevValues) => {
-      const existingDetail = prevValues[detailId];
-      if (existingDetail) {
-        return {
-          ...prevValues,
-          [detailId]: {
-            ...existingDetail,
-            text: value,
+      const versionId = selectedVersion.versionId;
+      const versionNumber = selectedVersion.versionNumber;
+
+      return {
+        ...prevValues,
+        [versionId]: {
+          ...prevValues[versionId],
+          [versionNumber]: {
+            ...prevValues[versionId]?.[versionNumber],
+            [detailId]: {
+              ...prevValues[versionId]?.[versionNumber]?.[detailId],
+              text: value,
+            },
           },
-        };
-      } else {
-        return {
-          ...prevValues,
-          [detailId]: {
-            text: value,
-            destinationUrl: "",
-          },
-        };
-      }
+        },
+      };
     });
   };
 
   const handleUrlChange = (event, detailId) => {
     const { value } = event.target;
-    setDetailValues((prevValues) => ({
-      ...prevValues,
-      [detailId]: {
-        ...prevValues[detailId],
-        destinationUrl: value,
-      },
-    }));
+    setDetailValues((prevValues) => {
+      const versionId = selectedVersion.versionId;
+      const versionNumber = selectedVersion.versionNumber;
+
+      return {
+        ...prevValues,
+        [versionId]: {
+          ...prevValues[versionId],
+          [versionNumber]: {
+            ...prevValues[versionId]?.[versionNumber],
+            [detailId]: {
+              ...prevValues[versionId]?.[versionNumber]?.[detailId],
+              destinationUrl: value,
+            },
+          },
+        },
+      };
+    });
   };
 
-  useEffect(() => {
-    if (!dataLoaded) {
-      loadVersion()
+  const resetToOriginalValues = () => {
+    if (originalValues) {
+      setDetailValues(originalValues);
     }
-  }, [dataLoaded, loadVersion])
+    setStep(1);
+  };
 
-  useEffect(() => {
-    if (placementVersion.content_details) {
-      const newDetailValues = {};
-      placementVersion.content_details.forEach(detail => {
-        const destinationUrlKey = Object.keys(detail).find(key => key.includes("destination_url"));
-        const destinationUrl = destinationUrlKey ? detail[destinationUrlKey] : "";
-        const textKey = Object.keys(detail).find(key => (key.includes("text") && key !== "context"));
-        const textContent = textKey ? detail[textKey] : "";
-        const typeKey = Object.keys(detail).find(key => key.includes("type")); // Assuming detail_type key includes "type"
-        const detailType = typeKey ? detail[typeKey] : ""; // Extract detail_type value
-        newDetailValues[detail.detail_id] = {
-          text: textContent,
-          destinationUrl: destinationUrl,
-          detailType: detailType, // Store the detail_type
-        };
-      });
-      setDetailValues(newDetailValues);
-    }
-  }, [placementVersion]);
-
-  useEffect(() => {
-    console.log(detailValues)
-  }, [detailValues])
 
 
   return (
     <Card className="edit" component="section">
-      {!dataLoaded &&
-        <LoadingAnim />
-      }
-      {dataLoaded &&
+      {!dataLoaded && <CircularProgress />}
+      {dataLoaded && (
         <Stack className="edit__display">
           <Typography className="edit__heading">{selectedVersion.versionName}</Typography>
           <Stack className="edit-form" component="form" noValidate autoComplete="off">
             {placementVersion.content_details.map((detail) => {
-
-              return(
-                <Stack className="edit-form__input-row" direction="row" key={detail.detail_id}>
+              const detailId = detail.detail_id;
+              const detailValue = detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId];
+              
+              return (
+                <Stack className="edit-form__input-row" direction="row" key={detailId}>
                   <TextField
                     className="edit-form__text-input"
                     label={detail.detail_name}
-                    value={detailValues[detail.detail_id]?.text || ""}
-                    onChange={(event) => handleInputChange(event, detail.detail_id)}
+                    value={detailValue?.text || ""}
+                    onChange={(event) => handleInputChange(event, detailId)}
                   />
-                  <Button className="edit-form__link-button" onClick={()=>{setLinkEdit(detail.detail_id);setOriginalDestinationUrl(detailValues[detail.detail_id].destinationUrl)}}>
-                    <Link className="edit-form__link-icon" />
-                  </Button>
+                  {detailValue?.detailType !== "html" && (
+                    <Button className="edit-form__link-button" onClick={() => {
+                      setLinkEdit(detailId);
+                      setOriginalDestinationUrl(detailValue?.destinationUrl || "");
+                    }}>
+                      <Link className="edit-form__link-icon" />
+                    </Button>
+                  )}
                   <Dialog
                     className="link-popup"
-                    open={linkEdit === detail.detail_id}
-                    onClose={()=>setLinkEdit('')}
-                    PaperProps={{
-                      component: 'form',
-                    }}
+                    open={linkEdit === detailId}
+                    onClose={() => setLinkEdit('')}
+                    PaperProps={{ component: 'form' }}
                   >
                     <DialogTitle className="link-popup__title">{detail.detail_name} Destination URL</DialogTitle>
                     <DialogContent className="link-popup__content">
@@ -149,31 +183,41 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
                         label="Destination URL"
                         fullWidth
                         variant="standard"
-                        value={detailValues[detail.detail_id]?.destinationUrl || ""}
-                        onChange={(event) => handleUrlChange(event, detail.detail_id)}
+                        value={detailValue?.destinationUrl || ""}
+                        onChange={(event) => handleUrlChange(event, detailId)}
                       />
                     </DialogContent>
                     <DialogActions className="link-popup__button-row">
-                      <Button 
+                      <Button
                         className="link-popup__button link-popup__button_cancel"
-                        onClick={()=> {
-                        setLinkEdit('');
-                        setDetailValues((prevValues) => ({
-                          ...prevValues,
-                          [detail.detail_id]: {
-                            ...prevValues[detail.detail_id],
-                            destinationUrl: originalDestinationUrl, // Revert to the original value
-                          },
-                        }));
-                      }} color="primary">
+                        onClick={() => {
+                          setLinkEdit('');
+                          setDetailValues((prevValues) => ({
+                            ...prevValues,
+                            [selectedVersion.versionId]: {
+                              ...prevValues[selectedVersion.versionId],
+                              [selectedVersion.versionNumber]: {
+                                ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
+                                [detail.detail_id]: {
+                                  ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detail.detail_id],
+                                  destinationUrl: originalDestinationUrl, // Revert to the original value
+                                },
+                              },
+                            },
+                          }));
+                        }}
+                        color="primary"
+                      >
                         Cancel
                       </Button>
                       <Button
                         className="link-popup__button link-popup__button_save"
                         onClick={() => {
-                        setLinkEdit('');
-                        // Save the changes
-                      }} color="primary">
+                          setLinkEdit('');
+                          // Save the changes
+                        }}
+                        color="primary"
+                      >
                         Save
                       </Button>
                     </DialogActions>
@@ -182,12 +226,12 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
               );
             })}
             <Stack className="edit-form__button-row" direction="row">
-              <Button className="edit-form__button edit-form__button_cancel">Cancel</Button>
-              <Button className="edit-form__button edit-form__button_confirm" onClick={submitRenditionVersion}>Confirm</Button>
+              <Button className="edit-form__button edit-form__button_cancel" onClick={() => resetToOriginalValues()}>Cancel</Button>
+              <Button className="edit-form__button edit-form__button_confirm" onClick={() => setStep(1)}>Confirm</Button>
             </Stack>
           </Stack>
         </Stack>
-      }
+      )}
     </Card>
   );
 }
