@@ -31,12 +31,12 @@ export default function RenditionTactics({ auth }){
         }catch(e){
             throw Error("error while getting tactics by rendition")
         }
-    }, [auth, authHeader])
+    }, [auth, authHeader, rendition])
 
     useEffect(() => {
         if(auth)
             getTactics()
-    }, [])
+    }, [auth, getTactics])
 
     const editTactic = (tacticId) => {
         const url = `/renditions/${tacticId}`
