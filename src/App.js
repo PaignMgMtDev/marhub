@@ -17,6 +17,11 @@ function App() {
   const [auth, setAuth] = useState("");
   const location = useLocation();
   
+  const searchParams = new URLSearchParams(location.search);
+  let redirectUrl = searchParams.get('redirect_url');
+  
+  console.log(redirectUrl)
+
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
     
@@ -38,9 +43,7 @@ function App() {
     })
     .catch(e => console.log(e))
     setOwner(email)
-    location.pathname.length>1?
-    handleSetLanding(location.pathname):
-    handleSetDash()
+    redirectUrl ? handleSetLanding(redirectUrl) : handleSetDash();
   }
 
   const handleSetLanding = (value) => {
@@ -127,8 +130,13 @@ function App() {
     setSelectedRows(selectedTactics);
   };
 
-
   let navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (auth) {
+  //     navigate(location.pathname);
+  //   }
+  // }, [auth,navigate,location]);
 
   //////////
 //   useEffect(() => {
