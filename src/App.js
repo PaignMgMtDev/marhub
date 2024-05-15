@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { useState  } from "react";
 import "./App.css";
 import SignIn from "./components/SignIn";
 import DashLanding from "./components/dashlanding/DashLanding";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import CampTactics from "./components/camptactics/CampTactics";
 import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
 import Rendition from "./components/rendition/Rendition";
 import Collaborators from "./components/collaborators/Collaborators";
+import RenditionTactics from "./components/renditiontactics/RenditionTactics";
+// import Cookies from 'js-cookie';
 
 function App() {
   const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
   const [owner, setOwner] = useState("");
   const [auth, setAuth] = useState("");
-
+  const location = useLocation();
+  
+  const searchParams = new URLSearchParams(location.search);
+  let redirectUrl = searchParams.get('redirect_url');
+  
+  console.log(redirectUrl)
 
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
-
+    
     const apiOptions = {
       method: "POST",
       headers: {
@@ -36,8 +43,12 @@ function App() {
     })
     .catch(e => console.log(e))
     setOwner(email)
-    // handleSetDash()
+    redirectUrl ? handleSetLanding(redirectUrl) : handleSetDash();
   }
+
+  const handleSetLanding = (value) => {
+    navigate(value);
+  };
 
   const handleSetDash = () => {
     navigate("/dashlanding");
@@ -91,8 +102,11 @@ function App() {
    
   };
 
-  const handleCollabs = () => {
+
+  const [renditionDetails, setRenditionDetails] = useState(false);
+  const handleCollabs = (data) => {
     navigate("/collaborators")
+    setRenditionDetails(data);
   }
 
   const tacticRows = tacticData.map((tactic) => ({
@@ -116,8 +130,102 @@ function App() {
     setSelectedRows(selectedTactics);
   };
 
-
   let navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (auth) {
+  //     navigate(location.pathname);
+  //   }
+  // }, [auth,navigate,location]);
+
+  //////////
+//   useEffect(() => {
+//     if (auth) {
+//       Cookies.set("authentication", auth);
+//     }
+//   }, [auth]);
+
+//   useEffect(() => {
+//     const token = Cookies.get("authentication");
+
+//     if (token) {
+//         verifyToken(token);
+//     } else {
+//         // Handle non-authenticated case or initial login attempt
+//     }
+
+//     async function verifyToken(token) {
+//         try {
+//             const response = await fetch(`https://campaign-app-api-staging.azurewebsites.net/api/users/token/verify/`, {
+//                 method: "POST",
+//                 headers: { "Content-Type": "application/json" },
+//                 body: JSON.stringify({ token }),
+//             });
+
+//             const data = await response.json();
+
+//             if (data.isValid) {
+//                 // On successful authentication, navigate to stored URL or default
+//                 const savedPath = sessionStorage.getItem('preAuthRoute') || '/defaultPath';
+//                 navigate(savedPath, { replace: true });
+//                 sessionStorage.removeItem('preAuthRoute'); // Clear the stored path
+//             } else {
+//                 // Handle failed token verification
+//                 Cookies.remove("authentication");
+//                 // Optionally redirect to login or error page
+//             }
+//         } catch (error) {
+//             console.error('Error verifying token:', error);
+//             // Error handling
+//         }
+//     }
+// }, [navigate]);
+
+
+
+
+  // useEffect(() => {
+//   const token = Cookies.get("authentication");
+
+//   if (token) {
+//     verifyToken(token);
+//   }
+
+//   async function verifyToken(token) {
+//     try {
+//       const response = await fetch(`https://campaign-app-api-staging.azurewebsites.net/api/users/token/verify/`, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ token }),
+//         redirect: "follow",
+//       });
+
+//       const data = await response.json();
+//       if (data.detail) {
+//         Cookies.remove("authentication");
+//         // Directly navigate to login if token is invalid
+//         navigate("/login");
+//       } else {
+//         // Navigate to the stored URL or default to '/dashlanding'
+//         const initialUrl = sessionStorage.getItem('preAuthRoute') || '/dashlanding';
+//         navigate(initialUrl, { replace: true });
+//         sessionStorage.removeItem('preAuthRoute'); // Clean up after navigating
+//       }
+//     } catch (error) {
+//       console.log("Failed to verify token:", error);
+//       navigate("/login");
+//     }
+//   }
+// }, [API_BASE_URL]); // Removed dependencies to prevent re-running unless component re-mounts
+
+// useEffect(() => {
+//   if (auth) {
+//     Cookies.set("authentication", auth);
+//   }
+// }, [auth]);
+///////
 
   return (
     <div className="App">
@@ -198,6 +306,7 @@ function App() {
                 tacticForm={tacticForm}
                 rendition={rendition}
                 handleCollabs={handleCollabs}
+                renditionDetails={renditionDetails}
               />
             }
           />
@@ -205,6 +314,12 @@ function App() {
             path="/renditions/:tactic"
             element={
               <Rendition auth={auth} />
+            }
+          />
+          <Route
+            path="/rendition-request/:rendition"
+            element={
+              <RenditionTactics auth={auth} />
             }
           />
         </Routes>

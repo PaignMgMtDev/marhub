@@ -42,7 +42,7 @@ export default function Rendition({ auth, requestId }) {
       console.log(err.message, err.code);
       setStep(-1);
     }
-  }, [apiBaseUrl, tactic, authHeader]);
+  }, [apiBaseUrl, tactic, authHeader, requestId]);
 
   const submitRenditionVersion = async () => {
     if(Object.keys(detailValues).length === 0) setDialogOpen(true)
