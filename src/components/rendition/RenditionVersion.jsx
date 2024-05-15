@@ -15,24 +15,49 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
   const [originalValues, setOriginalValues] = useState(null);
 
   const loadVersion = useCallback(async () => {
-    console.log('loading content ...');
-    try {
-      let response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader)
-      console.log(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`)
-      console.log(response.data)
-      setPlacementVersion(response.data);
-      setDataLoaded(true);
-    } catch (err) {
-      console.log(err.message, err.code)
-      setDataLoaded(false);
+    console.log("loading content...")
+    if(selectedVersion?.dbVersion){
+      console.log("loading content from db...")
+      try {
+        let response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader)
+        console.log(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`)
+        console.log(response.data)
+        setPlacementVersion(response.data);
+        console.log(response.data)
+        setDataLoaded(true);
+      } catch (err) {
+        console.log(err.message, err.code)
+        setDataLoaded(false);
+      }
     }
-  }, [apiBaseUrl, selectedVersion.versionId, authHeader]);
+    else{
+      console.log("loading content from state...")
+      const detailValuesObject = detailValues[selectedVersion.versionId][selectedVersion.versionNumber]
+      const reformattedDetailValues = Object.keys(detailValuesObject).map(detailId => ({
+        detail_id: parseInt(detailId), // Convert detailId to integer
+        detail_name: detailValuesObject[detailId].detail_name,
+        detail_type: detailValuesObject[detailId].detail_type,
+        img_url: detailValuesObject[detailId].detail_type === "image" ? detailValuesObject[detailId].text : null,
+        text: detailValuesObject[detailId].detail_type === "text" ? detailValuesObject[detailId].text : null,
+        html_code: detailValuesObject[detailId].detail_type === "html" ? detailValuesObject[detailId].text : null,
+        destination_url: detailValuesObject[detailId].destination_url,
+      }));
+      const reformattedData = { content_details: reformattedDetailValues };
+      console.log(reformattedData)
+      setPlacementVersion(reformattedData);
+      setDataLoaded(true);
+    }
+  }, [apiBaseUrl, selectedVersion, authHeader, detailValues]);
 
   useEffect(() => {
     if (!dataLoaded) {
       loadVersion();
     }
   }, [dataLoaded, loadVersion]);
+
+  useEffect(() => {
+    console.log(selectedVersion)
+  }, [selectedVersion]);
 
   useEffect(() => {
     if (placementVersion.content_details && !detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]) {
@@ -61,19 +86,23 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
         const textContent = textKey ? detail[textKey] : "";
         const typeKey = Object.keys(detail).find(key => key.includes("type"));
         const detailType = typeKey ? detail[typeKey] : "";
+        const nameKey = Object.keys(detail).find(key => key.includes("detail_name"));
+        const detailName = nameKey ? detail[nameKey] : "";
 
         newDetailValues[versionId][versionNumber][detail.detail_id] = {
           text: textContent,
-          destinationUrl: destinationUrl,
-          detailType: detailType,
+          destination_url: destinationUrl,
+          detail_type: detailType,
+          detail_name: detailName,
         };
 
         // Save original values when component first loads
         if (!originalValuesCopy) {
           originalValuesCopy[detail.detail_id] = {
             text: textContent,
-            destinationUrl: destinationUrl,
-            detailType: detailType,
+            destination_url: destinationUrl,
+            detail_type: detailType,
+            detail_name: detailName,
           };
         }
       });
