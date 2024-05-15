@@ -31,7 +31,7 @@ export default function RenditionTactics({ auth }){
         }catch(e){
             throw Error("error while getting tactics by rendition")
         }
-    }, [auth, authHeader, rendition])
+    }, [authHeader, rendition])
 
     useEffect(() => {
         if(auth)
