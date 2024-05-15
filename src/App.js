@@ -40,9 +40,9 @@ function App() {
     // handleSetDash()
   }
 
-  const handleSetDash = () => {
-    navigate("/dashlanding");
-  };
+  // const handleSetDash = () => {
+  //   navigate("/dashlanding");
+  // };
 
   const [campaignName, setCampaignName] = useState("");
   const [campaignID, setCampaignID] = useState("");
