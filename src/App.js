@@ -8,6 +8,7 @@ import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
 import Rendition from "./components/rendition/Rendition";
 import Collaborators from "./components/collaborators/Collaborators";
+import RenditionTactics from "./components/renditiontactics/RenditionTactics";
 
 function App() {
   const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
@@ -36,7 +37,7 @@ function App() {
     })
     .catch(e => console.log(e))
     setOwner(email)
-    handleSetDash()
+    // handleSetDash()
   }
 
   const handleSetDash = () => {
@@ -205,6 +206,12 @@ function App() {
             path="/renditions/:tactic"
             element={
               <Rendition auth={auth} />
+            }
+          />
+          <Route
+            path="/rendition-request/:rendition"
+            element={
+              <RenditionTactics auth={auth} />
             }
           />
         </Routes>
