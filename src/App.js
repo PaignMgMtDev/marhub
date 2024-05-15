@@ -8,6 +8,7 @@ import EditTactics from "./components/edittactics/EditTactics";
 import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
 import Rendition from "./components/rendition/Rendition";
 import Collaborators from "./components/collaborators/Collaborators";
+import RenditionTactics from "./components/renditiontactics/RenditionTactics";
 
 
 function App() {
@@ -36,12 +37,12 @@ function App() {
     })
     .catch(e => console.log(e))
     setOwner(email)
-    handleSetDash()
+    // handleSetDash()
   }
 
-  const handleSetDash = () => {
-    navigate("/dashlanding");
-  };
+  // const handleSetDash = () => {
+  //   navigate("/dashlanding");
+  // };
 
   const [campaignName, setCampaignName] = useState("");
   const [campaignID, setCampaignID] = useState("");
@@ -209,6 +210,12 @@ function App() {
             path="/renditions/:tactic"
             element={
               <Rendition auth={auth} />
+            }
+          />
+          <Route
+            path="/rendition-request/:rendition"
+            element={
+              <RenditionTactics auth={auth} />
             }
           />
         </Routes>
