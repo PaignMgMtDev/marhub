@@ -136,20 +136,31 @@ export default function Rendition({ auth, requestId }) {
             <Button className="title-bar__submit" onClick={submitRenditionVersion} variant="text">Submit</Button>
           </Stack>
           {step === 1 &&
-            <Card className="treatment" component="section">
+            <Card className="treatment" component="section" sx={'width:33%'}>
               <Stack className="treatment__display">
                 {Object.keys(treatment.vehicle_shells[0].module_coordinates).map((coordinate) => {
                   const vehicleShell = treatment.vehicle_shells[0];
                   const module = vehicleShell.module_coordinates[coordinate];
+                  
                   return (
                     <Box className="module" key={module.module_id} onClick={() => { setSelectedModule(module); setStep(2); }}>
                       <Typography className="module__name">{module.placement_version_name}</Typography>
+                      {module.placement_type_id === 2?
+                      <CardMedia
+                        className="module__image"
+                        component="img"
+                        height={'100px'}
+                        image={module.image}
+                        alt=""
+                      />
+                      :
                       <CardMedia
                         className="module__image"
                         component="img"
                         image={module.image}
                         alt=""
                       />
+                      }
                     </Box>
                   );
                 })}
