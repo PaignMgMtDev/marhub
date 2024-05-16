@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import CampHeader from '../header/CampHeader';
 //import { Value } from 'sass';
+import Header from "../header/Header";
 
 export default function Collaborators({
   campaignName,
@@ -102,6 +103,13 @@ const handleCollaboratorSelected = (user) => {
 
   return (
     <div>
+    <div>
+    <center>
+      <Header />
+    </center>
+    </div>
+    <div>
+    <div>
         <Grid container justifyContent="center">
          <Grid item>
            <CampHeader
@@ -112,7 +120,8 @@ const handleCollaboratorSelected = (user) => {
           />
         </Grid>
       </Grid>
-      
+      </div>
+      </div>
 <Grid
   container
   spacing={2}  

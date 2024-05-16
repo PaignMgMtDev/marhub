@@ -19,9 +19,11 @@ export default function CampHeader({
         display: "flex",
         alignItems: "start", // Adjust to start to align items to the top of the container
         flexDirection: "column", // Change direction to column to stack vertically
-        minWidth: "1850px",
-        height: "auto", // Adjust height to auto to contain both elements comfortably
+        //minWidth: "1850px",
         padding: "8px 16px",
+        height: "auto", // Adjust height to auto to contain both elements comfortably
+        width: "100vw",
+        paddingLeft: "5%",
         borderBottom: "1px solid #ddd", // Adjust color as needed
         boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Optional shadow for styling
         backgroundColor: "#fff", // Match the background to your theme

@@ -266,6 +266,7 @@ import {
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import CloseIcon from "@mui/icons-material/Close";
+import Header from "../header/Header";
 
 export default function RendReqConfig({
   campaignName,
@@ -366,6 +367,12 @@ export default function RendReqConfig({
 
   return (
     <div>
+    <div>
+    <center>
+      <Header />
+    </center>
+    </div>
+    <div>
       <Grid container justifyContent="center">
         <Grid item>
           <CampHeader
@@ -376,7 +383,7 @@ export default function RendReqConfig({
           />
         </Grid>
       </Grid>
-
+      </div>
       <Grid
         container
         spacing={2}
