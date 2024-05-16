@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, TextField, AppBar, Toolbar, Paper, IconButton, InputBase } from '@mui/material';
+import { Box, Grid, AppBar, Toolbar, Paper, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
