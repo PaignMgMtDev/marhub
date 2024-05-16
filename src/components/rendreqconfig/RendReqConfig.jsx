@@ -282,7 +282,7 @@ export default function RendReqConfig({
   const [localizationChecked, setLocalizationChecked] = useState(false);
   const [translationsChecked, setTranslationsChecked] = useState(false);
   const [placementData, setPlacementData] = useState([]);
-
+  
   const handleLocalizationChange = () =>
     setLocalizationChecked(!localizationChecked);
   const handleTranslationsChange = () =>
@@ -362,6 +362,7 @@ export default function RendReqConfig({
     const filteredTactics = selectedRows.filter((t) => t !== tactic);
     setSelectedRows(filteredTactics);
   };
+
 
   return (
     <div>
