@@ -1,33 +1,11 @@
 import React from 'react';
-import { Box, Typography, Grid, TextField, InputAdornment, AppBar, Toolbar, Paper, IconButton, InputBase } from '@mui/material';
+import { Box, Grid, TextField, AppBar, Toolbar, Paper, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { outlinedInputClasses } from "@mui/material/OutlinedInput";
-import { styled } from "@mui/material/styles";
 
 
-export default function Header({
-    campaignName,
-    backDash,
-    tacticForm,
-    backTact
-}) {
-    console.log(outlinedInputClasses)
-    const CustomTextField = styled(TextField)({
-        ['&:active']: {
-           border : 'none'
-        }
-    })
-
-    const searchStyles = {
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        background: 'white',
-        borderRadius: '8px',
-        borderBottom: '0',
-        color: '#FF8D6B',
-    }
-
+export default function Header() {
     const paperStyles = {
         position: 'absolute',
         right: '0',
