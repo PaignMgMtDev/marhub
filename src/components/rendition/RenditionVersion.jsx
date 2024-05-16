@@ -49,6 +49,19 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
     }
   }, [apiBaseUrl, selectedVersion, authHeader, detailValues]);
 
+  const submitRenditionVersion = async () => {
+    console.log('submitting rendition...')
+    try {
+      const tempRequestId = 1;
+      console.log(detailValues);
+      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.placementVersionId}/${tempRequestId}/`, detailValues, authHeader)
+      console.log(response.data)
+
+    } catch (err) {
+      console.log(err.message, err.code)
+    }
+  }
+
   useEffect(() => {
     if (!dataLoaded) {
       loadVersion();
@@ -165,8 +178,6 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
     setStep(1);
   };
 
-
-
   return (
     <Card className="edit" component="section">
       {!dataLoaded && <CircularProgress />}
@@ -256,7 +267,7 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
             })}
             <Stack className="edit-form__button-row" direction="row">
               <Button className="edit-form__button edit-form__button_cancel" onClick={() => resetToOriginalValues()}>Cancel</Button>
-              <Button className="edit-form__button edit-form__button_confirm" onClick={() => setStep(1)}>Confirm</Button>
+              <Button className="edit-form__button edit-form__button_confirm" onClick={submitRenditionVersion}>Submit</Button>
             </Stack>
           </Stack>
         </Stack>
