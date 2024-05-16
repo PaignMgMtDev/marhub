@@ -4,12 +4,13 @@ import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import { formatDate } from '../../utils/utils';
 
-export default function RenditionTactics({ auth }){
+export default function RenditionTactics({ auth ,handleRenditionRequestID}){
     const { rendition } = useParams()
     const navigate = useNavigate()
     const [renditionTactics, setRenditionTactics] = useState(null)
     const [approvedTacticId, setApprovedTacticId] = useState(null)
     const [openModal, setOpenModal] = useState(false)
+
 
     const toggleModal = () => {
         setOpenModal(!openModal)
@@ -42,6 +43,7 @@ export default function RenditionTactics({ auth }){
     const editTactic = (tacticId) => {
         const url = `/renditions/${tacticId}`
         navigate(url)
+        handleRenditionRequestID(rendition)
     }
 
     const modalBoxtyles = {

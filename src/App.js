@@ -135,6 +135,12 @@ function App() {
 
   let navigate = useNavigate();
 
+  const [renditionRequestID,setRenditionRequestID] = useState("");
+
+  const handleRenditionRequestID = (value) =>{
+    setRenditionRequestID(value);
+  }
+
   // useEffect(() => {
   //   if (auth) {
   //     navigate(location.pathname);
@@ -316,13 +322,16 @@ function App() {
           <Route
             path="/renditions/:tactic"
             element={
-              <Rendition auth={auth} />
+              <Rendition 
+              auth={auth}
+              renditionRequestID={renditionRequestID}
+              />
             }
           />
           <Route
             path="/rendition-request/:rendition"
             element={
-              <RenditionTactics auth={auth} />
+              <RenditionTactics auth={auth} handleRenditionRequestID={handleRenditionRequestID}/>
             }
           />
         </Routes>

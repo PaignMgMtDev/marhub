@@ -9,7 +9,7 @@ import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function Rendition({ auth, requestId }) {
+export default function Rendition({ auth, requestId, renditionRequestID }) {
   const [treatment, setTreatment] = useState({});
   const [selectedModule, setSelectedModule] = useState({});
   const [selectedVersion, setSelectedVersion] = useState(null); // Single object to hold version details
@@ -108,6 +108,8 @@ export default function Rendition({ auth, requestId }) {
     }
     
   }, [selectedModule, detailValues, step, tempUpdates]);
+
+  console.log(renditionRequestID);
 
   return (
     <Box className="rendition" component="main">
