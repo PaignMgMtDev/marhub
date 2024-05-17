@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from "@mui/material";
 import CampHeader from "../header/CampHeader";
-import Header from "../header/Header";
 
 export default function CampTactics({
   campaignName,
@@ -75,11 +74,6 @@ export default function CampTactics({
 
   return (
     <div>
-    <div>
-    <center>
-      <Header />
-    </center>
-    </div>
     <div>
       <center>
         <CampHeader 

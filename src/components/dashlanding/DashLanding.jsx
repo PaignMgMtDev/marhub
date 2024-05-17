@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from "@mui/material";
-import Header from "../header/Header";
 
 export default function DashLanding({
   handleAddNewContent,
@@ -103,9 +102,6 @@ export default function DashLanding({
 
   return (
     <div>
-      <center>
-        <Header />
-      </center>
       <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%"}}>
         <DataGridPro rows={rows} columns={columns} />
       </div>

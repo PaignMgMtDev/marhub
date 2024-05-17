@@ -9,6 +9,7 @@ import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
 import Rendition from "./components/rendition/Rendition";
 import Collaborators from "./components/collaborators/Collaborators";
 import RenditionTactics from "./components/renditiontactics/RenditionTactics";
+import Header from "./components/header/Header";
 // import Cookies from 'js-cookie';
 
 function App() {
@@ -238,6 +239,7 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
       {!auth ? null : (
         <Routes>
           <Route
