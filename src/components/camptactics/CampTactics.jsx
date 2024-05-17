@@ -99,7 +99,7 @@ export default function CampTactics({
       </div>
       </div>
       <br />
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end" ,paddingRight:"10%" }}>
         {newContent ? (
           <Button
             variant="contained"
@@ -116,7 +116,7 @@ export default function CampTactics({
         variant="contained"
             onClick={handleReqConfig}
             disabled={selectedRows.length === 0}
-            sx={{ backgroundColor: "#FF7F50" }}
+            sx={{ backgroundColor: "#FF7F50"}}
         >Configure Rendition Request</Button>
         ) : null}
       </div>

@@ -14,7 +14,7 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
   const [selectedModule, setSelectedModule] = useState({});
   const [selectedVersion, setSelectedVersion] = useState(null); // Single object to hold version details
   const [step, setStep] = useState(0);
-  const [tempUpdates, setTempUpdates] = useState(false);
+  // const [tempUpdates, setTempUpdates] = useState(false);
   const [detailValues, setDetailValues] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const { tactic } = useParams();
@@ -44,26 +44,6 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
     }
   }, [apiBaseUrl, tactic, authHeader, requestId]);
 
-  const submitRenditionVersion = async () => {
-    if(Object.keys(detailValues).length === 0) setDialogOpen(true)
-    else{
-      console.log('submitting rendition...')
-      try {
-        const tempRequestId = 1;
-        
-        for (const placementVersionId of Object.keys(detailValues)) {
-          const renditionVersion = detailValues[placementVersionId];
-          console.log(detailValues)
-          console.log(renditionVersion);
-          let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${placementVersionId}/${tempRequestId}/`, renditionVersion, authHeader)
-          console.log(response.data)
-        }
-      } catch (err) {
-        console.log(err.message, err.code)
-      }
-    }
-  }
-
   const selectVersion = (versionId, versionName, versionNumber, dbVersion) => {
     setSelectedVersion({ versionId, versionName, versionNumber, dbVersion }); // Update selectedVersion
     setStep(3);
@@ -75,39 +55,39 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
     }
   }, [step, tactic, loadTreatment]);
 
-  useEffect(() => {
-    if (step === 1) {
-      setTempUpdates(false);
-    }
-  }, [step]);
+  // useEffect(() => {
+  //   if (step === 1) {
+  //     setTempUpdates(false);
+  //   }
+  // }, [step]);
 
   // useEffect(() => {
   //   console.log(tempUpdates)
   // }, [tempUpdates]);
 
-  useEffect(() => {
-    if (step=== 2 && !tempUpdates && Object.keys(detailValues).length > 0) {
-      const selectedModuleId = selectedModule?.placement_version_id;
-      const matchingKeys = Object.keys(detailValues).filter(key => key === selectedModuleId.toString());
+  // useEffect(() => {
+  //   if (step=== 2 && !tempUpdates && Object.keys(detailValues).length > 0) {
+  //     const selectedModuleId = selectedModule?.placement_version_id;
+  //     const matchingKeys = Object.keys(detailValues).filter(key => key === selectedModuleId.toString());
       
-      if (matchingKeys.length > 0) {
-        const topLevelKey = matchingKeys[0]; // Assuming there's only one matching key
-        const subKeys = Object.keys(detailValues[topLevelKey]);
+  //     if (matchingKeys.length > 0) {
+  //       const topLevelKey = matchingKeys[0]; // Assuming there's only one matching key
+  //       const subKeys = Object.keys(detailValues[topLevelKey]);
   
-        const extendedRenditionVersions = subKeys.map(key => ({
-          placement_version_name: `${selectedModule.placement_version_name} - Rendition ${key}`,
-        }));
+  //       const extendedRenditionVersions = subKeys.map(key => ({
+  //         placement_version_name: `${selectedModule.placement_version_name} - Rendition ${key}`,
+  //       }));
   
-        // Update rendition_versions with the extended array
-        setSelectedModule(prevState => ({
-          ...prevState,
-          rendition_versions: prevState.rendition_versions.concat(extendedRenditionVersions),
-        }));
-      }
-      setTempUpdates(true)
-    }
+  //       // Update rendition_versions with the extended array
+  //       setSelectedModule(prevState => ({
+  //         ...prevState,
+  //         rendition_versions: prevState.rendition_versions.concat(extendedRenditionVersions),
+  //       }));
+  //     }
+  //     setTempUpdates(true)
+  //   }
     
-  }, [selectedModule, detailValues, step, tempUpdates]);
+  // }, [selectedModule, detailValues, step, tempUpdates]);
 
   console.log(renditionRequestID);
 
@@ -135,7 +115,7 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
               <KeyboardBackspace className="title-bar__back-icon" />
             </Button>
             <Typography className="title-bar__title" variant="h6">{treatment.vehicle_shells[0].vehicle_shell_name}</Typography>
-            <Button className="title-bar__submit" onClick={submitRenditionVersion} variant="text">Submit</Button>
+            <Button className="title-bar__submit" variant="text">Submit</Button>
           </Stack>
           {step === 1 &&
             <Card className="treatment" component="section" sx={'width:33%'}>
