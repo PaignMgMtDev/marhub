@@ -3,6 +3,7 @@ import { Button, Typography, Box, Table, TableHead, TableRow, TableCell, TableBo
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import { formatDate } from '../../utils/utils';
+import { DataGridPro } from "@mui/x-data-grid-pro";
 
 export default function RenditionTactics({ auth ,handleRenditionRequestID}){
     const { rendition } = useParams()
@@ -23,10 +24,10 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
         },
       }), [auth]);
 
-    const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
+    // const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
 
     const getTactics = useCallback(async () => {
-        const url = API_BASE_URL + `/api/mihp/rendition-request/${rendition}/`
+        const url = process.env.REACT_APP_API_BASE_URL + `/api/mihp/rendition-request/${rendition}/`
         try{
             const res = await axios.get(url, authHeader)
             res?.data && setRenditionTactics(res?.data['rendition_tactics'])
@@ -56,10 +57,76 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
         boxShadow: 24,
         p: 4,
       };
+
+    const getStatusClass = (status) => {
+    switch (status) {
+        case "PLANNED":
+        return "status-planned";
+        case "ACTIVE":
+        return "status-active";
+        case "DRAFT":
+        return "status-draft";
+        default:
+        return "status-default";
+    }
+    };
+
+    const tacticRows = renditionTactics?.map((tactic) => ({
+        id: tactic.id,
+        tactName: tactic.name,
+        status: tactic.current_status.toUpperCase(),
+        startdate: tactic.planned_start_dt,
+        enddate: tactic.planned_end_dt,
+        language: tactic.language,
+        actions: tactic?.id
+      }));
+    
+    const columns = [
+    {
+        field: "id",
+        headerName: "ID",
+        width: 300,
+    },
+    {
+        field: "tactName",
+        headerName: "Tactic Name",
+        width: 300,
+    },
+    {
+        field: "status",
+        headerName: "Status",
+        width: 200,
+        renderCell: (params) => (
+        <strong className={getStatusClass(params.value)}>{params.value}</strong>
+        ),
+    },
+    { field: "startdate", headerName: "Start Date", width: 300 },
+    { field: "enddate", headerName: "End Date", width: 300 },
+    { field: "language", headerName: "Language", width: 300 },
+    { 
+        field: "actions", 
+        width: 300,
+        renderCell: (params) => (
+            <>
+            <Button onClick={() => {toggleModal(); setApprovedTacticId(params.value)}}>Approve Tactic</Button>
+            <Button onClick={() => editTactic(params.value)}>Edit Tactic</Button>
+            </>
+        )
+    }
+    ];
+
+    // const tacticColumns = 
+
+    console.log(approvedTacticId)
     
     return(
         <Box className="rendition" component="main">
-            <TableContainer component={Paper}>
+                {renditionTactics &&
+                <DataGridPro
+                    rows={tacticRows}
+                    columns={columns}
+                />}
+            {/* <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
                         <TableRow sx={{borderBottom: 'none'}}>
@@ -104,7 +171,7 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
                         })}
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </TableContainer> */}
             {openModal &&
                 <Modal
                     open={openModal}
