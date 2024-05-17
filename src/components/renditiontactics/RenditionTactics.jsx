@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
-import { Button, Typography, Box, Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Modal } from "@mui/material"
-import axios from 'axios';
+import { Button, Typography, Box, Modal } from "@mui/material" //Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper,
 import { useParams, useNavigate } from "react-router-dom";
 import { formatDate } from '../../utils/utils';
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import axios from "axios"
 
 export default function RenditionTactics({ auth ,handleRenditionRequestID}){
     const { rendition } = useParams()
@@ -75,8 +75,8 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
         id: tactic.id,
         tactName: tactic.name,
         status: tactic.current_status.toUpperCase(),
-        startdate: tactic.planned_start_dt,
-        enddate: tactic.planned_end_dt,
+        startdate: formatDate(tactic.planned_start_dt),
+        enddate: formatDate(tactic.planned_end_dt),
         language: tactic.language,
         actions: tactic?.id
       }));
@@ -114,10 +114,6 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
         )
     }
     ];
-
-    // const tacticColumns = 
-
-    console.log(approvedTacticId)
     
     return(
         <Box className="rendition" component="main">
