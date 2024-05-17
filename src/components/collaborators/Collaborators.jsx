@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Paper,
   Button,
@@ -10,6 +10,8 @@ import {
 import CampHeader from '../header/CampHeader';
 //import { Value } from 'sass';
 import Header from "../header/Header";
+import axios from 'axios'
+import { DataGridPro } from "@mui/x-data-grid-pro";
 
 export default function Collaborators({
   campaignName,
@@ -19,6 +21,15 @@ export default function Collaborators({
   rendition,
   renditionDetails
 }) {
+
+  const [collaboratorRenditions, setCollaboratorRenditions] = useState([])
+
+  const authHeader = useMemo(() => ({
+    headers: {
+      Authorization: `Bearer ${auth}`,
+      "Content-Type": "application/json",
+    },
+  }), [auth]);
 
 
   console.log(renditionDetails);
@@ -60,17 +71,12 @@ const handleCollaboratorSelected = (user) => {
 }
 
 
+  const getRenditionsByUser = async (userId) => {
+    const url = process.env.REACT_APP_API_BASE_URL + `/api/mihp/collaborator-renditions/${userId}/`
 
-
-
-// console.log(collaboratorSelected);
-
-// console.log(JSON.stringify({
-//   "rendition_request": renditionDetails.rendition_request_log.id,
-//   "attribute_values": addedAttributes,
-//   "collaborator": collaboratorSelected.id
-// }));
-
+    const res = await axios.get(url, authHeader)
+    setCollaboratorRenditions(res?.data?.collaborator_renditions)
+  }
 
   const sendForm = () => {
     
@@ -88,7 +94,11 @@ const handleCollaboratorSelected = (user) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        if(data){
+          const user = data?.rendition_collaborator?.collaborator
+          getRenditionsByUser(user)
+
+        }
         setAttributes(attributes)
       })
       .catch((error) => {
@@ -100,6 +110,36 @@ const handleCollaboratorSelected = (user) => {
   //   const filteredUsers = user.filter((t) => t !== user);
   //   setUsers(filteredUsers);
   // };
+
+  const renditionRows = collaboratorRenditions?.map((rendition) => ({
+    id: rendition.id,
+    tactics: rendition?.tactics?.map((tact => tact?.id)),
+    placementType: rendition?.placement_type?.placement_type_name,
+    localization: rendition?.localization,
+    translation: rendition?.translation,
+    renditionDescription: rendition?.rendition_description,
+  }))
+
+const renditionColumns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+    },
+    {
+      field: "tactics",
+      headerName: "Tactics",
+      width: 300,
+    },
+    {
+      field: "placementType",
+      headerName: "Placement Type",
+      width: 200,
+    },
+    { field: "localization", headerName: "Localization", width: 300 },
+    { field: "translation", headerName: "Translation", width: 300 },
+    { field: "renditionDescription", headerName: "Rendition Description", width: 300 },
+  ];
 
   return (
     <div>
@@ -133,8 +173,8 @@ const handleCollaboratorSelected = (user) => {
       <Typography variant="h6" gutterBottom>
         Select Collaborators
       </Typography>
-      {users.map((user) => (
-        <Grid container key={user.user.id} alignItems="center" spacing={1}>
+      {users?.map((user, index) => (
+        <Grid container key={user.user.id + index} alignItems="center" spacing={1}>
           <Grid item xs>
           <Button onClick={() => handleCollaboratorSelected(user)} variant='link'
           sx={{
@@ -181,9 +221,16 @@ const handleCollaboratorSelected = (user) => {
   
 </Grid>
 
-      <Grid container justifyContent="center" style={{ marginTop: 20, paddingRight: "155px" }}>
+      <Grid container justifyContent="center" style={{ marginTop: 20, marginBottom: 20, paddingRight: "155px" }}>
         <Button variant="contained" sx={{ backgroundColor: "#FF7F50" }} onClick={sendForm}>Submit Rendition Request</Button>
       </Grid>
+      {collaboratorRenditions?.length > 0 &&
+          <DataGridPro
+          // checkboxSelection
+              rows={renditionRows}
+              columns={renditionColumns}
+          // onRowSelectionModelChange={handleSelectionChange}
+          />}
     </div>
   );
 }
