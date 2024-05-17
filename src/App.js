@@ -112,7 +112,7 @@ function App() {
     setRenditionDetails(data);
   }
 
-  const tacticRows = tacticData.map((tactic) => ({
+  const tacticRows = tacticData?.map((tactic) => ({
     id: tactic.id,
     tactName: tactic.name,
     status: tactic.current_status.toUpperCase(),
