@@ -54,7 +54,7 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
     try {
       const tempRequestId = 1;
       console.log(detailValues);
-      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.placementVersionId}/${tempRequestId}/`, detailValues, authHeader)
+      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${tempRequestId}/`, detailValues, authHeader)
       console.log(response.data)
 
     } catch (err) {
