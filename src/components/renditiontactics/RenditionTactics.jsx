@@ -85,17 +85,17 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
     {
         field: "id",
         headerName: "ID",
-        width: 300,
+        width: 100,
     },
     {
         field: "tactName",
         headerName: "Tactic Name",
-        width: 300,
+        width: 200,
     },
     {
         field: "status",
         headerName: "Status",
-        width: 200,
+        width: 100,
         renderCell: (params) => (
         <strong className={getStatusClass(params.value)}>{params.value}</strong>
         ),
