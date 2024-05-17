@@ -3,6 +3,7 @@ import { Button, Typography, Box, Modal } from "@mui/material" //Table, TableHea
 import { useParams, useNavigate } from "react-router-dom";
 import { formatDate } from '../../utils/utils';
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import axios from "axios"
 
 export default function RenditionTactics({ auth ,handleRenditionRequestID}){
     const { rendition } = useParams()
@@ -113,10 +114,6 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
         )
     }
     ];
-
-    // const tacticColumns = 
-
-    console.log(approvedTacticId)
     
     return(
         <Box className="rendition" component="main">
