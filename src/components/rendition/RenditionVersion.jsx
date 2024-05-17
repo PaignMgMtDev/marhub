@@ -52,7 +52,7 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
   const submitRenditionVersion = async () => {
     console.log('submitting rendition...')
     try {
-      const tempRequestId = 1;
+      const tempRequestId = 3;
       console.log(detailValues);
       let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.placementVersionId}/${tempRequestId}/`, detailValues, authHeader)
       console.log(response.data)

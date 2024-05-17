@@ -9,12 +9,13 @@ import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function Rendition({ auth, requestId }) {
+export default function Rendition({ auth, renditionRequestID }) {
   const [treatment, setTreatment] = useState({});
   const [selectedModule, setSelectedModule] = useState({});
   const [selectedVersion, setSelectedVersion] = useState(null); // Single object to hold version details
   const [step, setStep] = useState(0);
   // const [tempUpdates, setTempUpdates] = useState(false);
+  const [renditionList, setRenditionList] = useState([]);
   const [detailValues, setDetailValues] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const { tactic } = useParams();
@@ -32,7 +33,7 @@ export default function Rendition({ auth, requestId }) {
     console.log('loading treatment...');
     try {
       let endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`
-      if(requestId) endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}/${requestId}`
+      if(renditionRequestID) endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}/${renditionRequestID}`
       let response = await axios.get(endpoint, authHeader);
       console.log(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`);
       console.log(response.data);
@@ -42,7 +43,20 @@ export default function Rendition({ auth, requestId }) {
       console.log(err.message, err.code);
       setStep(-1);
     }
-  }, [apiBaseUrl, tactic, authHeader, requestId]);
+  }, [apiBaseUrl, tactic, authHeader, renditionRequestID]);
+
+  const loadRenditions = useCallback(async () => {
+    console.log('loading renditions...')
+    try {
+      const tempRequestId = 3;
+      console.log(selectedModule.placement_version_id)
+      let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${selectedModule.placement_version_id}/${tempRequestId}/`, authHeader)
+      console.log(response.data)
+      setRenditionList(response.data)
+    } catch (err) {
+      console.log(err.message, err.code)
+    }
+  }, [apiBaseUrl, authHeader, selectedModule.placement_version_id]);
 
   const selectVersion = (versionId, versionName, versionNumber, dbVersion) => {
     setSelectedVersion({ versionId, versionName, versionNumber, dbVersion }); // Update selectedVersion
@@ -54,6 +68,12 @@ export default function Rendition({ auth, requestId }) {
       loadTreatment();
     }
   }, [step, tactic, loadTreatment]);
+
+  useEffect(() => {
+    if (step === 2) {
+      loadRenditions();
+    }
+  }, [step, selectedModule.placementVersionId, loadRenditions]);
 
   // useEffect(() => {
   //   if (step === 1) {

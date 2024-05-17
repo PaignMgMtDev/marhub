@@ -43,7 +43,7 @@ function App() {
     })
     .catch(e => console.log(e))
     setOwner(email)
-    redirectUrl ? handleSetLanding(redirectUrl) : handleSetDash();
+    // redirectUrl ? handleSetLanding(redirectUrl) : handleSetDash();
   }
 
   const handleSetLanding = (value) => {
