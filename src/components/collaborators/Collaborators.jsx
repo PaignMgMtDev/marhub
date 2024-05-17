@@ -70,9 +70,11 @@ const handleCollaboratorSelected = (user) => {
     setAttributes(user.attribute_values)
 }
 
+
+let REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net/";
   const getRenditionsByUser = async () => {
     const userId = collaboratorSelected?.id
-    const url = process.env.REACT_APP_API_BASE_URL + `/api/mihp/collaborator-renditions/${userId}/`
+    const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-renditions/${userId}/`
 
     const res = await axios.get(url, authHeader)
     setCollaboratorRenditions(res?.data?.collaborator_renditions)
