@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
-import { Button, Typography, Box, Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Modal } from "@mui/material"
-import axios from 'axios';
+import { Button, Typography, Box, Modal } from "@mui/material" //Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper,
 import { useParams, useNavigate } from "react-router-dom";
 import { formatDate } from '../../utils/utils';
 import { DataGridPro } from "@mui/x-data-grid-pro";
