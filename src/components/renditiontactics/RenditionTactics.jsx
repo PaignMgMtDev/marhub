@@ -75,8 +75,8 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
         id: tactic.id,
         tactName: tactic.name,
         status: tactic.current_status.toUpperCase(),
-        startdate: tactic.planned_start_dt,
-        enddate: tactic.planned_end_dt,
+        startdate: formatDate(tactic.planned_start_dt),
+        enddate: formatDate(tactic.planned_end_dt),
         language: tactic.language,
         actions: tactic?.id
       }));
