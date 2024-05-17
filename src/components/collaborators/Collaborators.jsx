@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import CampHeader from '../header/CampHeader';
 //import { Value } from 'sass';
-import Header from "../header/Header";
 import axios from 'axios'
 import { DataGridPro } from "@mui/x-data-grid-pro";
 
@@ -141,11 +140,6 @@ const renditionColumns = [
 
   return (
     <div>
-    <div>
-    <center>
-      <Header />
-    </center>
-    </div>
     <div>
     <div>
         <Grid container justifyContent="center">
