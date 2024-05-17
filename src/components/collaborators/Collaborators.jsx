@@ -64,14 +64,15 @@ const [collaboratorSelected, setCollaboratorSelected] = useState([])
 const [selectedUserId, setSelectedUserId] = useState(null);
 
 const handleCollaboratorSelected = (user) => {
+    setCollaboratorRenditions([])
     const ids = user;
     setCollaboratorSelected(ids);
     setSelectedUserId(user.user.id);
     setAttributes(user.attribute_values)
 }
 
-
-  const getRenditionsByUser = async (userId) => {
+  const getRenditionsByUser = async () => {
+    const userId = collaboratorSelected?.id
     const url = process.env.REACT_APP_API_BASE_URL + `/api/mihp/collaborator-renditions/${userId}/`
 
     const res = await axios.get(url, authHeader)
@@ -94,16 +95,13 @@ const handleCollaboratorSelected = (user) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if(data){
-          const user = data?.rendition_collaborator?.collaborator
-          getRenditionsByUser(user)
-
-        }
         setAttributes(attributes)
       })
       .catch((error) => {
         console.error("Error:", error);
       });
+
+      getRenditionsByUser()
   };
 
   // const handleRemoveUser = (user) => {
@@ -226,10 +224,8 @@ const renditionColumns = [
       </Grid>
       {collaboratorRenditions?.length > 0 &&
           <DataGridPro
-          // checkboxSelection
               rows={renditionRows}
               columns={renditionColumns}
-          // onRowSelectionModelChange={handleSelectionChange}
           />}
     </div>
   );
