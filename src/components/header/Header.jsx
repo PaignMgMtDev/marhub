@@ -21,7 +21,7 @@ export default function Header() {
             <Box
                 sx={{
                     height: '110px',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                    // boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                     backgroundColor: '#fff'
                 }}>
                 <AppBar position="static" sx={{backgroundColor: 'white'}}>

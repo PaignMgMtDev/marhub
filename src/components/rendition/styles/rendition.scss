@@ -14,24 +14,100 @@ body{
         background-color: whitesmoke !important;
     }
 
+    &__display{
+        display: flex;
+        width: 100%;
+    }
+
+    .sidebar{
+        display: none;
+        background-color: rgba(0,0,0,0);
+        box-shadow: unset;
+        padding: 0.5rem 1rem;
+
+        @include mixins.wide-screen{
+            @include mixins.default-grid;
+        }
+
+        &__logo{
+            width: 50px;
+            height: 50px;
+            background-color: var(--coral);
+            padding-right: 3.5px;
+            padding-top: 5px;
+            border-radius: 2pc;
+        }
+    }
+
+    .main-display{
+        background-color: rgba(0,0,0,0);
+        box-shadow: unset;
+        width: 100%;
+
+        &__panels{
+            position: relative;
+
+            @include mixins.wide-screen{
+                display: flex;
+            }
+        }
+    }
+
     .title-bar{
         background-color: white;
         margin-bottom: 1rem;
+        border-radius: 0;
+        width: 100%;
 
         &__back{
             color: black;
+
+            &:hover{
+                background-color: rgba(0,0,0,0);
+            }
+        }
+
+        &__title{
+            margin: 1.25rem 0;
+            @include mixins.title-font;
         }
 
         &__submit{
-            margin-left: auto;
+            color: var(--coral);
+            margin: 0 2rem 0 auto;
             text-transform: unset;
+            font-size: 1rem;
+
+            &:hover{
+                background-color: rgba(0,0,0,0);
+            }
         }
     }
 
     .treatment{
+        @include mixins.default-grid;
+        grid-auto-rows: max-content;
         margin: 0 1rem;
         border-radius: 0.7rem;
         padding: 2rem 1rem;
+        
+        @include mixins.wide-screen{
+            padding: 1rem;
+            @include mixins.display-card;
+        }
+
+        &:hover{
+            @include mixins.wide-screen{
+                .rendition .treatment .module{
+                    opacity: 0.5;
+                }
+            }
+        }
+
+        &__name{
+            @include mixins.title-font;
+            margin-bottom: 0.5rem;
+        }
     }
 
     .module{
@@ -41,14 +117,29 @@ body{
         &:hover{
             outline: 2px solid coral;
 
+            @include mixins.wide-screen{
+                outline: none;
+            }
+
             .module__name{
                 display: block;
+
+                @include mixins.wide-screen{
+                    display: none;
+                }
             }
+        }
+
+        &__dimmer{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
         }
 
         &__name{
             display: none;
-            background-color: coral;
+            background-color: var(--coral);
             padding: 0.25rem 0.35rem;
             position: absolute;
             top: -1.9rem;
@@ -57,9 +148,75 @@ body{
         }
     }
 
+    .versions{
+        @include mixins.default-grid;
+        grid-auto-rows: max-content;
+        padding-bottom: 0.25rem;
+
+        @include mixins.wide-screen{
+            @include mixins.display-card;
+        }
+        
+
+        &__heading{
+            @include mixins.title-font;
+            margin: 1rem 1rem 0 1rem;
+        }
+
+        &__add{
+            margin: 0 0.65rem;
+            text-transform: unset;
+            font-size: 0.95rem;
+        }
+
+        .selected-version {
+            background-color: #f0f0f0;
+        }
+    }
+
+    .edit{
+        @include mixins.default-grid;
+        grid-auto-rows: max-content;
+        padding: 1rem 1rem 0.5rem 1rem;
+
+
+        @include mixins.wide-screen{
+            @include mixins.display-card;
+            margin-left: 1rem;
+        }
+
+        &__heading{
+            @include mixins.title-font;
+            margin-bottom: 0.25rem;
+        }
+
+        &__subheading{
+            @include mixins.title-font;
+            margin-bottom: 1rem;
+        }
+
+        &__uploading{
+            margin-bottom: 1rem;
+        }
+    }
+
     .edit-form{
         &__text-input{
             width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        &__link-button{
+            min-width: unset;
+        }
+
+        &__button-row{
+            justify-content: space-between;
+        }
+
+        &__button{
+            text-transform: unset;
+            font-size: 0.95rem;
         }
     }
 }

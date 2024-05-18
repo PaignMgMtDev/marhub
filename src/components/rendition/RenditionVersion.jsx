@@ -1,24 +1,23 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Button, Stack, Card, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, CircularProgress } from "@mui/material";
+import { Button, Stack, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, CircularProgress } from "@mui/material";
 import { Link } from '@mui/icons-material';
 // import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersion, setStep, detailValues, setDetailValues, renditionRequestId }) {
+export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersion, renditionList, setStep, detailValues, setDetailValues, renditionRequestId }) {
 
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
   const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [originalValues, setOriginalValues] = useState(null);
 
   const loadVersion = useCallback(async () => {
-    console.log(`version id: ${selectedVersion.versionId}`)
     try {
       let response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader)
-      console.log(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`)
       console.log(response.data)
       setPlacementVersion(response.data);
       setDataLoaded(true);
@@ -29,16 +28,16 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
   }, [apiBaseUrl, selectedVersion, authHeader]);
 
   const submitRenditionVersion = async () => {
-    console.log('submitting rendition...')
+    setSubmitting(true)
     try {
-      const tempRequestId = 5;
-      console.log(detailValues);
-      console.log(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.originalVersion}/${tempRequestId}/`)
-      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${tempRequestId}/`, detailValues, authHeader)
+      // const tempRequestId = 5;
+      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader)
       console.log(response.data)
-
+      setStep(2)
+      setSubmitting(false)
     } catch (err) {
       console.log(err.message, err.code)
+      setSubmitting(false)
     }
   }
 
@@ -47,10 +46,6 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
       loadVersion();
     }
   }, [dataLoaded, loadVersion]);
-
-  useEffect(() => {
-    console.log(selectedVersion)
-  }, [selectedVersion]);
 
   useEffect(() => {
     if (placementVersion.content_details && !detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]) {
@@ -159,11 +154,13 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
   };
 
   return (
-    <Card className="edit" component="section">
-      {!dataLoaded && <CircularProgress />}
-      {dataLoaded && (
+    <>
+      {submitting && <Typography className="edit__uploading">Uploading rendition...</Typography>}
+      {(!dataLoaded || submitting) && <CircularProgress />}
+      {(dataLoaded && !submitting) && (
         <Stack className="edit__display">
           <Typography className="edit__heading">{selectedVersion.versionName}</Typography>
+          <Typography className="edit__subheading">{selectedVersion.versionNumber > renditionList.length ? `Create Rendition ${selectedVersion.versionNumber}` : `Edit Rendition ${selectedVersion.versionNumber}`}</Typography>
           <Stack className="edit-form" component="form" noValidate autoComplete="off">
             {placementVersion.content_details.map((detail) => {
               const detailId = detail.detail_id;
@@ -252,6 +249,6 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
           </Stack>
         </Stack>
       )}
-    </Card>
+    </>
   );
 }

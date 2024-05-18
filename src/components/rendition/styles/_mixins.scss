@@ -59,3 +59,14 @@
   top: 0;
   left: 0;
 }
+
+@mixin title-font{
+  color: rgba(0,0,0,0.6);
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+@mixin display-card{
+  width: 29.5%;
+  height: max-content;
+}
