@@ -30,13 +30,10 @@ export default function Rendition({ auth, renditionRequestID }) {
   }), [auth]);
 
   const loadTreatment = useCallback(async () => {
-    console.log('loading treatment...');
     try {
       let endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`
       if(renditionRequestID) endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}/${renditionRequestID}`
       let response = await axios.get(endpoint, authHeader);
-      console.log(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`);
-      console.log(response.data);
       setTreatment(response.data);
       setStep(1);
     } catch (err) {
@@ -46,20 +43,17 @@ export default function Rendition({ auth, renditionRequestID }) {
   }, [apiBaseUrl, tactic, authHeader, renditionRequestID]);
 
   const loadRenditions = useCallback(async () => {
-    console.log('loading renditions...')
     try {
-      const tempRequestId = 3;
-      console.log(selectedModule.placement_version_id)
+      const tempRequestId = 5;
       let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${selectedModule.placement_version_id}/${tempRequestId}/`, authHeader)
-      console.log(response.data)
       setRenditionList(response.data)
     } catch (err) {
       console.log(err.message, err.code)
     }
   }, [apiBaseUrl, authHeader, selectedModule.placement_version_id]);
 
-  const selectVersion = (versionId, versionName, versionNumber, dbVersion) => {
-    setSelectedVersion({ versionId, versionName, versionNumber, dbVersion }); // Update selectedVersion
+  const selectVersion = (versionId, versionName, versionNumber, originalVersion) => {
+    setSelectedVersion({ versionId, versionName, versionNumber, originalVersion }); // Update selectedVersion
     setStep(3);
   }
 
@@ -141,15 +135,26 @@ export default function Rendition({ auth, renditionRequestID }) {
                 {Object.keys(treatment.vehicle_shells[0].module_coordinates).map((coordinate) => {
                   const vehicleShell = treatment.vehicle_shells[0];
                   const module = vehicleShell.module_coordinates[coordinate];
+                  
                   return (
                     <Box className="module" key={module.module_id} onClick={() => { setSelectedModule(module); setStep(2); }}>
                       <Typography className="module__name">{module.placement_version_name}</Typography>
+                      {module.placement_type_id === 2?
+                      <CardMedia
+                        className="module__image"
+                        component="img"
+                        height={'100px'}
+                        image={module.image}
+                        alt=""
+                      />
+                      :
                       <CardMedia
                         className="module__image"
                         component="img"
                         image={module.image}
                         alt=""
                       />
+                      }
                     </Box>
                   );
                 })}
@@ -160,20 +165,20 @@ export default function Rendition({ auth, renditionRequestID }) {
             <Card className="versions">
               <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
               <List className="versions__list">
-                {selectedModule.rendition_versions.map((renditionVersion, i) => (
+                {renditionList.map((renditionVersion, i) => (
                   <ListItem key={`${selectedModule.placement_version_id}--${i}`} className="versions__item" disablePadding>
-                    <ListItemButton onClick={()=>selectVersion((renditionVersion?.placement_version_id || selectedModule?.placement_version_id), renditionVersion?.placement_version_name, i+1, renditionVersion?.placement_version_id)} className="versions__version-button">
-                      <ListItemText className="versions__text" primary={renditionVersion?.placement_version_name} />
+                    <ListItemButton onClick={()=>selectVersion(renditionVersion?.id, renditionVersion?.name, i+1, selectedModule?.placement_version_id)} className="versions__version-button">
+                      <ListItemText className="versions__text" primary={renditionVersion?.name} />
                     </ListItemButton>
                   </ListItem>
                 ))}
               </List>
               <Stack className="versions__button-row" direction="row">
-                <Button className="versions__add" variant="text" onClick={()=>selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, selectedModule.rendition_versions.length+1, selectedModule?.placement_version_id)}>Add Rendition</Button>
+                <Button className="versions__add" variant="text" onClick={()=>selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, renditionList.length+1, selectedModule?.placement_version_id)}>Add Rendition</Button>
               </Stack>
             </Card>
           }
-          {step === 3 && <RenditionVersion apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} />}
+          {step === 3 && <RenditionVersion apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} />}
         </Box>
       }
     </Box>

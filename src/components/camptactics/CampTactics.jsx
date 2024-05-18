@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from "@mui/material";
 import CampHeader from "../header/CampHeader";
+import Header from "../header/Header";
 
 export default function CampTactics({
   campaignName,
@@ -74,6 +75,12 @@ export default function CampTactics({
 
   return (
     <div>
+    <div>
+    <center>
+      <Header />
+    </center>
+    </div>
+    <div>
       <center>
         <CampHeader 
         campaignName={campaignName} 
@@ -82,14 +89,17 @@ export default function CampTactics({
         newContent={newContent}
         />
       </center>
+      <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%"}}>
       <DataGridPro
         checkboxSelection
         rows={tacticRows}
         columns={columns}
         onRowSelectionModelChange={handleSelectionChange}
       />
+      </div>
+      </div>
       <br />
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end" ,paddingRight:"10%" }}>
         {newContent ? (
           <Button
             variant="contained"
@@ -106,7 +116,7 @@ export default function CampTactics({
         variant="contained"
             onClick={handleReqConfig}
             disabled={selectedRows.length === 0}
-            sx={{ backgroundColor: "#FF7F50" }}
+            sx={{ backgroundColor: "#FF7F50"}}
         >Configure Rendition Request</Button>
         ) : null}
       </div>

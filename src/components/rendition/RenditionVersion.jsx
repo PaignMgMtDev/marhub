@@ -6,7 +6,7 @@ import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersion, setStep, detailValues, setDetailValues }) {
+export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersion, setStep, detailValues, setDetailValues, renditionRequestId }) {
 
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
@@ -15,46 +15,26 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
   const [originalValues, setOriginalValues] = useState(null);
 
   const loadVersion = useCallback(async () => {
-    console.log("loading content...")
-    if(selectedVersion?.dbVersion){
-      console.log("loading content from db...")
-      try {
-        let response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader)
-        console.log(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`)
-        console.log(response.data)
-        setPlacementVersion(response.data);
-        console.log(response.data)
-        setDataLoaded(true);
-      } catch (err) {
-        console.log(err.message, err.code)
-        setDataLoaded(false);
-      }
-    }
-    else{
-      console.log("loading content from state...")
-      const detailValuesObject = detailValues[selectedVersion.versionId][selectedVersion.versionNumber]
-      const reformattedDetailValues = Object.keys(detailValuesObject).map(detailId => ({
-        detail_id: parseInt(detailId), // Convert detailId to integer
-        detail_name: detailValuesObject[detailId].detail_name,
-        detail_type: detailValuesObject[detailId].detail_type,
-        img_url: detailValuesObject[detailId].detail_type === "image" ? detailValuesObject[detailId].text : null,
-        text: detailValuesObject[detailId].detail_type === "text" ? detailValuesObject[detailId].text : null,
-        html_code: detailValuesObject[detailId].detail_type === "html" ? detailValuesObject[detailId].text : null,
-        destination_url: detailValuesObject[detailId].destination_url,
-      }));
-      const reformattedData = { content_details: reformattedDetailValues };
-      console.log(reformattedData)
-      setPlacementVersion(reformattedData);
+    console.log(`version id: ${selectedVersion.versionId}`)
+    try {
+      let response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader)
+      console.log(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`)
+      console.log(response.data)
+      setPlacementVersion(response.data);
       setDataLoaded(true);
+    } catch (err) {
+      console.log(err.message, err.code)
+      setDataLoaded(false);
     }
-  }, [apiBaseUrl, selectedVersion, authHeader, detailValues]);
+  }, [apiBaseUrl, selectedVersion, authHeader]);
 
   const submitRenditionVersion = async () => {
     console.log('submitting rendition...')
     try {
-      const tempRequestId = 3;
+      const tempRequestId = 5;
       console.log(detailValues);
-      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.placementVersionId}/${tempRequestId}/`, detailValues, authHeader)
+      console.log(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.originalVersion}/${tempRequestId}/`)
+      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${tempRequestId}/`, detailValues, authHeader)
       console.log(response.data)
 
     } catch (err) {
@@ -74,7 +54,7 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
 
   useEffect(() => {
     if (placementVersion.content_details && !detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]) {
-      const newDetailValues = { ...detailValues };
+      const newDetailValues = {};
       const versionId = selectedVersion.versionId;
       const versionNumber = selectedVersion.versionNumber;
       const originalValuesCopy = { ...originalValues };
@@ -175,7 +155,7 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
     if (originalValues) {
       setDetailValues(originalValues);
     }
-    setStep(1);
+    setStep(2);
   };
 
   return (

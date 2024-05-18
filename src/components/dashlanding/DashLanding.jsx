@@ -106,7 +106,7 @@ export default function DashLanding({
       <center>
         <Header />
       </center>
-      <div style={{ height: 400, width: "100%" }}>
+      <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%"}}>
         <DataGridPro rows={rows} columns={columns} />
       </div>
     </div>

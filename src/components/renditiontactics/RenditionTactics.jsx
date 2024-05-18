@@ -4,12 +4,13 @@ import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import { formatDate } from '../../utils/utils';
 
-export default function RenditionTactics({ auth }){
+export default function RenditionTactics({ auth ,handleRenditionRequestID}){
     const { rendition } = useParams()
     const navigate = useNavigate()
     const [renditionTactics, setRenditionTactics] = useState(null)
     const [approvedTacticId, setApprovedTacticId] = useState(null)
     const [openModal, setOpenModal] = useState(false)
+
 
     const toggleModal = () => {
         setOpenModal(!openModal)
@@ -22,9 +23,10 @@ export default function RenditionTactics({ auth }){
         },
       }), [auth]);
 
-    
+    const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
+
     const getTactics = useCallback(async () => {
-        const url = process.env.REACT_APP_API_BASE_URL + `/api/mihp/rendition-request/${rendition}/`
+        const url = API_BASE_URL + `/api/mihp/rendition-request/${rendition}/`
         try{
             const res = await axios.get(url, authHeader)
             res?.data && setRenditionTactics(res?.data['rendition_tactics'])
@@ -41,6 +43,7 @@ export default function RenditionTactics({ auth }){
     const editTactic = (tacticId) => {
         const url = `/renditions/${tacticId}`
         navigate(url)
+        handleRenditionRequestID(rendition)
     }
 
     const modalBoxtyles = {

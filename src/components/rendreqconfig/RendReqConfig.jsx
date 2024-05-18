@@ -266,6 +266,7 @@ import {
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import CloseIcon from "@mui/icons-material/Close";
+import Header from "../header/Header";
 
 export default function RendReqConfig({
   campaignName,
@@ -282,7 +283,7 @@ export default function RendReqConfig({
   const [localizationChecked, setLocalizationChecked] = useState(false);
   const [translationsChecked, setTranslationsChecked] = useState(false);
   const [placementData, setPlacementData] = useState([]);
-
+  
   const handleLocalizationChange = () =>
     setLocalizationChecked(!localizationChecked);
   const handleTranslationsChange = () =>
@@ -363,7 +364,14 @@ export default function RendReqConfig({
     setSelectedRows(filteredTactics);
   };
 
+
   return (
+    <div>
+    <div>
+    <center>
+      <Header />
+    </center>
+    </div>
     <div>
       <Grid container justifyContent="center">
         <Grid item>
@@ -375,7 +383,7 @@ export default function RendReqConfig({
           />
         </Grid>
       </Grid>
-
+      </div>
       <Grid
         container
         spacing={2}

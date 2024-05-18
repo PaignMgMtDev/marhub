@@ -19,8 +19,7 @@ function App() {
   
   const searchParams = new URLSearchParams(location.search);
   let redirectUrl = searchParams.get('redirect_url');
-  
-  console.log(redirectUrl)
+  let redirectUrl2 = searchParams.get('redirect_path');
 
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
@@ -43,7 +42,11 @@ function App() {
     })
     .catch(e => console.log(e))
     setOwner(email)
-    // redirectUrl ? handleSetLanding(redirectUrl) : handleSetDash();
+    redirectUrl ? 
+    handleSetLanding(redirectUrl) : 
+    redirectUrl2 ?
+    handleSetLanding(redirectUrl2) : 
+    handleSetDash();
   }
 
   const handleSetLanding = (value) => {
@@ -131,6 +134,12 @@ function App() {
   };
 
   let navigate = useNavigate();
+
+  const [renditionRequestID,setRenditionRequestID] = useState("");
+
+  const handleRenditionRequestID = (value) =>{
+    setRenditionRequestID(value);
+  }
 
   // useEffect(() => {
   //   if (auth) {
@@ -313,13 +322,16 @@ function App() {
           <Route
             path="/renditions/:tactic"
             element={
-              <Rendition auth={auth} />
+              <Rendition 
+              auth={auth}
+              renditionRequestID={renditionRequestID}
+              />
             }
           />
           <Route
             path="/rendition-request/:rendition"
             element={
-              <RenditionTactics auth={auth} />
+              <RenditionTactics auth={auth} handleRenditionRequestID={handleRenditionRequestID}/>
             }
           />
         </Routes>
