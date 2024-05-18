@@ -9,12 +9,13 @@ import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function Rendition({ auth, requestId, renditionRequestID }) {
+export default function Rendition({ auth, renditionRequestID }) {
   const [treatment, setTreatment] = useState({});
   const [selectedModule, setSelectedModule] = useState({});
   const [selectedVersion, setSelectedVersion] = useState(null); // Single object to hold version details
   const [step, setStep] = useState(0);
   // const [tempUpdates, setTempUpdates] = useState(false);
+  const [renditionList, setRenditionList] = useState([]);
   const [detailValues, setDetailValues] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const { tactic } = useParams();
@@ -29,23 +30,30 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
   }), [auth]);
 
   const loadTreatment = useCallback(async () => {
-    console.log('loading treatment...');
     try {
       let endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`
-      if(requestId) endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}/${requestId}`
+      if(renditionRequestID) endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}/${renditionRequestID}`
       let response = await axios.get(endpoint, authHeader);
-      console.log(`${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`);
-      console.log(response.data);
       setTreatment(response.data);
       setStep(1);
     } catch (err) {
       console.log(err.message, err.code);
       setStep(-1);
     }
-  }, [apiBaseUrl, tactic, authHeader, requestId]);
+  }, [apiBaseUrl, tactic, authHeader, renditionRequestID]);
 
-  const selectVersion = (versionId, versionName, versionNumber, dbVersion) => {
-    setSelectedVersion({ versionId, versionName, versionNumber, dbVersion }); // Update selectedVersion
+  const loadRenditions = useCallback(async () => {
+    try {
+      const tempRequestId = 5;
+      let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${selectedModule.placement_version_id}/${tempRequestId}/`, authHeader)
+      setRenditionList(response.data)
+    } catch (err) {
+      console.log(err.message, err.code)
+    }
+  }, [apiBaseUrl, authHeader, selectedModule.placement_version_id]);
+
+  const selectVersion = (versionId, versionName, versionNumber, originalVersion) => {
+    setSelectedVersion({ versionId, versionName, versionNumber, originalVersion }); // Update selectedVersion
     setStep(3);
   }
 
@@ -54,6 +62,12 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
       loadTreatment();
     }
   }, [step, tactic, loadTreatment]);
+
+  useEffect(() => {
+    if (step === 2) {
+      loadRenditions();
+    }
+  }, [step, selectedModule.placementVersionId, loadRenditions]);
 
   // useEffect(() => {
   //   if (step === 1) {
@@ -89,8 +103,6 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
     
   // }, [selectedModule, detailValues, step, tempUpdates]);
 
-  console.log(renditionRequestID);
-
   return (
     <Box className="rendition" component="main">
       <Dialog className="popup" onClose={()=>setDialogOpen(false)} open={dialogOpen}>
@@ -118,7 +130,7 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
             <Button className="title-bar__submit" variant="text">Submit</Button>
           </Stack>
           {step === 1 &&
-            <Card className="treatment" component="section" sx={'width:33%'}>
+            <Card className="treatment" component="section">
               <Stack className="treatment__display">
                 {Object.keys(treatment.vehicle_shells[0].module_coordinates).map((coordinate) => {
                   const vehicleShell = treatment.vehicle_shells[0];
@@ -153,20 +165,20 @@ export default function Rendition({ auth, requestId, renditionRequestID }) {
             <Card className="versions">
               <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
               <List className="versions__list">
-                {selectedModule.rendition_versions.map((renditionVersion, i) => (
+                {renditionList.map((renditionVersion, i) => (
                   <ListItem key={`${selectedModule.placement_version_id}--${i}`} className="versions__item" disablePadding>
-                    <ListItemButton onClick={()=>selectVersion((renditionVersion?.placement_version_id || selectedModule?.placement_version_id), renditionVersion?.placement_version_name, i+1, renditionVersion?.placement_version_id)} className="versions__version-button">
-                      <ListItemText className="versions__text" primary={renditionVersion?.placement_version_name} />
+                    <ListItemButton onClick={()=>selectVersion(renditionVersion?.id, renditionVersion?.name, i+1, selectedModule?.placement_version_id)} className="versions__version-button">
+                      <ListItemText className="versions__text" primary={renditionVersion?.name} />
                     </ListItemButton>
                   </ListItem>
                 ))}
               </List>
               <Stack className="versions__button-row" direction="row">
-                <Button className="versions__add" variant="text" onClick={()=>selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, selectedModule.rendition_versions.length+1, selectedModule?.placement_version_id)}>Add Rendition</Button>
+                <Button className="versions__add" variant="text" onClick={()=>selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, renditionList.length+1, selectedModule?.placement_version_id)}>Add Rendition</Button>
               </Stack>
             </Card>
           }
-          {step === 3 && <RenditionVersion apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} />}
+          {step === 3 && <RenditionVersion apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} />}
         </Box>
       }
     </Box>
