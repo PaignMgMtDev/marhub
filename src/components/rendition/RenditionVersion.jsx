@@ -30,8 +30,8 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
   const submitRenditionVersion = async () => {
     setSubmitting(true)
     try {
-      const tempRequestId = 5;
-      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${tempRequestId}/`, detailValues, authHeader)
+      // const tempRequestId = 5;
+      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader)
       console.log(response.data)
       setStep(2)
       setSubmitting(false)

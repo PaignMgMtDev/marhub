@@ -51,13 +51,13 @@ export default function Rendition({ auth, renditionRequestID }) {
 
   const loadRenditions = useCallback(async () => {
     try {
-      const tempRequestId = 5;
-      let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${selectedModule.placement_version_id}/${tempRequestId}/`, authHeader)
+      // const tempRequestId = 5;
+      let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${selectedModule.placement_version_id}/${renditionRequestID}/`, authHeader)
       setRenditionList(response.data)
     } catch (err) {
       console.log(err.message, err.code)
     }
-  }, [apiBaseUrl, authHeader, selectedModule.placement_version_id]);
+  }, [apiBaseUrl, authHeader, selectedModule.placement_version_id, renditionRequestID]);
 
   const selectVersion = (versionId, versionName, versionNumber, originalVersion) => {
     setSelectedVersion({ versionId, versionName, versionNumber, originalVersion }); // Update selectedVersion
