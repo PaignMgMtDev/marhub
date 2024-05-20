@@ -175,9 +175,10 @@ export default function RendReqConfig({
                       unique.push(item);
                     }
                     return unique;
-                  }, []) // Start with an empty array as the initial value of unique
+                  }, []) 
                   .map((item) => (
                     <FormControlLabel
+                    disabled={true}
                       key={item.placement_type.id}
                       value={item.placement_type.id}
                       control={<CheckBox defaultChecked />}
