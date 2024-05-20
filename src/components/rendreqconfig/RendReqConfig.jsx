@@ -10,7 +10,6 @@ import {
   IconButton,
   Grid,
   Checkbox,
-  RadioGroup,
   FormGroup
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
