@@ -56,14 +56,6 @@ function App() {
     setOwner(email)
   }
 
-  const handleSetLanding = (value) => {
-    navigate(value);
-  };
-
-  const handleSetDash = () => {
-    navigate("/dashlanding");
-  };
-
   const [campaignName, setCampaignName] = useState("");
   const [campaignID, setCampaignID] = useState("");
   const [campaignData, setCampaignData] = useState([]);
