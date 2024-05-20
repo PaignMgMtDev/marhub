@@ -12,7 +12,6 @@ import RenditionTactics from "./components/renditiontactics/RenditionTactics";
 import Header from "./components/header/Header";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { useAuth } from "./hooks/useAuth";
-// import Cookies from 'js-cookie';
 
 function App() {
   const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
