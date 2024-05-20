@@ -32,7 +32,12 @@ export default function CampTactics({
     )
       .then((response) => response.json())
       .then((data) => {
-        setTacticData(data["tactics"]);
+        const filteredTactics = data["tactics"].filter(
+          (tactic) =>
+            !["cancelled", "completed", "expired"].includes(tactic.current_status)
+        );
+        setTacticData(filteredTactics);
+        console.log(data["tactics"]);
       });
   }, [auth, campaignID, setTacticData]);
   const getStatusClass = (status) => {

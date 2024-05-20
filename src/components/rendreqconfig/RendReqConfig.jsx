@@ -10,11 +10,11 @@ import {
   IconButton,
   Grid,
   Checkbox,
-  RadioGroup,
-  Radio,
+  FormGroup
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import CloseIcon from "@mui/icons-material/Close";
+import { CheckBox } from "@mui/icons-material";
 
 export default function RendReqConfig({
   campaignName,
@@ -31,7 +31,7 @@ export default function RendReqConfig({
   const [localizationChecked, setLocalizationChecked] = useState(false);
   const [translationsChecked, setTranslationsChecked] = useState(false);
   const [placementData, setPlacementData] = useState([]);
-  
+
   const handleLocalizationChange = () =>
     setLocalizationChecked(!localizationChecked);
   const handleTranslationsChange = () =>
@@ -45,16 +45,16 @@ export default function RendReqConfig({
     setDescription(event.target.value);
   };
 
-
   useEffect(() => {
     async function fetchPlacementTypes() {
       const tacticsIds = selectedRows.map((tactic) => tactic.id);
-      const url = "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
+      const url =
+        "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
       const headers = new Headers({
         Authorization: `Bearer ${auth}`,
         "Content-Type": "application/json",
       });
-  
+
       const requestOptions = {
         method: "POST",
         headers: headers,
@@ -63,40 +63,43 @@ export default function RendReqConfig({
         }),
         redirect: "follow",
       };
-  
+
       try {
         const response = await fetch(url, requestOptions);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const result = await response.json();
-        console.log(result);
+        
         setPlacementData(result);
       } catch (error) {
         console.error("Error fetching placement types:", error);
       }
     }
-  
+
     fetchPlacementTypes();
   }, [selectedRows, auth]);
 
   const sendForm = () => {
     const tacticsIds = selectedRows.map((tactic) => tactic.id);
-    const placementIdNumber = Number(placementID);
-    fetch("https://campaign-app-api-staging.azurewebsites.net/api/mihp/rendition-request/", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${auth}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        tactics: tacticsIds,
-        placement_type: placementIdNumber,
-        localization: localizationChecked,
-        translation: translationsChecked,
-        rendition_description: description,
-      }),
-    })
+    // const placementIdNumber = Number(placementID);
+    fetch(
+      "https://campaign-app-api-staging.azurewebsites.net/api/mihp/rendition-request/",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${auth}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tactics: tacticsIds,
+          placement_type: 3,
+          localization: localizationChecked,
+          translation: translationsChecked,
+          rendition_description: description,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -112,20 +115,19 @@ export default function RendReqConfig({
     setSelectedRows(filteredTactics);
   };
 
-
   return (
     <div>
-    <div>
-      <Grid container justifyContent="center">
-        <Grid item>
-          <CampHeader
-            campaignName={campaignName}
-            tacticForm={tacticForm}
-            backTact={backTact}
-            rendition={rendition}
-          />
+      <div>
+        <Grid container justifyContent="center">
+          <Grid item>
+            <CampHeader
+              campaignName={campaignName}
+              tacticForm={tacticForm}
+              backTact={backTact}
+              rendition={rendition}
+            />
+          </Grid>
         </Grid>
-      </Grid>
       </div>
       <Grid
         container
@@ -160,16 +162,37 @@ export default function RendReqConfig({
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <FormControl component="fieldset">
               <FormLabel component="legend">Select A Placement</FormLabel>
-              <RadioGroup value={placementID} onChange={handleSetPlacementType}>
-                {placementData.map((item) => (
+              <FormGroup value={placementID} onChange={handleSetPlacementType}>
+                {placementData
+                  .reduce((unique, item) => {
+                    // Check if the unique array already contains an item with this id
+                    if (
+                      !unique.some(
+                        (obj) =>
+                          obj.placement_type.id === item.placement_type.id
+                      )
+                    ) {
+                      unique.push(item);
+                    }
+                    return unique;
+                  }, []) // Start with an empty array as the initial value of unique
+                  .map((item) => (
+                    <FormControlLabel
+                      key={item.placement_type.id}
+                      value={item.placement_type.id}
+                      control={<CheckBox defaultChecked />}
+                      label={item.placement_type.placement_type_name}
+                    />
+                  ))}
+                {/* {placementData.map((item) => (
                   <FormControlLabel
                     key={item.placement_type.id} 
                     value={item.placement_type.id} 
-                    control={<Radio />}
+                    control={<CheckBox defaultChecked />}
                     label={item.placement_type.placement_type_name} 
                   />
-                ))}
-              </RadioGroup>
+                ))} */}
+              </FormGroup>
             </FormControl>
           </Paper>
         </Grid>
