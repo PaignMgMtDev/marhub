@@ -34,10 +34,9 @@ export default function CampTactics({
       .then((data) => {
         const filteredTactics = data["tactics"].filter(
           (tactic) =>
-            !["cancelled", "completed", "expired"].includes(tactic.current_status)
+            ["approved", "planned", "in_market"].includes(tactic.current_status)
         );
         setTacticData(filteredTactics);
-        console.log(data["tactics"]);
       });
   }, [auth, campaignID, setTacticData]);
   const getStatusClass = (status) => {

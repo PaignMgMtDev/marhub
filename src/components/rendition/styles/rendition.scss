@@ -113,6 +113,7 @@ body{
     .module{
         cursor: pointer;
         position: relative;
+        width: 100%;
         
         &:hover{
             outline: 2px solid coral;
@@ -146,6 +147,13 @@ body{
             left: -0.15rem;
             font-size: 0.9rem;
         }
+
+        &__image{
+            object-fit: contain;
+            height: 100%;
+            width: 100%;
+            max-height: 21rem;
+        }
     }
 
     .versions{
@@ -167,6 +175,10 @@ body{
             margin: 0 0.65rem;
             text-transform: unset;
             font-size: 0.95rem;
+        }
+
+        &__button-row{
+            justify-content: space-between;
         }
 
         .selected-version {
