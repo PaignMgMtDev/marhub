@@ -10,17 +10,20 @@ import Rendition from "./components/rendition/Rendition";
 import Collaborators from "./components/collaborators/Collaborators";
 import RenditionTactics from "./components/renditiontactics/RenditionTactics";
 import Header from "./components/header/Header";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { useAuth } from "./hooks/useAuth";
 // import Cookies from 'js-cookie';
 
 function App() {
   const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
   const [owner, setOwner] = useState("");
-  const [auth, setAuth] = useState("");
+  // const [auth, setAuth] = useState("");
   const location = useLocation();
+  const { auth, login } = useAuth()
   
   const searchParams = new URLSearchParams(location.search);
-  let redirectUrl = searchParams.get('redirect_url');
-  let redirectUrl2 = searchParams.get('redirect_path');
+  const redirectUrl = searchParams.get('redirect_url');
+  const redirectUrl2 = searchParams.get('redirect_path');
 
   const getAccessToken = (e, email, password) => {
     e.preventDefault();
@@ -39,24 +42,19 @@ function App() {
     fetch(`${API_BASE_URL}/api/users/token/obtain/`, apiOptions)
     .then((res) => res.json())
     .then(data => {
-      data && setAuth(data?.access)
+      // data?.access && login(data?.access)
+      if(data?.access){
+        const authToken = data?.access
+        redirectUrl ? 
+          login(authToken, redirectUrl) : 
+        redirectUrl2 ?
+          login(authToken, redirectUrl2) : 
+        login(authToken, "/dashlanding")
+      }
     })
     .catch(e => console.log(e))
     setOwner(email)
-    redirectUrl ? 
-    handleSetLanding(redirectUrl) : 
-    redirectUrl2 ?
-    handleSetLanding(redirectUrl2) : 
-    handleSetDash();
   }
-
-  const handleSetLanding = (value) => {
-    navigate(value);
-  };
-
-  const handleSetDash = () => {
-    navigate("/dashlanding");
-  };
 
   const [campaignName, setCampaignName] = useState("");
   const [campaignID, setCampaignID] = useState("");
@@ -142,203 +140,126 @@ function App() {
     setRenditionRequestID(value);
   }
 
-  // useEffect(() => {
-  //   if (auth) {
-  //     navigate(location.pathname);
-  //   }
-  // }, [auth,navigate,location]);
-
-  //////////
-//   useEffect(() => {
-//     if (auth) {
-//       Cookies.set("authentication", auth);
-//     }
-//   }, [auth]);
-
-//   useEffect(() => {
-//     const token = Cookies.get("authentication");
-
-//     if (token) {
-//         verifyToken(token);
-//     } else {
-//         // Handle non-authenticated case or initial login attempt
-//     }
-
-//     async function verifyToken(token) {
-//         try {
-//             const response = await fetch(`https://campaign-app-api-staging.azurewebsites.net/api/users/token/verify/`, {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify({ token }),
-//             });
-
-//             const data = await response.json();
-
-//             if (data.isValid) {
-//                 // On successful authentication, navigate to stored URL or default
-//                 const savedPath = sessionStorage.getItem('preAuthRoute') || '/defaultPath';
-//                 navigate(savedPath, { replace: true });
-//                 sessionStorage.removeItem('preAuthRoute'); // Clear the stored path
-//             } else {
-//                 // Handle failed token verification
-//                 Cookies.remove("authentication");
-//                 // Optionally redirect to login or error page
-//             }
-//         } catch (error) {
-//             console.error('Error verifying token:', error);
-//             // Error handling
-//         }
-//     }
-// }, [navigate]);
-
-
-
-
-  // useEffect(() => {
-//   const token = Cookies.get("authentication");
-
-//   if (token) {
-//     verifyToken(token);
-//   }
-
-//   async function verifyToken(token) {
-//     try {
-//       const response = await fetch(`https://campaign-app-api-staging.azurewebsites.net/api/users/token/verify/`, {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ token }),
-//         redirect: "follow",
-//       });
-
-//       const data = await response.json();
-//       if (data.detail) {
-//         Cookies.remove("authentication");
-//         // Directly navigate to login if token is invalid
-//         navigate("/login");
-//       } else {
-//         // Navigate to the stored URL or default to '/dashlanding'
-//         const initialUrl = sessionStorage.getItem('preAuthRoute') || '/dashlanding';
-//         navigate(initialUrl, { replace: true });
-//         sessionStorage.removeItem('preAuthRoute'); // Clean up after navigating
-//       }
-//     } catch (error) {
-//       console.log("Failed to verify token:", error);
-//       navigate("/login");
-//     }
-//   }
-// }, [API_BASE_URL]); // Removed dependencies to prevent re-running unless component re-mounts
-
-// useEffect(() => {
-//   if (auth) {
-//     Cookies.set("authentication", auth);
-//   }
-// }, [auth]);
-///////
-
   return (
     <div className="App">
       <Header />
-      {!auth ? null : (
         <Routes>
+          <Route 
+            path="/"
+            element={
+              <SignIn getAccessToken={getAccessToken} />
+            }/>
           <Route
             path="/dashlanding"
             element={
-              <DashLanding
-                handleAddNewContent={handleAddNewContent}
-                campaignData={campaignData}
-                owner={owner}
-                auth={auth}
-                setCampaignData={setCampaignData}
-                handleCampaignID={handleCampaignID}
-                handleCreateRendition={handleCreateRendition}
-              />
+              <ProtectedRoute>
+                <DashLanding
+                  handleAddNewContent={handleAddNewContent}
+                  campaignData={campaignData}
+                  owner={owner}
+                  auth={auth}
+                  setCampaignData={setCampaignData}
+                  handleCampaignID={handleCampaignID}
+                  handleCreateRendition={handleCreateRendition}
+                />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/camptactics"
             element={
-              <CampTactics
-                campaignName={campaignName}
-                editTactics={editTactics}
-                selectedRows={selectedRows}
-                handleSelectionChange={handleSelectionChange}
-                tacticRows={tacticRows}
-                campaignID={campaignID}
-                setTacticData={setTacticData}
-                tacticData={tacticData}
-                auth={auth}
-                rendition={rendition}
-                newContent={newContent}
-                backDash={backDash}
-                handleReqConfig={handleReqConfig}
-              />
+              <ProtectedRoute>
+                <CampTactics
+                  campaignName={campaignName}
+                  editTactics={editTactics}
+                  selectedRows={selectedRows}
+                  handleSelectionChange={handleSelectionChange}
+                  tacticRows={tacticRows}
+                  campaignID={campaignID}
+                  setTacticData={setTacticData}
+                  tacticData={tacticData}
+                  auth={auth}
+                  rendition={rendition}
+                  newContent={newContent}
+                  backDash={backDash}
+                  handleReqConfig={handleReqConfig}
+                />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/edittactics"
             element={
-              <EditTactics
-                campaignName={campaignName}
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                auth={auth}
-                tacticForm={tacticForm}
-                backTact={backTact}
-            
-              />
+              <ProtectedRoute>
+                <EditTactics
+                  campaignName={campaignName}
+                  selectedRows={selectedRows}
+                  setSelectedRows={setSelectedRows}
+                  auth={auth}
+                  tacticForm={tacticForm}
+                  backTact={backTact}
+                />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/rendreqconfig"
             element={
-              <RendReqConfig
-                campaignName={campaignName}
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                auth={auth}
-                backTact={backTact}
-                tacticForm={tacticForm}
-                rendition={rendition}
-                handleCollabs={handleCollabs}
-              />
+              <ProtectedRoute>
+                <RendReqConfig
+                  campaignName={campaignName}
+                  selectedRows={selectedRows}
+                  setSelectedRows={setSelectedRows}
+                  auth={auth}
+                  backTact={backTact}
+                  tacticForm={tacticForm}
+                  rendition={rendition}
+                  handleCollabs={handleCollabs}
+                />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/collaborators"
             element={
-              <Collaborators
-                campaignName={campaignName}
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                auth={auth}
-                backTact={backTact}
-                tacticForm={tacticForm}
-                rendition={rendition}
-                handleCollabs={handleCollabs}
-                renditionDetails={renditionDetails}
-              />
+              <ProtectedRoute>
+                <Collaborators
+                  campaignName={campaignName}
+                  selectedRows={selectedRows}
+                  setSelectedRows={setSelectedRows}
+                  auth={auth}
+                  backTact={backTact}
+                  tacticForm={tacticForm}
+                  rendition={rendition}
+                  handleCollabs={handleCollabs}
+                  renditionDetails={renditionDetails}
+               />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/renditions/:tactic"
             element={
-              <Rendition 
-              auth={auth}
-              renditionRequestID={renditionRequestID}
-              />
+              <ProtectedRoute>
+                <Rendition 
+                  auth={auth}
+                  renditionRequestID={renditionRequestID}
+                />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/rendition-request/:rendition"
             element={
-              <RenditionTactics auth={auth} handleRenditionRequestID={handleRenditionRequestID}/>
+              <ProtectedRoute>
+                <RenditionTactics 
+                  auth={auth} 
+                  handleRenditionRequestID={handleRenditionRequestID}
+                />
+              </ProtectedRoute>
             }
           />
         </Routes>
-      )}
-      {!auth ? <SignIn getAccessToken={getAccessToken} /> : null}
     </div>
   );
 }

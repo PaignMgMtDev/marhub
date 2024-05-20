@@ -1,11 +1,29 @@
-import React from 'react';
-import { Box, Grid, AppBar, Toolbar, Paper, IconButton, InputBase } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Grid, AppBar, Toolbar, Paper, IconButton, InputBase, Popover, Button, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useAuth } from '../../hooks/useAuth';
 
 
 export default function Header() {
+    const [openSettings, setOpenSettings] = useState(false)
+    const [anchorEl, setAnchorEl] = React.useState(null)
+    const { logout } = useAuth()
+
+    const handleClick = (event) => {
+      setOpenSettings(!openSettings)
+      setAnchorEl(event.currentTarget)
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null)
+    };
+  
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined
+
+
     const paperStyles = {
         position: 'absolute',
         right: '0',
@@ -52,6 +70,7 @@ export default function Header() {
                                         <NotificationsIcon/>
                                     </IconButton>
                                     <IconButton
+                                    onClick={handleClick}
                                     sx={{color: '#FF8D6B'}}>
                                         <SettingsIcon/>
                                     </IconButton>
@@ -60,6 +79,20 @@ export default function Header() {
                         </Grid>
                     </Toolbar>
                 </AppBar>
+                {openSettings &&
+                    <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                >
+                    <Typography sx={{ p: 2 }}>Settings</Typography>
+                    <Button onClick={logout}>Logout</Button>
+                </Popover>}
             </Box>
         </div>
     );
