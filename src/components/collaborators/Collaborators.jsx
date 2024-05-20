@@ -99,7 +99,7 @@ export default function Collaborators({
       .then((data) => {
         setTables(data["attribute_tables"]);
       });
-  }, [selectedUserId]);
+  }, [selectedUserId, auth]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,7 +123,7 @@ export default function Collaborators({
     };
 
     fetchData();
-  }, [selectedTable]); // `auth` is a dependency if your token might change
+  }, [selectedTable, auth, selectedUserId]); // `auth` is a dependency if your token might change
 
   // useEffect(() => {
   //   fetch(`https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable}/`, {
