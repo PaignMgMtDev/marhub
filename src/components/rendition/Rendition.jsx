@@ -6,7 +6,6 @@ import RenditionVersion from "./RenditionVersion";
 import LoadingAnim from "./LoadingAnim";
 // import { apiBaseUrl } from "../../api";
 import axios from 'axios';
-import Header from "../header/Header";
 import "./styles/rendition.scss";
 import marriottLogo from './img/mi_button_logo.png'
 
@@ -83,7 +82,6 @@ export default function Rendition({ auth, renditionRequestID }) {
 
   return (
     <Box className="rendition" component="main">
-      <Header />
       <Dialog className="popup" onClose={()=>setDialogOpen(false)} open={dialogOpen}>
         <DialogContent className="popup__content">
           <DialogActions className="popup__actions">
