@@ -27,7 +27,7 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
     const REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
 
     const getTactics = useCallback(async () => {
-        const url = REACT_APP_API_BASE_URL + `/api/mihp/rendition-request/${rendition}/`
+        const url = REACT_APP_API_BASE_URL + `/api/mihp/rendition-request/v2/${rendition}/`
         try{
             const res = await axios.get(url, authHeader)
             res?.data && setRenditionTactics(res?.data['rendition_tactics'])
