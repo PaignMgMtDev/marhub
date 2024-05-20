@@ -6,7 +6,7 @@ import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersion, renditionList, setStep, detailValues, setDetailValues, renditionRequestId }) {
+export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader, selectedVersion, renditionList, setStep, detailValues, setDetailValues, renditionRequestId }) {
 
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
@@ -31,6 +31,12 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
     setSubmitting(true)
     try {
       // const tempRequestId = 5;
+
+      // Scroll to the top of the .rendition element
+      if (renditionRef.current) {
+        renditionRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+
       let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader)
       console.log(response.data)
       setStep(2)
@@ -151,6 +157,11 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
       setDetailValues(originalValues);
     }
     setStep(2);
+    
+    // Scroll to the top of the .rendition element
+    if (renditionRef.current) {
+      renditionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -243,7 +254,7 @@ export default function RenditionVersion({ apiBaseUrl, authHeader, selectedVersi
               );
             })}
             <Stack className="edit-form__button-row" direction="row">
-              <Button className="edit-form__button edit-form__button_cancel" onClick={() => resetToOriginalValues()}>Cancel</Button>
+              <Button className="edit-form__button edit-form__button_cancel" onClick={resetToOriginalValues}>Cancel</Button>
               <Button className="edit-form__button edit-form__button_confirm" onClick={submitRenditionVersion}>Submit</Button>
             </Stack>
           </Stack>
