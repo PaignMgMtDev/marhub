@@ -15,7 +15,7 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
   const [submitting, setSubmitting] = useState(false);
   const [originalValues, setOriginalValues] = useState(null);
 
-  const excludedKeywords = ["imgwidth", "imgheight", "cntblk", "contentstartdate", "contentenddate", "tactic_id", "product", "module", "cblock", "section"];
+  const excludedKeywords = ["imgwidth", "imgheight", "contentstartdate", "contentenddate", "tactic_id", "product", "module", "cblock", "section", "linkid", "linkname"];
 
   const loadVersion = useCallback(async () => {
     try {
