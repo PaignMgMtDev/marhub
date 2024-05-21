@@ -38,6 +38,17 @@ export default function Collaborators({
 
   const [users, setUsers] = useState([]);
   const [attributes, setAttributes] = useState([]);
+  const [selectedAttribute, setSelectedAttribute] = useState()
+  const handleSetAttribute = (event, value) => {
+   
+    if (value) {
+      setSelectedAttribute(value.id); 
+    } else {
+      setSelectedAttribute(null);
+    }
+    console.log("Selected Attribute:", selectedAttribute);
+  }
+  console.log(selectedAttribute)
   useEffect(() => {
     fetch(
       "https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborators/",
@@ -59,12 +70,12 @@ export default function Collaborators({
       });
   }, [auth]);
 
-  const [addedAttributes, setAddedAttributes] = useState([]);
-  const handleAddedAttributes = (event, value) => {
-    const ids = value.map((item) => item.id);
-    setAddedAttributes(ids);
-  };
-  console.log(addedAttributes);
+  // const [addedAttributes, setAddedAttributes] = useState();
+  // const handleAddedAttributes = (event, value) => {
+  //   const ids = value.map((item) => item.id);
+  //   setAddedAttributes(ids);
+  // };
+  // console.log(addedAttributes);
 
   // const [collaboratorSelected, setCollaboratorSelected] = useState([])
   const [selectedUserId, setSelectedUserId] = useState();
@@ -101,6 +112,13 @@ export default function Collaborators({
       });
   }, [selectedUserId, auth]);
 
+
+  const [flags, setFlags] = useState([])
+  const [selectedFlag, setSelectedFlag] = useState()
+  console.log(selectedFlag)
+  const handleSetFlag = (event, value) => {
+    setSelectedFlag(value ? value.id : null);
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -116,39 +134,62 @@ export default function Collaborators({
         if (!response.ok) throw new Error("Failed to fetch");
         const data = await response.json();
         console.log(data)
-        setAttributes(data['attribute_flags']); // Assuming data is the array as shown
+        setAttributes(data['attributes']); // Assuming data is the array as shown
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [selectedTable, auth, selectedUserId]); // `auth` is a dependency if your token might change
+  }, [selectedTable, auth, selectedUserId]); 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable}/attribute-${selectedAttribute}/`,
+          {
+            headers: {
+              Authorization: `Bearer ${auth}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) throw new Error("Failed to fetch");
+        const data = await response.json();
+        console.log(data)
+        setFlags(data['attribute_flags'])
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  // useEffect(() => {
-  //   fetch(`https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable}/`, {
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `Bearer ${auth}`,
-  //       "Content-Type": "application/json",
-  //     },
-  //     redirect: "follow",
-  //   })
-  //   .then((response) => response.json())
-  //   .then((data) => {
+    fetchData();
+  }, [selectedAttribute, selectedUserId, auth, selectedTable]); 
 
-  //    console.log(data)
-  //   });
-  // }, [selectedTable]);
+  useEffect(() => {
+    fetch(`https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable}/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${auth}`,
+        "Content-Type": "application/json",
+      },
+      redirect: "follow",
+    })
+    .then((response) => response.json())
+    .then((data) => {
+
+     console.log(data)
+    });
+  }, [selectedTable, auth, selectedUserId]);
 
   // let REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net/";
-  //   const getRenditionsByUser = async () => {
-  //     const userId = collaboratorSelected?.id
-  //     const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-renditions/${userId}/`
+    // const getRenditionsByUser = async () => {
+    //   const userId = collaboratorSelected?.id
+    //   const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-renditions/${userId}/`
 
-  //     const res = await axios.get(url, authHeader)
-  //     setCollaboratorRenditions(res?.data?.collaborator_renditions)
-  //   }
+    //   const res = await axios.get(url, authHeader)
+    //   setCollaboratorRenditions(res?.data?.collaborator_renditions)
+    // }
 
   const sendForm = () => {
     fetch(
@@ -161,14 +202,14 @@ export default function Collaborators({
         },
         body: JSON.stringify({
           rendition_request: renditionDetails.rendition_request_log.id,
-          attribute_values: addedAttributes,
-          // "collaborator": collaboratorSelected.id
+          collaborator: selectedUserId,
+          attribute_values: [selectedAttribute]
         }),
       }
     )
       .then((response) => response.json())
       .then((data) => {
-        setAttributes(attributes);
+        console.log(data)
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -299,11 +340,11 @@ export default function Collaborators({
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <Autocomplete
-              multiple
+             
               id="tags-standard"
               options={attributes}
               getOptionLabel={(option) => option.name}
-              onChange={handleAddedAttributes}
+              onChange={handleSetAttribute}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -313,23 +354,30 @@ export default function Collaborators({
                 />
               )}
             />
-            {/* <Autocomplete
-        multiple
-        id="tags-standard"
-        onChange={handleAddedAttributes}
-        options={attributes}
-        getOptionLabel={(attribute) => `${attribute.name}`}    
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="standard"
-            label="Select Attributes"
-            placeholder=""
-          />
-        )}
-      /> */}
+            
           </Paper>
         </Grid>
+        <Grid item>
+          <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <Autocomplete
+          
+              id="tags-standard"
+              options={flags}
+              getOptionLabel={(flag) => flag.name}
+              onChange={handleSetFlag}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  label="Select Flags"
+                  placeholder="Select..."
+                />
+              )}
+            />
+            
+          </Paper>
+        </Grid>
+        
       </Grid>
 
       <Grid
