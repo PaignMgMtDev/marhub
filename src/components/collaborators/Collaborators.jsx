@@ -182,6 +182,8 @@ export default function Collaborators({
     });
   }, [selectedTable, auth, selectedUserId]);
 
+
+  
   // let REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net/";
     // const getRenditionsByUser = async () => {
     //   const userId = collaboratorSelected?.id
