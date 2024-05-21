@@ -114,10 +114,10 @@ export default function Collaborators({
 
 
   const [flags, setFlags] = useState([])
-  const [selectedFlag, setSelectedFlag] = useState()
-  console.log(selectedFlag)
-  const handleSetFlag = (event, value) => {
-    setSelectedFlag(value ? value.id : null);
+  const [selectedFlags, setSelectedFlags] = useState([])
+  console.log(selectedFlags)
+  const handleSetFlag = (event, values) => {
+    setSelectedFlags(values.map(flag => flag.id));
   }
   useEffect(() => {
     const fetchData = async () => {
@@ -183,7 +183,7 @@ export default function Collaborators({
   }, [selectedTable, auth, selectedUserId]);
 
 
-  
+
   // let REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net/";
     // const getRenditionsByUser = async () => {
     //   const userId = collaboratorSelected?.id
@@ -205,7 +205,7 @@ export default function Collaborators({
         body: JSON.stringify({
           rendition_request: renditionDetails.rendition_request_log.id,
           collaborator: selectedUserId,
-          attribute_values: [selectedAttribute]
+          attribute_values: selectedFlags
         }),
       }
     )
@@ -362,7 +362,7 @@ export default function Collaborators({
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <Autocomplete
-          
+          multiple
               id="tags-standard"
               options={flags}
               getOptionLabel={(flag) => flag.name}
