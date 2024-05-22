@@ -1,20 +1,8 @@
-import React, { 
-  useEffect, 
-  useState, 
-  // useMemo 
-} from "react";
-import {
-  Paper,
-  Button,
-  Typography,
-  Grid,
-  Autocomplete,
-  TextField,
-} from "@mui/material";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { Paper, Button, Typography, Grid, Autocomplete, TextField } from "@mui/material";
 import CampHeader from "../header/CampHeader";
-//import { Value } from 'sass';
-// import axios from "axios";
-// import { DataGridPro } from "@mui/x-data-grid-pro";
+import axios from "axios";
+import { DataGridPro } from "@mui/x-data-grid-pro";
 
 export default function Collaborators({
   campaignName,
@@ -23,241 +11,173 @@ export default function Collaborators({
   backTact,
   rendition,
   renditionDetails,
-}) {
-  // const [collaboratorRenditions, setCollaboratorRenditions] = useState([]);
+}){
+  const REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net/"
+  const [collaborators, setCollaborators] = useState([])
+  const [selectedUserId, setSelectedUserId] = useState(null)
 
-  // const authHeader = useMemo(
-  //   () => ({
-  //     headers: {
-  //       Authorization: `Bearer ${auth}`,
-  //       "Content-Type": "application/json",
-  //     },
-  //   }),
-  //   [auth]
-  // );
+  const [tables, setTables] = useState([])
+  const [selectedTable, setSelectedTable] = useState(null)
 
-  const [users, setUsers] = useState([]);
-  const [attributes, setAttributes] = useState([]);
-  const [selectedAttribute, setSelectedAttribute] = useState()
-  const handleSetAttribute = (event, value) => {
-   
-    if (value) {
-      setSelectedAttribute(value.id); 
-    } else {
-      setSelectedAttribute(null);
-    }
-    console.log("Selected Attribute:", selectedAttribute);
-  }
-  console.log(selectedAttribute)
-  useEffect(() => {
-    fetch(
-      "https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborators/",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data.collaborators);
-
-        // const allAttributes = data.collaborators.flatMap(collab => collab.attribute_values);
-        // setAttributes(allAttributes);
-      });
-  }, [auth]);
-
-  // const [addedAttributes, setAddedAttributes] = useState();
-  // const handleAddedAttributes = (event, value) => {
-  //   const ids = value.map((item) => item.id);
-  //   setAddedAttributes(ids);
-  // };
-  // console.log(addedAttributes);
-
-  // const [collaboratorSelected, setCollaboratorSelected] = useState([])
-  const [selectedUserId, setSelectedUserId] = useState();
-
-  const handleCollaboratorSelected = (user) => {
-    // setCollaboratorRenditions([])
-    // const ids = user;
-    // setCollaboratorSelected(ids);
-    setSelectedUserId(user.id);
-  };
-
-  const [tables, setTables] = useState([]);
-  const [selectedTable, setSelectedTable] = useState();
-  const handleSetTable = (event, value) => {
-    setSelectedTable(value ? value.id : null);
-  };
-
-  console.log(selectedTable);
-  useEffect(() => {
-    fetch(
-      `https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborator-attribute-tables/${selectedUserId}/`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setTables(data["attribute_tables"]);
-      });
-  }, [selectedUserId, auth]);
-
+  const [attributes, setAttributes] = useState([])
+  const [selectedAttribute, setSelectedAttribute] = useState(null)
 
   const [flags, setFlags] = useState([])
   const [selectedFlags, setSelectedFlags] = useState([])
-  console.log(selectedFlags)
-  const handleSetFlag = (event, values) => {
-    setSelectedFlags(values.map(flag => flag.id));
-  }
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable}/`,
-          {
-            headers: {
-              Authorization: `Bearer ${auth}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data = await response.json();
-        console.log(data)
-        setAttributes(data['attributes']); // Assuming data is the array as shown
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
 
-    fetchData();
-  }, [selectedTable, auth, selectedUserId]); 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable}/attribute-${selectedAttribute}/`,
-          {
-            headers: {
-              Authorization: `Bearer ${auth}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) throw new Error("Failed to fetch");
-        const data = await response.json();
-        console.log(data)
-        setFlags(data['attribute_flags'])
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const [collaboratorRenditions, setCollaboratorRenditions] = useState([])
 
-    fetchData();
-  }, [selectedAttribute, selectedUserId, auth, selectedTable]); 
-
-  useEffect(() => {
-    fetch(`https://campaign-app-api-staging.azurewebsites.net/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable}/`, {
-      method: "GET",
+  const authHeader = useMemo(
+    () => ({
       headers: {
         Authorization: `Bearer ${auth}`,
         "Content-Type": "application/json",
       },
-      redirect: "follow",
-    })
-    .then((response) => response.json())
-    .then((data) => {
+    }),
+    [auth]
+  );
 
-     console.log(data)
-    });
-  }, [selectedTable, auth, selectedUserId]);
+  const getCollaborators = useCallback(async () => {
+    try{
+      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborators/`
+      const res = await axios.get(url, authHeader)
+      const data = res?.data 
+      data && setCollaborators(data?.collaborators)
+    }catch(e){
+      console.log('error while getting collaborators: ', e)
+    }
+  }, [authHeader])
 
+  useEffect(() => {
+    getCollaborators()
+  }, [getCollaborators]);
 
+  const handleSetFlag = (event, values) => {
+    setSelectedFlags(values.map(flag => flag.id));
+  }
 
-  // let REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net/";
-    // const getRenditionsByUser = async () => {
-    //   const userId = collaboratorSelected?.id
-    //   const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-renditions/${userId}/`
+  const getAttributeTableValues = useCallback(async (userId) => {
+    try{
+      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-attribute-tables/${userId}/`
+      const res = await axios.get(url, authHeader)
+      const data = res?.data
+      data && setTables(data?.attribute_tables)
+    }catch(e){
+      console.log('error while getting attribute table values: ', e)
+    }
+  }, [authHeader])
 
-    //   const res = await axios.get(url, authHeader)
-    //   setCollaboratorRenditions(res?.data?.collaborator_renditions)
-    // }
+  const getAttributesValues = useCallback(async(table) => {
+    try{
+      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${table?.id}/`
+      const res = await axios.get(url, authHeader)
+      const data = res?.data
+      data && setAttributes(data?.attributes)
+    }catch(e){
+      console.log('error while getting attribute values: ', e)
+    }
+  }, [authHeader, selectedUserId])
 
-  const sendForm = () => {
-    fetch(
-      "https://campaign-app-api-staging.azurewebsites.net/api/mihp/rendition-collaborator/",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          rendition_request: renditionDetails.rendition_request_log.id,
-          collaborator: selectedUserId,
-          attribute_values: selectedFlags
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+  const getAttributeFlags = useCallback(async (attributeSelected) => {
+    try{
+      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable?.id}/attribute-${attributeSelected}/`
+      const res = await axios.get(url, authHeader)
+      const data = res?.data 
+      data && setFlags(data?.attribute_flags)
+    }catch(e){
+      console.log('error while getting attribute flags: ', e)
+    }
+  }, [authHeader, selectedUserId, selectedTable])
 
-    // getRenditionsByUser()
+  const handleSetTable = (event, value) => {
+    value && getAttributesValues(value)
+    value && setSelectedTable(value);
   };
 
-  // const handleRemoveUser = (user) => {
-  //   const filteredUsers = user.filter((t) => t !== user);
-  //   setUsers(filteredUsers);
-  // };
+  const handleSetAttribute = (event, value) => {
+    value && setSelectedAttribute(value?.id)
+    value && getAttributeFlags(value?.id)
+  }
 
-  // const renditionRows = collaboratorRenditions?.map((rendition) => ({
-  //   id: rendition.id,
-  //   tactics: rendition?.tactics?.map((tact) => tact?.id),
-  //   placementType: rendition?.placement_type?.placement_type_name,
-  //   localization: rendition?.localization,
-  //   translation: rendition?.translation,
-  //   renditionDescription: rendition?.rendition_description,
-  // }));
 
-  // const renditionColumns = [
-  //   {
-  //     field: "id",
-  //     headerName: "ID",
-  //     width: 100,
-  //   },
-  //   {
-  //     field: "tactics",
-  //     headerName: "Tactics",
-  //     width: 300,
-  //   },
-  //   {
-  //     field: "placementType",
-  //     headerName: "Placement Type",
-  //     width: 200,
-  //   },
-  //   { field: "localization", headerName: "Localization", width: 300 },
-  //   { field: "translation", headerName: "Translation", width: 300 },
-  //   {
-  //     field: "renditionDescription",
-  //     headerName: "Rendition Description",
-  //     width: 300,
-  //   },
-  // ];
+  const getRenditionsByUser = useCallback(async (userId) => {
+    try{
+      const renditionId = renditionDetails?.rendition_request_log?.id
+      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-rendition-requests/${renditionId}/${userId}/`
+  
+      const res = await axios.get(url, authHeader)
+      setCollaboratorRenditions(res?.data)
+    }catch(e){
+      console.log('error while getting renditions by collaborator: ', e)
+    }
+  }, [authHeader, renditionDetails])
+
+  const handleCollaboratorSelected = (user) => {
+    //reset rendering values on click on new collaborator
+    setSelectedTable(null)
+    setSelectedAttribute(null)
+    setSelectedFlags([])
+    setTables([])
+    setAttributes([])
+    setFlags([])
+    //end rendering values
+
+    setSelectedUserId(user?.id);
+    getRenditionsByUser(user?.id)
+    getAttributeTableValues(user?.id)
+  }
+
+  const sendForm = async () => {
+    try{
+      const url = REACT_APP_API_BASE_URL + `/api/mihp/rendition-collaborator/`
+      const body = JSON.stringify({
+        rendition_request: renditionDetails.rendition_request_log.id,
+        collaborator: selectedUserId,
+        attribute_values: selectedFlags
+      })
+      const res = await axios.post(url, body, authHeader)
+      const data = res?.data 
+      data && console.log(data)
+    }catch(e){
+      console.log('error while sending the form: ', e)
+    }
+  };
+
+  const renditionRows = collaboratorRenditions?.map((rendition) => ({
+    id: rendition.id,
+    tactics: rendition?.tactics?.map((tact) => tact?.id),
+    placementType: rendition?.placement_type?.placement_type_name,
+    localization: rendition?.localization,
+    translation: rendition?.translation,
+    renditionDescription: rendition?.rendition_description,
+  }));
+
+  const renditionColumns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+    },
+    {
+      field: "tactics",
+      headerName: "Tactics",
+      width: 300,
+    },
+    {
+      field: "placementType",
+      headerName: "Placement Type",
+      width: 200,
+    },
+    { field: "localization", headerName: "Localization", width: 300 },
+    { field: "translation", headerName: "Translation", width: 300 },
+    {
+      field: "renditionDescription",
+      headerName: "Rendition Description",
+      width: 300,
+    },
+  ];
+
+  const buttonDisabled = selectedTable === null || selectedAttribute === null || selectedFlags?.length === 0 ? true : false
 
   return (
     <div>
@@ -278,49 +198,42 @@ export default function Collaborators({
       <Grid
         container
         spacing={2}
-        //   justifyContent="center"
-        style={{ padding: 20, paddingTop: "25px" }}
-      >
+        style={{ padding: 20, paddingTop: "25px" }}>
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <Typography variant="h6" gutterBottom>
               Select Collaborators
             </Typography>
-            {users?.map((user, index) => (
-              <Grid
-                container
-                key={user.id + index}
-                alignItems="center"
-                spacing={1}
-              >
-                <Grid item xs>
-                  <Button
-                    onClick={() => handleCollaboratorSelected(user)}
-                    variant="link"
-                    sx={{
-                      backgroundColor:
-                        selectedUserId === user.user.id ? "grey" : "inherit", // Conditionally apply color
-                      "&:hover": {
-                        backgroundColor: "lightgrey", // Hover effect
-                      },
-                    }}
+            {collaborators?.map((collaborator, index) => {
+              if(collaborator?.user?.first_name?.length === 0) return null 
+              return(
+                <Grid
+                  container
+                  key={collaborator?.id + index}
+                  alignItems="center"
+                  spacing={1}
                   >
-                    {user.user.first_name} {user.user.last_name}
-                  </Button>
-                </Grid>
-                <Grid item>
-                  {/* <IconButton
-              onClick={() => handleRemoveUser(user)}
-              size="small"
-            >
-              <CloseIcon />
-            </IconButton> */}
-                </Grid>
-              </Grid>
-            ))}
+                    <Grid item xs>
+                      <Button
+                        onClick={() => handleCollaboratorSelected(collaborator)}
+                        variant="link"
+                        sx={{
+                          backgroundColor:
+                            selectedUserId === collaborator?.id ? "grey" : "inherit", // Conditionally apply color
+                          "&:hover": {
+                            backgroundColor: "lightgrey", // Hover effect
+                          },
+                        }}
+                      >
+                        {collaborator?.user?.first_name} {collaborator?.user?.last_name}
+                      </Button>
+                    </Grid>
+                  </Grid>
+                )
+            })}
           </Paper>
         </Grid>
-
+        {tables?.length > 0 &&
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <Autocomplete
@@ -338,11 +251,11 @@ export default function Collaborators({
               )}
             />
           </Paper>
-        </Grid>
+        </Grid>}
+        {attributes?.length > 0 &&
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <Autocomplete
-             
               id="tags-standard"
               options={attributes}
               getOptionLabel={(option) => option.name}
@@ -358,11 +271,12 @@ export default function Collaborators({
             />
             
           </Paper>
-        </Grid>
+        </Grid>}
+        {flags?.length > 0 &&
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <Autocomplete
-          multiple
+              multiple
               id="tags-standard"
               options={flags}
               getOptionLabel={(flag) => flag.name}
@@ -378,26 +292,23 @@ export default function Collaborators({
             />
             
           </Paper>
-        </Grid>
-        
+        </Grid>} 
       </Grid>
-
       <Grid
         container
         justifyContent="center"
-        style={{ marginTop: 20, marginBottom: 20, paddingRight: "155px" }}
-      >
+        style={{ marginTop: 20, marginBottom: 20, paddingRight: "155px" }}>
         <Button
           variant="contained"
           sx={{ backgroundColor: "#FF7F50" }}
           onClick={sendForm}
-        >
+          disabled={buttonDisabled}>
           Submit Rendition Request
         </Button>
       </Grid>
-      {/* {collaboratorRenditions?.length > 0 && (
+      {collaboratorRenditions?.length > 0 && (
         <DataGridPro rows={renditionRows} columns={renditionColumns} />
-      )} */}
+      )}
     </div>
   );
 }
