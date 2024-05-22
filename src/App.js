@@ -85,7 +85,7 @@ function App() {
     }
 
     setOwner(email)
-  }, [authHeader])
+  }, [authHeader, login, redirectUrl, redirectUrl2])
 
   const [campaignName, setCampaignName] = useState("");
   const [campaignID, setCampaignID] = useState("");
