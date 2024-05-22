@@ -15,7 +15,7 @@ import { useAuth } from "./hooks/useAuth"
 import axios from "axios"
 
 function App() {
-  const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
+  // const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
   const [owner, setOwner] = useState("");
   // const [auth, setAuth] = useState("");
   const location = useLocation();
