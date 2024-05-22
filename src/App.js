@@ -1,17 +1,18 @@
-import { useState  } from "react";
-import "./App.css";
+import { useCallback, useState, useMemo  } from "react"
+import "./App.css"
 import SignIn from "./components/SignIn";
-import DashLanding from "./components/dashlanding/DashLanding";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import CampTactics from "./components/camptactics/CampTactics";
-import EditTactics from "./components/edittactics/EditTactics";
-import RendReqConfig from "./components/rendreqconfig/RendReqConfig";
-import Rendition from "./components/rendition/Rendition";
-import Collaborators from "./components/collaborators/Collaborators";
-import RenditionTactics from "./components/renditiontactics/RenditionTactics";
-import Header from "./components/header/Header";
-import { ProtectedRoute } from "./routes/ProtectedRoute";
-import { useAuth } from "./hooks/useAuth";
+import DashLanding from "./components/dashlanding/DashLanding"
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
+import CampTactics from "./components/camptactics/CampTactics"
+import EditTactics from "./components/edittactics/EditTactics"
+import RendReqConfig from "./components/rendreqconfig/RendReqConfig"
+import Rendition from "./components/rendition/Rendition"
+import Collaborators from "./components/collaborators/Collaborators"
+import RenditionTactics from "./components/renditiontactics/RenditionTactics"
+import Header from "./components/header/Header"
+import { ProtectedRoute } from "./routes/ProtectedRoute"
+import { useAuth } from "./hooks/useAuth"
+import axios from "axios"
 
 function App() {
   const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
@@ -24,36 +25,67 @@ function App() {
   const redirectUrl = searchParams.get('redirect_url');
   const redirectUrl2 = searchParams.get('redirect_path');
 
-  const getAccessToken = (e, email, password) => {
-    e.preventDefault();
-    
-    const apiOptions = {
-      method: "POST",
+  const authHeader = useMemo(
+    () => ({
       headers: {
+        Authorization: `Bearer ${auth}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      redirect: "follow",
-    }
-    fetch(`${API_BASE_URL}/api/users/token/obtain/`, apiOptions)
-    .then((res) => res.json())
-    .then(data => {
-      // data?.access && login(data?.access)
-      if(data?.access){
-        const authToken = data?.access
-        redirectUrl ? 
-          login(authToken, redirectUrl) : 
-        redirectUrl2 ?
-          login(authToken, redirectUrl2) : 
-        login(authToken, "/dashlanding")
-      }
+    }),
+    [auth]
+  );
+
+  // const getAccessToken = (e, email, password) => {
+  //   e.preventDefault();
+    
+  //   const apiOptions = {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       email,
+  //       password,
+  //     }),
+  //     redirect: "follow",
+  //   }
+  //   fetch(`${API_BASE_URL}/api/users/token/obtain/`, apiOptions)
+  //   .then((res) => res.json())
+  //   .then(data => {
+  //     // data?.access && login(data?.access)
+  //     if(data?.access){
+  //       const authToken = data?.access
+  //       redirectUrl ? 
+  //         login(authToken, redirectUrl) : 
+  //       redirectUrl2 ?
+  //         login(authToken, redirectUrl2) : 
+  //       login(authToken, "/dashlanding")
+  //     }
+  //   })
+  //   .catch(e => console.log(e))
+  //   setOwner(email)
+  // }
+
+  const getAccessToken = useCallback(async (e, email, password) => {
+    e.preventDefault();
+    const url = process.env.REACT_APP_API_BASE_URL + "/api/users/token/obtain/"
+    const body = JSON.stringify({
+      email,
+      password,
     })
-    .catch(e => console.log(e))
+    const res = await axios.post(url, body, authHeader)
+    const data = res?.data 
+    if(data?.access){
+      const authToken = data?.access
+      redirectUrl ? 
+        login(authToken, redirectUrl) : 
+      redirectUrl2 ?
+        login(authToken, redirectUrl2) : 
+      login(authToken, "/dashlanding")
+    }
+
     setOwner(email)
-  }
+  }, [authHeader])
 
   const [campaignName, setCampaignName] = useState("");
   const [campaignID, setCampaignID] = useState("");
