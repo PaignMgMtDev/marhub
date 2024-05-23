@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Button, Typography, Box, Modal } from "@mui/material" //Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper,
 import { useParams, useNavigate } from "react-router-dom";
 import { formatDate } from '../../utils/utils';
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import axios from "axios"
 
-export default function RenditionTactics({ auth ,handleRenditionRequestID}){
+export default function RenditionTactics({authHeader, handleRenditionRequestID}){
     const { rendition } = useParams()
     const navigate = useNavigate()
     const [renditionTactics, setRenditionTactics] = useState(null)
@@ -17,29 +17,22 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
         setOpenModal(!openModal)
     }
 
-    const authHeader = useMemo(() => ({
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-      }), [auth]);
-
-    const REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
+    // const REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
 
     const getTactics = useCallback(async () => {
-        const url = REACT_APP_API_BASE_URL + `/api/mihp/rendition-request/v2/${rendition}/`
         try{
+            const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-request/v2/${rendition}/`
             const res = await axios.get(url, authHeader)
-            res?.data && setRenditionTactics(res?.data['rendition_tactics'])
+            const data = res?.data
+            data && setRenditionTactics(data?.rendition_tactics)
         }catch(e){
-            throw Error("error while getting tactics by rendition")
+            console.log('error while getting tactics by rendition: ', e)
         }
     }, [authHeader, rendition])
 
     useEffect(() => {
-        if(auth)
-            getTactics()
-    }, [auth, getTactics])
+        getTactics()
+    }, [getTactics])
 
     const editTactic = (tacticId) => {
         const url = `/renditions/${tacticId}`
@@ -117,57 +110,11 @@ export default function RenditionTactics({ auth ,handleRenditionRequestID}){
     
     return(
         <Box className="rendition" component="main">
-                {renditionTactics &&
+            {renditionTactics &&
                 <DataGridPro
                     rows={tacticRows}
                     columns={columns}
                 />}
-            {/* <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                        <TableRow sx={{borderBottom: 'none'}}>
-                            <TableCell>Tactic Name**</TableCell>
-                            <TableCell>Status</TableCell>
-                            <TableCell>Start Date</TableCell>
-                            <TableCell>End Date</TableCell>
-                            <TableCell>Language</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {renditionTactics && renditionTactics?.map((tactic, index) => {
-                            const tacticId = tactic?.id
-                            const elementKey = `tactic-${tacticId}-index${index}`
-                            const name = tactic?.name 
-                            const status = tactic?.current_status
-                            const startDate = formatDate(tactic?.actual_start_dt)
-                            const endDate = formatDate(tactic?.actual_end_dt)
-                            const languages = tactic?.future_language !== null ? tactic?.future_language?.languages?.map(lang => lang.language_name) : []
-                            const language = languages?.join(', ')
-                            return(
-                                <TableRow sx={{background: 'lightgray'}} key={elementKey}>
-                                    <TableCell>{name}</TableCell>
-                                    <TableCell>
-                                        <Paper sx={{background: 'blue', padding: 1}}>
-                                            <Typography textAlign='center' variant='body1' sx={{color: 'white'}}>
-                                                {status}
-                                            </Typography>
-                                        </Paper>
-                                    </TableCell>
-                                    <TableCell>{startDate}</TableCell>
-                                    <TableCell>{endDate}</TableCell>
-                                    <TableCell>{language}</TableCell>
-                                    <TableCell>
-                                        <Button onClick={() => {toggleModal(); setApprovedTacticId(tacticId)}}>Approve Tactic</Button>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Button onClick={() => editTactic(tacticId)}>Edit Tactic</Button>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer> */}
             {openModal &&
                 <Modal
                     open={openModal}

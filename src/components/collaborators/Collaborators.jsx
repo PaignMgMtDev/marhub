@@ -1,18 +1,17 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Paper, Button, Typography, Grid, Autocomplete, TextField } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import axios from "axios";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 
 export default function Collaborators({
+  authHeader,
   campaignName,
-  auth,
   tacticForm,
   backTact,
   rendition,
   renditionDetails,
 }){
-  const REACT_APP_API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net/"
   const [collaborators, setCollaborators] = useState([])
   const [selectedUserId, setSelectedUserId] = useState(null)
 
@@ -27,19 +26,9 @@ export default function Collaborators({
 
   const [collaboratorRenditions, setCollaboratorRenditions] = useState([])
 
-  const authHeader = useMemo(
-    () => ({
-      headers: {
-        Authorization: `Bearer ${auth}`,
-        "Content-Type": "application/json",
-      },
-    }),
-    [auth]
-  );
-
   const getCollaborators = useCallback(async () => {
     try{
-      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborators/`
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborators/`
       const res = await axios.get(url, authHeader)
       const data = res?.data 
       data && setCollaborators(data?.collaborators)
@@ -58,7 +47,7 @@ export default function Collaborators({
 
   const getAttributeTableValues = useCallback(async (userId) => {
     try{
-      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-attribute-tables/${userId}/`
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborator-attribute-tables/${userId}/`
       const res = await axios.get(url, authHeader)
       const data = res?.data
       data && setTables(data?.attribute_tables)
@@ -69,7 +58,7 @@ export default function Collaborators({
 
   const getAttributesValues = useCallback(async(table) => {
     try{
-      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${table?.id}/`
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${table?.id}/`
       const res = await axios.get(url, authHeader)
       const data = res?.data
       data && setAttributes(data?.attributes)
@@ -80,7 +69,7 @@ export default function Collaborators({
 
   const getAttributeFlags = useCallback(async (attributeSelected) => {
     try{
-      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable?.id}/attribute-${attributeSelected}/`
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable?.id}/attribute-${attributeSelected}/`
       const res = await axios.get(url, authHeader)
       const data = res?.data 
       data && setFlags(data?.attribute_flags)
@@ -103,8 +92,7 @@ export default function Collaborators({
   const getRenditionsByUser = useCallback(async (userId) => {
     try{
       const renditionId = renditionDetails?.rendition_request_log?.id
-      const url = REACT_APP_API_BASE_URL + `/api/mihp/collaborator-rendition-requests/${renditionId}/${userId}/`
-  
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborator-rendition-requests/${renditionId}/${userId}/`
       const res = await axios.get(url, authHeader)
       setCollaboratorRenditions(res?.data)
     }catch(e){
@@ -129,7 +117,7 @@ export default function Collaborators({
 
   const sendForm = async () => {
     try{
-      const url = REACT_APP_API_BASE_URL + `/api/mihp/rendition-collaborator/`
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-collaborator/`
       const body = JSON.stringify({
         rendition_request: renditionDetails.rendition_request_log.id,
         collaborator: selectedUserId,
