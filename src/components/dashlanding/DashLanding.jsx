@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { Button } from "@mui/material";
+import axios from "axios"
 
 export default function DashLanding({
+  authHeader,
   handleAddNewContent,
   campaignData,
-  owner,
   setCampaignData,
-  auth,
   handleCampaignID,
   handleCreateRendition
 }) {
@@ -24,23 +24,20 @@ export default function DashLanding({
     }
   };
 
+  const getCampaigns = useCallback(async () => {
+    try{
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaigns/`
+      const res = await axios.get(url, authHeader)
+      const data = res?.data 
+      data && setCampaignData(data?.campaigns)
+    }catch(e){
+      console.log('error while getting campaigns: ', e)
+    }
+  }, [authHeader, setCampaignData])
+
   useEffect(() => {
-    fetch(
-      "https://campaign-app-api-staging.azurewebsites.net/api/v2/default/mihp/campaigns/",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setCampaignData(data["campaigns"]);
-      });
-  }, [auth, setCampaignData]);
+    getCampaigns()
+  }, [getCampaigns]);
   
 
  

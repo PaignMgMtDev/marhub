@@ -1,44 +1,40 @@
-import React, { useEffect } from "react";
-import { DataGridPro } from "@mui/x-data-grid-pro";
-import { Button } from "@mui/material";
-import CampHeader from "../header/CampHeader";
+import React, { useCallback, useEffect } from "react"
+import { DataGridPro } from "@mui/x-data-grid-pro"
+import { Button } from "@mui/material"
+import CampHeader from "../header/CampHeader"
+import axios from "axios"
 
 export default function CampTactics({
+  authHeader,
   campaignName,
   editTactics,
   handleSelectionChange,
   selectedRows,
   tacticRows,
   campaignID,
-  auth,
   setTacticData,
   newContent,
   rendition,
   backDash,
-  handleReqConfig,
-  
-}) {
+  handleReqConfig,  
+}){
+
+  const getTactics = useCallback(async () => {
+    try{
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaign-${campaignID}/tactics/`
+      const res = await axios.get(url, authHeader)
+      const data = res?.data 
+      const tactics = data && data?.tactics?.filter((tactic) => ["approved", "planned", "in_market"].includes(tactic.current_status))
+      setTacticData(tactics)
+    }catch(e){
+      console.log('error while getting tactics: ', e)
+    }
+  }, [authHeader, campaignID, setTacticData])
+
   useEffect(() => {
-    fetch(
-      `https://campaign-app-api-staging.azurewebsites.net/api/v2/default/mihp/campaign-${campaignID}/tactics/`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-        redirect: "follow",
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const filteredTactics = data["tactics"].filter(
-          (tactic) =>
-            ["approved", "planned", "in_market"].includes(tactic.current_status)
-        );
-        setTacticData(filteredTactics);
-      });
-  }, [auth, campaignID, setTacticData]);
+    getTactics()
+  }, [getTactics]);
+
   const getStatusClass = (status) => {
     switch (status) {
       case "PLANNED":
@@ -79,14 +75,14 @@ export default function CampTactics({
   return (
     <div>
     <div>
-      <center>
+      <div>
         <CampHeader 
         campaignName={campaignName} 
         backDash={backDash}
         rendition={rendition}
         newContent={newContent}
         />
-      </center>
+      </div>
       <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%"}}>
       <DataGridPro
         checkboxSelection

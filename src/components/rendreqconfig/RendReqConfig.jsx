@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Paper,
   TextField,
@@ -15,12 +15,13 @@ import {
 import CampHeader from "../header/CampHeader";
 import CloseIcon from "@mui/icons-material/Close";
 import { CheckBox } from "@mui/icons-material";
+import axios from "axios"
 
 export default function RendReqConfig({
   campaignName,
   selectedRows,
   setSelectedRows,
-  auth,
+  authHeader,
   tacticForm,
   backTact,
   rendition,
@@ -45,69 +46,38 @@ export default function RendReqConfig({
     setDescription(event.target.value);
   };
 
-  useEffect(() => {
-    async function fetchPlacementTypes() {
-      const tacticsIds = selectedRows.map((tactic) => tactic.id);
-      const url =
-        "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
-      const headers = new Headers({
-        Authorization: `Bearer ${auth}`,
-        "Content-Type": "application/json",
-      });
-
-      const requestOptions = {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({
-          tactics: tacticsIds,
-        }),
-        redirect: "follow",
-      };
-
-      try {
-        const response = await fetch(url, requestOptions);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const result = await response.json();
-        
-        setPlacementData(result);
-      } catch (error) {
-        console.error("Error fetching placement types:", error);
-      }
-    }
-
-    fetchPlacementTypes();
-  }, [selectedRows, auth]);
-
-  const sendForm = () => {
-    const tacticsIds = selectedRows.map((tactic) => tactic.id);
-    // const placementIdNumber = Number(placementID);
-    fetch(
-      "https://campaign-app-api-staging.azurewebsites.net/api/mihp/rendition-request/",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tactics: tacticsIds,
-          placement_type: 3,
-          localization: localizationChecked,
-          translation: translationsChecked,
-          rendition_description: description,
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        handleCollabs(data);
+  const getPlacementTypes = useCallback(async () => {
+    try{
+      const tacticsIds = selectedRows.map((tactic) => tactic.id)
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/get-placement-types/`
+      const body = JSON.stringify({
+        tactics: tacticsIds,
       })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      const res = await axios.post(url, body, authHeader)
+      const data = res?.data 
+      data && setPlacementData(data)
+    }catch(e){
+      console.log('error while getting placement types: ', e)
+    }
+  }, [selectedRows, authHeader])
+
+  useEffect(() => {
+    getPlacementTypes()
+  }, [getPlacementTypes]);
+
+  const sendForm = async () => {
+    const tacticsIds = selectedRows.map((tactic) => tactic.id);
+    const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-request/`
+    const body = JSON.stringify({
+      tactics: tacticsIds,
+      placement_type: 3,
+      localization: localizationChecked,
+      translation: translationsChecked,
+      rendition_description: description,
+    })
+    const res = await axios.post(url, body, authHeader)
+    const data = res?.data 
+    data && handleCollabs(data)
   };
 
   const handleRemoveTactic = (tactic) => {

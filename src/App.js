@@ -15,15 +15,12 @@ import { useAuth } from "./hooks/useAuth"
 import axios from "axios"
 
 function App() {
-  // const API_BASE_URL = "https://campaign-app-api-staging.azurewebsites.net"
-  const [owner, setOwner] = useState("");
-  // const [auth, setAuth] = useState("");
   const location = useLocation();
   const { auth, login } = useAuth()
   
-  const searchParams = new URLSearchParams(location.search);
-  const redirectUrl = searchParams.get('redirect_url');
-  const redirectUrl2 = searchParams.get('redirect_path');
+  const searchParams = new URLSearchParams(location.search)
+  const redirectUrl = searchParams.get('redirect_url')
+  const redirectUrl2 = searchParams.get('redirect_path')
 
   const authHeader = useMemo(
     () => ({
@@ -35,40 +32,9 @@ function App() {
     [auth]
   );
 
-  // const getAccessToken = (e, email, password) => {
-  //   e.preventDefault();
-    
-  //   const apiOptions = {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       email,
-  //       password,
-  //     }),
-  //     redirect: "follow",
-  //   }
-  //   fetch(`${API_BASE_URL}/api/users/token/obtain/`, apiOptions)
-  //   .then((res) => res.json())
-  //   .then(data => {
-  //     // data?.access && login(data?.access)
-  //     if(data?.access){
-  //       const authToken = data?.access
-  //       redirectUrl ? 
-  //         login(authToken, redirectUrl) : 
-  //       redirectUrl2 ?
-  //         login(authToken, redirectUrl2) : 
-  //       login(authToken, "/dashlanding")
-  //     }
-  //   })
-  //   .catch(e => console.log(e))
-  //   setOwner(email)
-  // }
-
   const getAccessToken = useCallback(async (e, email, password) => {
     e.preventDefault();
-    const url = process.env.REACT_APP_API_BASE_URL + "/api/users/token/obtain/"
+    const url = `${process.env.REACT_APP_API_BASE_URL}/api/users/token/obtain/`
     const body = JSON.stringify({
       email,
       password,
@@ -83,8 +49,6 @@ function App() {
         login(authToken, redirectUrl2) : 
       login(authToken, "/dashlanding")
     }
-
-    setOwner(email)
   }, [authHeader, login, redirectUrl, redirectUrl2])
 
   const [campaignName, setCampaignName] = useState("");
@@ -185,10 +149,9 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashLanding
+                  authHeader={authHeader}
                   handleAddNewContent={handleAddNewContent}
                   campaignData={campaignData}
-                  owner={owner}
-                  auth={auth}
                   setCampaignData={setCampaignData}
                   handleCampaignID={handleCampaignID}
                   handleCreateRendition={handleCreateRendition}
@@ -201,6 +164,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <CampTactics
+                  authHeader={authHeader}
                   campaignName={campaignName}
                   editTactics={editTactics}
                   selectedRows={selectedRows}
@@ -223,10 +187,10 @@ function App() {
             element={
               <ProtectedRoute>
                 <EditTactics
+                  authHeader={authHeader}
                   campaignName={campaignName}
                   selectedRows={selectedRows}
                   setSelectedRows={setSelectedRows}
-                  auth={auth}
                   tacticForm={tacticForm}
                   backTact={backTact}
                 />
@@ -241,7 +205,7 @@ function App() {
                   campaignName={campaignName}
                   selectedRows={selectedRows}
                   setSelectedRows={setSelectedRows}
-                  auth={auth}
+                  authHeader={authHeader}
                   backTact={backTact}
                   tacticForm={tacticForm}
                   rendition={rendition}
@@ -255,6 +219,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Collaborators
+                  authHeader={authHeader}
                   campaignName={campaignName}
                   selectedRows={selectedRows}
                   setSelectedRows={setSelectedRows}
@@ -284,7 +249,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <RenditionTactics 
-                  auth={auth} 
+                  authHeader={authHeader} 
                   handleRenditionRequestID={handleRenditionRequestID}
                 />
               </ProtectedRoute>

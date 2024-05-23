@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Paper,
   TextField,
@@ -16,15 +16,16 @@ import {
   Typography,
   IconButton,
   Grid,
-} from "@mui/material";
-import CampHeader from "../header/CampHeader";
-import CloseIcon from "@mui/icons-material/Close";
+} from "@mui/material"
+import CampHeader from "../header/CampHeader"
+import CloseIcon from "@mui/icons-material/Close"
+import axios from "axios"
 
 export default function EditTactics({
+  authHeader,
   campaignName,
   selectedRows,
   setSelectedRows,
-  auth,
   tacticForm,
   backTact,
   rendition,
@@ -54,71 +55,47 @@ export default function EditTactics({
     setAudience(event.target.value);
   };
 
+  const getPlacementTypes = useCallback(async () => {
+    try{
+      const tacticIds = selectedRows?.map(tactic => tactic?.id)
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/get-placement-types/`
+      const body = JSON.stringify({
+        tactics: tacticIds,
+      })
+      const res = await axios.post(url, body, authHeader)
+      const data = res?.data 
+      data && setPlacementData(data)
+    }catch(e){
+      console.log('error while getting placement types: ', e)
+    }
+  }, [authHeader, selectedRows, setPlacementData])
  
   useEffect(() => {
-    async function fetchPlacementTypes() {
+    getPlacementTypes()
+  }, [getPlacementTypes]);
+
+  const sendForm = async () => {
+    try{
       const tacticsIds = selectedRows.map((tactic) => tactic.id);
-      const url = "https://campaign-app-api-staging.azurewebsites.net/api/mihp/get-placement-types/";
-      const headers = new Headers({
-        Authorization: `Bearer ${auth}`,
-        "Content-Type": "application/json",
-      });
-  
-      const requestOptions = {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({
-          tactics: tacticsIds,
-        }),
-        redirect: "follow",
-      };
-  
-      try {
-        const response = await fetch(url, requestOptions);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const result = await response.json();
-        console.log(result);
-        setPlacementData(result);
-      } catch (error) {
-        console.error("Error fetching placement types:", error);
-      }
-    }
-  
-    fetchPlacementTypes();
-  }, [selectedRows, auth]);
-
-  const sendForm = () => {
-    const tacticsIds = selectedRows.map((tactic) => tactic.id);
-    const placementIdNumber = Number(placementID);
-    fetch(
-      "https://campaign-app-api-staging.azurewebsites.net/api/mihp/data-log/",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${auth}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tactics: tacticsIds,
-          placement_type: placementIdNumber,
-          placement_start_dt: startDate,
-          placement_end_dt: endDate,
-          placement_description: description,
-          audience: audience,
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setScrapeID(data["mihp_data_log"]["scrape_log_id"]);
-        handleConfirmClick();
+      const placementIdNumber = Number(placementID);
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/data-log/`
+      const body = JSON.stringify({
+        tactics: tacticsIds,
+        placement_type: placementIdNumber,
+        placement_start_dt: startDate,
+        placement_end_dt: endDate,
+        placement_description: description,
+        audience: audience,
       })
-
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      const res = await axios.post(url, body, authHeader)
+      const data = res?.data
+      if(data){
+        setScrapeID(data?.mihp_data_log?.scrape_log_id)
+        handleConfirmClick()
+      }
+    }catch(e){
+      console.log('error while creating data log: ', e)
+    }
   };
 
   const handleConfirmClick = () => {
