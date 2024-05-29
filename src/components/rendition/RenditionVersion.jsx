@@ -39,7 +39,6 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
       let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader);
       console.log(response.data);
       loadRenditions(selectedVersion.versionId);
-      setStep(2);
       setSubmitting(false);
     } catch (err) {
       console.log(err.message, err.code);

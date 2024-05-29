@@ -49,15 +49,17 @@ export default function Rendition({ auth, renditionRequestID }) {
     }
   }, [tactic, authHeader, renditionRequestID]);
 
-  const loadRenditions = async (placement_version_id) => {
+  const loadRenditions = useCallback(async (placement_version_id) => {
     try {
       let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${placement_version_id}/${renditionRequestID}/`, authHeader);
+      console.log('Renditions loaded:', response.data);
       setRenditionList(response.data);
       setDataLoaded(true);
+      setStep(2);
     } catch (err) {
       console.log(err.message, err.code);
     }
-  };
+  }, [authHeader, renditionRequestID]);
 
   const selectVersion = (versionId, versionName, versionNumber, originalVersion) => {
     setSelectedVersion({ versionId, versionName, versionNumber, originalVersion });
@@ -81,12 +83,6 @@ export default function Rendition({ auth, renditionRequestID }) {
   const selectModule = (module) => {
     setSelectedModule(module);
     loadRenditions(module.placement_version_id);
-    setStep(2);
-
-    // Scroll to the top of the .rendition element
-    if (renditionRef.current) {
-      renditionRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   // Group modules by their row value

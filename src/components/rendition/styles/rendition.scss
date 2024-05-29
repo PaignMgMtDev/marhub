@@ -225,6 +225,7 @@ body{
         &__preview{
             transform: scale(0.9);
             border-bottom: 1px solid black;
+            pointer-events: none;
 
             &_image{
                 @include mixins.module-image;
