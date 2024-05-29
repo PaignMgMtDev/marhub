@@ -6,7 +6,7 @@ import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader, selectedVersion, renditionList, setStep, detailValues, setDetailValues, renditionRequestId }) {
+export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader, selectedVersion, renditionList, setStep, detailValues, setDetailValues, renditionRequestId, loadRenditions }) {
 
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
@@ -32,20 +32,18 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
   const submitRenditionVersion = async () => {
     setSubmitting(true)
     try {
-      // const tempRequestId = 5;
-
       // Scroll to the top of the .rendition element
       if (renditionRef.current) {
         renditionRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-
-      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader)
-      console.log(response.data)
-      setStep(2)
-      setSubmitting(false)
+      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader);
+      console.log(response.data);
+      loadRenditions(selectedVersion.versionId);
+      setStep(2);
+      setSubmitting(false);
     } catch (err) {
-      console.log(err.message, err.code)
-      setSubmitting(false)
+      console.log(err.message, err.code);
+      setSubmitting(false);
     }
   }
 
@@ -148,7 +146,7 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
             ...prevValues[versionId]?.[versionNumber],
             [detailId]: {
               ...prevValues[versionId]?.[versionNumber]?.[detailId],
-              destinationUrl: value,
+              destination_url: value,
             },
           },
         },
@@ -175,13 +173,13 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
       {(dataLoaded && !submitting) && (
         <Stack className="edit__display">
           <Typography className="edit__heading">{selectedVersion.versionName}</Typography>
-          <Typography className="edit__subheading">{selectedVersion.versionNumber > renditionList.length ? `Create Rendition ${selectedVersion.versionNumber}` : `Edit Rendition ${selectedVersion.versionNumber}`}</Typography>
+          <Typography className="edit__subheading">{selectedVersion.versionNumber > renditionList?.length ? `Create Rendition ${selectedVersion.versionNumber}` : `Edit Rendition ${selectedVersion.versionNumber}`}</Typography>
           <Stack className="edit-form" component="form" noValidate autoComplete="off">
             {placementVersion.content_details.map((detail) => {
               const detailId = detail.detail_id;
               const detailValue = detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId];
 
-              if (detailValue?.text && !excludedKeywords.some(keyword => detailValue?.detail_name?.toLowerCase().includes(keyword))) {
+              if (detailValue?.text !== undefined && !excludedKeywords.some(keyword => detailValue?.detail_name?.toLowerCase().includes(keyword))) {
                 return (
                   <Stack className="edit-form__input-row" direction="row" key={detailId}>
                     <TextField
@@ -190,10 +188,10 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
                       value={detailValue?.text || ""}
                       onChange={(event) => handleInputChange(event, detailId)}
                     />
-                    {detailValue.clickable && (
+                    {(detailValue.clickable || detailValue?.destination_url !== undefined) && (
                       <Button className="edit-form__link-button" onClick={() => {
                         setLinkEdit(detailId);
-                        setOriginalDestinationUrl(detailValue?.destinationUrl || "");
+                        setOriginalDestinationUrl(detailValue?.destination_url || "");
                       }}>
                         <Link className="edit-form__link-icon" />
                       </Button>
@@ -216,7 +214,7 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
                           label="Destination URL"
                           fullWidth
                           variant="standard"
-                          value={detailValue?.destinationUrl || ""}
+                          value={detailValue?.destination_url || ""}
                           onChange={(event) => handleUrlChange(event, detailId)}
                         />
                       </DialogContent>
@@ -233,7 +231,7 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
                                   ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
                                   [detail.detail_id]: {
                                     ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detail.detail_id],
-                                    destinationUrl: originalDestinationUrl, // Revert to the original value
+                                    destination_url: originalDestinationUrl, // Revert to the original value
                                   },
                                 },
                               },
