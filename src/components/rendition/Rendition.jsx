@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
-import { Button, Typography, Box, Stack, Card, CardMedia, List, ListItem, ListItemButton, ListItemText, Dialog, DialogContent, DialogContentText, DialogActions, useMediaQuery } from "@mui/material";
+import { CircularProgress, Button, Typography, Box, Stack, Card, CardMedia, List, ListItem, ListItemButton, ListItemText, Dialog, DialogContent, DialogContentText, DialogActions, useMediaQuery } from "@mui/material";
 import { KeyboardBackspace, Close } from '@mui/icons-material';
 import { useParams, useNavigate } from "react-router-dom";
 import RenditionVersion from "./RenditionVersion";
 import LoadingAnim from "./LoadingAnim";
-// import { apiBaseUrl } from "../../api";
+import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 import "./styles/rendition.scss";
 import marriottLogo from './img/mi_button_logo.png'
@@ -18,14 +18,16 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [detailValues, setDetailValues] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [highlightedModule, setHighlightedModule] = useState('');
+  const [groupedModules, setGroupedModules] = useState({});
+  const [renditionsLoaded, setRenditionsLoaded] = useState(false);
+  const [detailsLoaded, setDetailsLoaded] = useState(false);
   const { tactic } = useParams();
   const isWideScreen = useMediaQuery('(min-width:1200px)');
 
   const navigate = useNavigate();
+  // renditionRequestID = 5;
 
   const renditionRef = useRef(null);
-
-  const apiBaseUrl = 'https://campaign-app-api-staging.azurewebsites.net';
 
   const authHeader = useMemo(() => ({
     headers: {
@@ -46,20 +48,29 @@ export default function Rendition({ auth, renditionRequestID }) {
       console.log(err.message, err.code);
       setStep(-1);
     }
-  }, [apiBaseUrl, tactic, authHeader, renditionRequestID]);
+  }, [tactic, authHeader, renditionRequestID]);
 
-  const loadRenditions = useCallback(async () => {
+  const loadRenditions = useCallback(async (placement_version_id) => {
     try {
-      let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${selectedModule.placement_version_id}/${renditionRequestID}/`, authHeader);
+      let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${placement_version_id}/${renditionRequestID}/`, authHeader);
+      console.log('Renditions loaded:', response.data);
       setRenditionList(response.data);
+      setRenditionsLoaded(true);
+      setStep(2);
     } catch (err) {
       console.log(err.message, err.code);
     }
-  }, [apiBaseUrl, authHeader, selectedModule.placement_version_id, renditionRequestID]);
+  }, [authHeader, renditionRequestID]);
 
   const selectVersion = (versionId, versionName, versionNumber, originalVersion) => {
     setSelectedVersion({ versionId, versionName, versionNumber, originalVersion });
     setStep(3);
+    setDetailsLoaded(false);
+
+    // Scroll to the top of the .rendition element
+    if (renditionRef.current) {
+      renditionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
@@ -69,14 +80,16 @@ export default function Rendition({ auth, renditionRequestID }) {
   }, [step, tactic, loadTreatment]);
 
   useEffect(() => {
-    if (step === 2) {
-      loadRenditions();
-    }
-  }, [step, selectedModule.placement_version_id, loadRenditions]);
+    console.log(detailValues);
+  }, [detailValues]);
+
+  useEffect(() => {
+    console.log(selectedVersion);
+  }, [selectedVersion]);
 
   const selectModule = (module) => {
     setSelectedModule(module);
-    setStep(2);
+    loadRenditions(module.placement_version_id);
 
     // Scroll to the top of the .rendition element
     if (renditionRef.current) {
@@ -86,24 +99,65 @@ export default function Rendition({ auth, renditionRequestID }) {
 
   // Group modules by their row value
   const groupModulesByRow = (modules) => {
-    return Object.values(modules).reduce((acc, module) => {
-      const row = module.module_id.toString().split('-')[0];
-      if (!acc[row]) {
-        acc[row] = [];
-      }
+    const moduleEntries = Object.entries(modules).map(([key, value]) => {
+      const [row, column] = key.split('-').map(Number);
+      return { row, column, module: value };
+    });
+
+    moduleEntries.sort((a, b) => a.row - b.row || a.column - b.column);
+
+    return moduleEntries.reduce((acc, { row, module }) => {
+      if (!acc[row]) acc[row] = [];
       acc[row].push(module);
       return acc;
     }, {});
   };
 
   const navigateBack = () => {
-    setSelectedModule({}); 
+    setSelectedModule({});
     setStep(1);
     const url = `/rendition-request/${renditionRequestID}`;
     navigate(url);
-  }
+  };
 
-  const groupedModules = treatment ? groupModulesByRow(treatment.vehicle_shells[0].module_coordinates) : {};
+  useEffect(() => {
+    if (treatment) {
+      const grouped = groupModulesByRow(treatment.vehicle_shells[0].module_coordinates);
+      setGroupedModules(grouped);
+    }
+  }, [treatment]);
+
+  useEffect(() => {
+    if (Object.keys(detailValues).length > 0) {
+      for (const placementVersionId in detailValues) {
+        const elements = document.querySelectorAll(`.versions__preview`);
+  
+        elements.forEach((element) => {
+          const values = detailValues[placementVersionId][selectedVersion.versionNumber];
+  
+          for (const detailId in values) {
+            const detailValue = values[detailId];
+            let textElement = null;
+  
+            // Convert detail_name to lower case for consistent matching
+            const detailNameLower = detailValue.detail_name.toLowerCase();
+  
+            // Dynamically select the element based on detail_name
+            if (detailNameLower.includes("headline") || detailNameLower.includes("bodytxt")) {
+              textElement = element.querySelector(`.${detailValue.detail_name}`);
+            } else {
+              textElement = element.querySelector(`.${detailValue.detail_name}`);
+            }
+  
+            // Update the element content if the textElement is found
+            if (textElement) {
+              textElement.textContent = detailValue.text;
+            }
+          }
+        });
+      }
+    }
+  }, [detailValues, selectedVersion]);
 
   if (!treatment) {
     return <LoadingAnim />;
@@ -147,21 +201,29 @@ export default function Rendition({ auth, renditionRequestID }) {
                 <Card className="treatment" component="section">
                   <Stack className="treatment__display">
                     <Typography className="treatment__name" variant="h6">{treatment.vehicle_shells[0].vehicle_shell_name}</Typography>
-                    {Object.keys(groupedModules).map((row) => (
-                      <Stack direction="row" className="treatment__module-row" key={row}>
-                        {groupedModules[row].map((module, i) => (
-                          <Box className="module" key={`${module.module_id}--${i}`} onMouseEnter={() => setHighlightedModule(module.placement_version_id)} onMouseLeave={() => setHighlightedModule('')} onClick={() => selectModule(module)}>
-                            {(module.placement_version_id !== selectedModule.placement_version_id && isWideScreen && highlightedModule !== '' && module.placement_version_id !== highlightedModule) && <Box className="module__dimmer"></Box>}
-                            <Typography className="module__name">{module.placement_version_name}</Typography>
-                            <CardMedia
-                              className="module__image"
-                              component="img"
-                              height={'100px'}
-                              image={module.image}
-                              alt=""
-                            />
-                          </Box>
-                        ))}
+                    {Object.keys(groupedModules).map((row, rowIndex) => (
+                      <Stack className="treatment__module-row" key={`row-${rowIndex}`} direction="row" spacing={2}>
+                        {groupedModules[row].map((module, i) => {
+                          const moduleClass = `module module_${module.placement_version_id}`
+
+                          return (
+                            <Box className={moduleClass} key={`${row}-${i}`} onMouseEnter={() => setHighlightedModule(module.placement_version_id)} onMouseLeave={() => setHighlightedModule('')} onClick={() => selectModule(module)}>
+                              {(module.placement_version_id !== selectedModule.placement_version_id && isWideScreen && highlightedModule !== '' && module.placement_version_id !== highlightedModule) && <Box className="module__dimmer"></Box>}
+                              <Typography className="module__name">{module.placement_version_name}</Typography>
+                              {module.render_entity ? (
+                                <Box className="module__html" dangerouslySetInnerHTML={{ __html: module.render_entity }} />
+                              ) : (
+                                <CardMedia
+                                  className="module__image"
+                                  component="img"
+                                  height={'100px'}
+                                  image={module.image}
+                                  alt=""
+                                />
+                              )}
+                            </Box>
+                          )
+                        })}
                       </Stack>
                     ))}
                   </Stack>
@@ -169,36 +231,45 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {(step === 2 || (isWideScreen && step > 1)) &&
                 <Card className="versions">
-                  <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
-                  <CardMedia
-                    className="module__image"
-                    component="img"
-                    height={'100px'}
-                    image={selectedModule.image}
-                    alt=""
-                  />
-                  <List className="versions__list">
-                    {renditionList.map((renditionVersion, i) => {
-                      const itemClass = selectedVersion === i + 1 ? "versions__item versions__item_selected" : "versions__item";
+                  {!renditionsLoaded && <CircularProgress />}
+                  {renditionsLoaded &&
+                    <>
+                      <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
+                      {selectedModule.render_entity ? (
+                        <Box className="versions__preview versions__preview_html" dangerouslySetInnerHTML={{ __html: selectedModule.render_entity }} />
+                      ) : (
+                        <CardMedia
+                          className="versions__preview versions__preview_image"
+                          component="img"
+                          height={'100px'}
+                          image={selectedModule.image}
+                          alt=""
+                        />
+                      )}
+                      <List className="versions__list">
+                        {renditionList.map((renditionVersion, i) => {
+                          const itemClass = selectedVersion === i + 1 ? "versions__item versions__item_selected" : "versions__item";
 
-                      return (
-                        <ListItem key={`${selectedModule.placement_version_id}--${i}`} className={itemClass} disablePadding>
-                          <ListItemButton onClick={() => selectVersion(renditionVersion?.id, renditionVersion?.name, i + 1, selectedModule?.placement_version_id)} className="versions__version-button">
-                            <ListItemText className="versions__text" primary={renditionVersion?.name} />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    })}
-                  </List>
-                  <Stack className="versions__button-row" direction="row">
-                    <Button className="versions__add" variant="text" onClick={() => setStep(1)}>Unselect</Button>
-                    <Button className="versions__add" variant="text" onClick={() => selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, renditionList.length + 1, selectedModule?.placement_version_id)}>Add Rendition</Button>
-                  </Stack>
+                          return (
+                            <ListItem key={`${selectedModule.placement_version_id}--${i}`} className={itemClass} disablePadding>
+                              <ListItemButton onClick={() => selectVersion(renditionVersion?.id, renditionVersion?.name, i + 1, selectedModule?.placement_version_id)} className="versions__version-button">
+                                <ListItemText className="versions__text" primary={renditionVersion?.name} />
+                              </ListItemButton>
+                            </ListItem>
+                          );
+                        })}
+                      </List>
+                      <Stack className="versions__button-row" direction="row">
+                        <Button className="versions__add" variant="text" onClick={() => setStep(1)}>Unselect</Button>
+                        <Button className="versions__add" variant="text" onClick={() => selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, renditionList.length + 1, selectedModule?.placement_version_id)}>Add Rendition</Button>
+                      </Stack>                     
+                    </>
+                  }
                 </Card>
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} />
+                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded}/>
                 </Card>
               }
             </Box>

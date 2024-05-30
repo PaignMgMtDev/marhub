@@ -1,6 +1,43 @@
 @use './variables';
 @use './mixins';
 
+@font-face {
+    font-family: 'Aldine-Light';
+    src: url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0804m.eot') format('embedded-opentype'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0804m.otf') format('otf'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0804m.woff') format('woff'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0804m.woff2') format('woff2'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0804m_.ttf') format('truetype'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0804m.svg') format('svg');
+  }
+  @font-face {
+    font-family: 'Aldine-Light-Italic';
+    src: url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0805m.eot') format('embedded-opentype'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0805m.otf') format('otf'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0805m.woff') format('woff'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0805m.woff2') format('woff2'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0805m_.ttf') format('truetype'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/aldine/tt0805m.svg') format('svg');
+  }
+  @font-face {
+    font-family: 'Swiss-Light';
+    src: url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Light.eot') format('embedded-opentype'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Light.otf') format('otf'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Light.woff') format('woff'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Light.woff2') format('woff2'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Light.ttf') format('truetype'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Light.svg') format('svg');
+  }
+  @font-face {
+    font-family: 'Swiss-Regular';
+    src: url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Regular.eot') format('embedded-opentype'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Regular.otf') format('otf'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Regular.woff') format('woff'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Regular.woff2') format('woff2'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Regular.ttf') format('truetype'),
+         url('https://cache.marriott.com/aka-fonts/MarriottDigital/swiss/Swiss721BT-Regular.svg') format('svg');
+  }
+
 body{
     position: relative;
     background-color: whitesmoke;
@@ -9,6 +46,7 @@ body{
 
 .rendition{
     @include mixins.default-grid;
+
 
     &__backdrop{
         background-color: whitesmoke !important;
@@ -114,6 +152,7 @@ body{
         cursor: pointer;
         position: relative;
         width: 100%;
+        margin-left: 0;
         
         &:hover{
             outline: 2px solid coral;
@@ -149,10 +188,7 @@ body{
         }
 
         &__image{
-            object-fit: contain;
-            height: 100%;
-            width: 100%;
-            max-height: 21rem;
+            @include mixins.module-image;
         }
     }
 
@@ -179,6 +215,21 @@ body{
 
         &__button-row{
             justify-content: space-between;
+        }
+
+        &__list{
+            position: relative;
+            padding-top: 0;
+        }
+
+        &__preview{
+            transform: scale(0.9);
+            border-bottom: 1px solid black;
+            pointer-events: none;
+
+            &_image{
+                @include mixins.module-image;
+            }
         }
 
         .selected-version {
@@ -220,6 +271,7 @@ body{
 
         &__link-button{
             min-width: unset;
+            height: 3.5rem;
         }
 
         &__button-row{
