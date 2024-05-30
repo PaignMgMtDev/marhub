@@ -6,37 +6,93 @@ import axios from 'axios';
 // import Header from "../header/Header";
 import "./styles/rendition.scss";
 
-export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader, selectedVersion, renditionList, setStep, detailValues, setDetailValues, renditionRequestId, loadRenditions }) {
-
+export default function RenditionVersion({
+  renditionRef,
+  apiBaseUrl,
+  authHeader,
+  selectedVersion,
+  renditionList,
+  setStep,
+  detailValues,
+  setDetailValues,
+  renditionRequestId,
+  loadRenditions,
+  detailsLoaded,
+  setDetailsLoaded,
+}) {
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
   const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
-  const [dataLoaded, setDataLoaded] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [originalValues, setOriginalValues] = useState(null);
 
   const excludedKeywords = ["imgwidth", "imgheight", "contentstartdate", "contentenddate", "tactic_id", "product", "module", "cblock", "section", "linkid", "linkname"];
 
-  const loadVersion = useCallback(async () => {
+  const updateDetailValues = useCallback((contentDetails) => {
+    const newDetailValues = {};
+    const versionId = selectedVersion.versionId;
+    const versionNumber = selectedVersion.versionNumber;
+    const originalValuesCopy = { ...originalValues };
+
+    if (!newDetailValues[versionId]) newDetailValues[versionId] = {};
+    if (!newDetailValues[versionId][versionNumber]) newDetailValues[versionId][versionNumber] = {};
+
+    contentDetails.forEach((detail) => {
+      const destinationUrlKey = Object.keys(detail).find(key => key.includes("destination_url"));
+      const destinationUrl = destinationUrlKey ? detail[destinationUrlKey] : "";
+      const textKey = Object.keys(detail).find(key => (
+        (key.includes("text") || key.includes("img_url") || key.includes("html_code")) &&
+        key !== "context"
+      ));
+      const textContent = textKey ? detail[textKey] : "";
+      const typeKey = Object.keys(detail).find(key => key.includes("type"));
+      const detailType = typeKey ? detail[typeKey] : "";
+      const nameKey = Object.keys(detail).find(key => key.includes("detail_name"));
+      const detailName = nameKey ? detail[nameKey] : "";
+
+      newDetailValues[versionId][versionNumber][detail.detail_id] = {
+        text: textContent,
+        destination_url: destinationUrl,
+        detail_type: detailType,
+        detail_name: detailName,
+        clickable: detail.clickable,
+      };
+
+      if (!originalValuesCopy) {
+        originalValuesCopy[detail.detail_id] = {
+          text: textContent,
+          destination_url: destinationUrl,
+          detail_type: detailType,
+          detail_name: detailName,
+          clickable: detail.clickable,
+        };
+      }
+    });
+
+    setDetailValues(newDetailValues);
+    if (!originalValues) setOriginalValues(originalValuesCopy);
+    setDetailsLoaded(true);
+  }, [originalValues, selectedVersion, setDetailValues, setDetailsLoaded]);
+
+  const loadAndInitializeVersion = useCallback(async () => {
     try {
-      let response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader)
-      console.log(response.data)
+      const response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader);
+      console.log(response.data);
       setPlacementVersion(response.data);
-      setDataLoaded(true);
+      updateDetailValues(response.data.content_details);
     } catch (err) {
-      console.log(err.message, err.code)
-      setDataLoaded(false);
+      console.log(err.message, err.code);
+      setDetailsLoaded(true);
     }
-  }, [apiBaseUrl, selectedVersion, authHeader]);
+  }, [apiBaseUrl, authHeader, updateDetailValues, selectedVersion.versionId, setDetailsLoaded]);
 
   const submitRenditionVersion = async () => {
-    setSubmitting(true)
+    setSubmitting(true);
     try {
-      // Scroll to the top of the .rendition element
       if (renditionRef.current) {
         renditionRef.current.scrollIntoView({ behavior: 'smooth' });
       }
-      let response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader);
+      const response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader);
       console.log(response.data);
       loadRenditions(selectedVersion.versionId);
       setSubmitting(false);
@@ -44,132 +100,60 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
       console.log(err.message, err.code);
       setSubmitting(false);
     }
-  }
+  };
 
   useEffect(() => {
-    if (!dataLoaded) {
-      loadVersion();
-    }
-  }, [dataLoaded, loadVersion]);
-
-  useEffect(() => {
-    if (placementVersion.content_details && !detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]) {
-      const newDetailValues = {};
-      const versionId = selectedVersion.versionId;
-      const versionNumber = selectedVersion.versionNumber;
-      const originalValuesCopy = { ...originalValues };
-
-      if (!newDetailValues[versionId]) {
-        newDetailValues[versionId] = {};
-      }
-
-      if (!newDetailValues[versionId][versionNumber]) {
-        newDetailValues[versionId][versionNumber] = {};
-      }
-
-      placementVersion.content_details.forEach(detail => {
-        const destinationUrlKey = Object.keys(detail).find(key => key.includes("destination_url"));
-        const destinationUrl = destinationUrlKey ? detail[destinationUrlKey] : "";
-        const textKey = Object.keys(detail).find(key => {
-          return (
-            (key.includes("text") || key.includes("img_url") || key.includes("html_code")) &&
-            key !== "context"
-          );
-        });
-        const textContent = textKey ? detail[textKey] : "";
-        const typeKey = Object.keys(detail).find(key => key.includes("type"));
-        const detailType = typeKey ? detail[typeKey] : "";
-        const nameKey = Object.keys(detail).find(key => key.includes("detail_name"));
-        const detailName = nameKey ? detail[nameKey] : "";
-
-        newDetailValues[versionId][versionNumber][detail.detail_id] = {
-          text: textContent,
-          destination_url: destinationUrl,
-          detail_type: detailType,
-          detail_name: detailName,
-          clickable: detail.clickable,
-        };
-
-        // Save original values when component first loads
-        if (!originalValuesCopy) {
-          originalValuesCopy[detail.detail_id] = {
-            text: textContent,
-            destination_url: destinationUrl,
-            detail_type: detailType,
-            detail_name: detailName,
-            clickable: detail.clickable,
-          };
-        }
-      });
-
-      setDetailValues(newDetailValues);
-      if (!originalValues) {
-        setOriginalValues(originalValuesCopy);
-      }
-    }
-  }, [placementVersion, setDetailValues, detailValues, selectedVersion.versionId, selectedVersion.versionNumber, originalValues]);
+    if (!detailsLoaded) loadAndInitializeVersion();
+  }, [detailsLoaded, loadAndInitializeVersion]);
 
   const handleInputChange = (event, detailId) => {
     const { value } = event.target;
-    setDetailValues((prevValues) => {
-      const versionId = selectedVersion.versionId;
-      const versionNumber = selectedVersion.versionNumber;
-
-      return {
-        ...prevValues,
-        [versionId]: {
-          ...prevValues[versionId],
-          [versionNumber]: {
-            ...prevValues[versionId]?.[versionNumber],
-            [detailId]: {
-              ...prevValues[versionId]?.[versionNumber]?.[detailId],
-              text: value,
-            },
+    setDetailValues((prevValues) => ({
+      ...prevValues,
+      [selectedVersion.versionId]: {
+        ...prevValues[selectedVersion.versionId],
+        [selectedVersion.versionNumber]: {
+          ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
+          [detailId]: {
+            ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId],
+            text: value,
           },
         },
-      };
-    });
+      },
+    }));
   };
 
   const handleUrlChange = (event, detailId) => {
     const { value } = event.target;
-    setDetailValues((prevValues) => {
-      const versionId = selectedVersion.versionId;
-      const versionNumber = selectedVersion.versionNumber;
-
-      return {
-        ...prevValues,
-        [versionId]: {
-          ...prevValues[versionId],
-          [versionNumber]: {
-            ...prevValues[versionId]?.[versionNumber],
-            [detailId]: {
-              ...prevValues[versionId]?.[versionNumber]?.[detailId],
-              destination_url: value,
-            },
+    setDetailValues((prevValues) => ({
+      ...prevValues,
+      [selectedVersion.versionId]: {
+        ...prevValues[selectedVersion.versionId],
+        [selectedVersion.versionNumber]: {
+          ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
+          [detailId]: {
+            ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId],
+            destination_url: value,
           },
         },
-      };
-    });
+      },
+    }));
   };
 
   const resetToOriginalValues = () => {
-    if (originalValues) {
-      setDetailValues(originalValues);
-    }
+    if (originalValues) setDetailValues(originalValues);
     setStep(2);
-    
-    // Scroll to the top of the .rendition element
+
     if (renditionRef.current) {
       renditionRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
+  
   return (
     <>
       {submitting && <Typography className="edit__uploading">Uploading rendition...</Typography>}
-      {(!dataLoaded || submitting) && <CircularProgress />}
-      {(dataLoaded && !submitting) && (
+      {(!detailsLoaded || submitting) && <CircularProgress />}
+      {(detailsLoaded && !submitting) && (
         <Stack className="edit__display">
           <Typography className="edit__heading">{selectedVersion.versionName}</Typography>
           <Typography className="edit__subheading">{selectedVersion.versionNumber > renditionList?.length ? `Create Rendition ${selectedVersion.versionNumber}` : `Edit Rendition ${selectedVersion.versionNumber}`}</Typography>
@@ -177,7 +161,7 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
             {placementVersion.content_details.map((detail) => {
               const detailId = detail.detail_id;
               const detailValue = detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId];
-
+  
               if (detailValue?.text !== undefined && !excludedKeywords.some(keyword => detailValue?.detail_name?.toLowerCase().includes(keyword))) {
                 return (
                   <Stack className="edit-form__input-row" direction="row" key={detailId}>
@@ -256,7 +240,6 @@ export default function RenditionVersion({ renditionRef, apiBaseUrl, authHeader,
                 );
               }
               else return null;
-              
             })}
             <Stack className="edit-form__button-row" direction="row">
               <Button className="edit-form__button edit-form__button_cancel" onClick={resetToOriginalValues}>Cancel</Button>

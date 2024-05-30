@@ -19,7 +19,8 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [highlightedModule, setHighlightedModule] = useState('');
   const [groupedModules, setGroupedModules] = useState({});
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const [renditionsLoaded, setRenditionsLoaded] = useState(false);
+  const [detailsLoaded, setDetailsLoaded] = useState(false);
   const { tactic } = useParams();
   const isWideScreen = useMediaQuery('(min-width:1200px)');
 
@@ -54,7 +55,7 @@ export default function Rendition({ auth, renditionRequestID }) {
       let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${placement_version_id}/${renditionRequestID}/`, authHeader);
       console.log('Renditions loaded:', response.data);
       setRenditionList(response.data);
-      setDataLoaded(true);
+      setRenditionsLoaded(true);
       setStep(2);
     } catch (err) {
       console.log(err.message, err.code);
@@ -64,6 +65,7 @@ export default function Rendition({ auth, renditionRequestID }) {
   const selectVersion = (versionId, versionName, versionNumber, originalVersion) => {
     setSelectedVersion({ versionId, versionName, versionNumber, originalVersion });
     setStep(3);
+    setDetailsLoaded(false);
   };
 
   useEffect(() => {
@@ -219,8 +221,8 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {(step === 2 || (isWideScreen && step > 1)) &&
                 <Card className="versions">
-                  {!dataLoaded && <CircularProgress />}
-                  {dataLoaded &&
+                  {!renditionsLoaded && <CircularProgress />}
+                  {renditionsLoaded &&
                     <>
                       <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
                       {selectedModule.render_entity ? (
@@ -257,7 +259,7 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} />
+                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded}/>
                 </Card>
               }
             </Box>
