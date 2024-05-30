@@ -66,6 +66,11 @@ export default function Rendition({ auth, renditionRequestID }) {
     setSelectedVersion({ versionId, versionName, versionNumber, originalVersion });
     setStep(3);
     setDetailsLoaded(false);
+
+    // Scroll to the top of the .rendition element
+    if (renditionRef.current) {
+      renditionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
@@ -85,6 +90,11 @@ export default function Rendition({ auth, renditionRequestID }) {
   const selectModule = (module) => {
     setSelectedModule(module);
     loadRenditions(module.placement_version_id);
+
+    // Scroll to the top of the .rendition element
+    if (renditionRef.current) {
+      renditionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   // Group modules by their row value
