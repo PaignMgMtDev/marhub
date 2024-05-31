@@ -138,21 +138,18 @@ export default function Rendition({ auth, renditionRequestID }) {
           for (const detailId in values) {
             const detailValue = values[detailId];
             let textElement = null;
+            let imageElement = null;
   
             // Convert detail_name to lower case for consistent matching
             const detailNameLower = detailValue.detail_name.toLowerCase();
   
             // Dynamically select the element based on detail_name
-            if (detailNameLower.includes("headline") || detailNameLower.includes("bodytxt")) {
-              textElement = element.querySelector(`.${detailValue.detail_name}`);
-            } else {
-              textElement = element.querySelector(`.${detailValue.detail_name}`);
-            }
+            if (detailNameLower.includes("imgurl")) imageElement = element.querySelector(`.${detailValue.detail_name}`);
+            else textElement = element.querySelector(`.${detailValue.detail_name}`);
   
-            // Update the element content if the textElement is found
-            if (textElement) {
-              textElement.textContent = detailValue.text;
-            }
+            // Update the element content
+            if (textElement) textElement.textContent = detailValue.text;
+            if (imageElement) imageElement.src = detailValue.text;
           }
         });
       }
