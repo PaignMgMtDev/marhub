@@ -8,6 +8,7 @@ import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 import "./styles/rendition.scss";
 import marriottLogo from './img/mi_button_logo.png';
+import RenderEngine from "./RenderEngine";
 
 export default function Rendition({ auth, renditionRequestID }) {
   const [treatment, setTreatment] = useState(null);
@@ -208,7 +209,9 @@ export default function Rendition({ auth, renditionRequestID }) {
                               {(module.placement_version_id !== selectedModule.placement_version_id && isWideScreen && highlightedModule !== '' && module.placement_version_id !== highlightedModule) && <Box className="module__dimmer"></Box>}
                               <Typography className="module__name">{module.placement_version_name}</Typography>
                               {module.render_entity ? (
-                                <Box className="module__html" dangerouslySetInnerHTML={{ __html: module.render_entity }} />
+                                <Box className="module__render">
+                                  <RenderEngine renderObject={module.render_entity} />
+                                </Box>
                               ) : (
                                 <CardMedia
                                   className="module__image"
@@ -233,7 +236,9 @@ export default function Rendition({ auth, renditionRequestID }) {
                     <>
                       <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
                       {selectedModule.render_entity ? (
-                        <Box className="versions__preview versions__preview_html" dangerouslySetInnerHTML={{ __html: selectedModule.render_entity }} />
+                        <Box className="versions__preview versions__preview_render">
+                          <RenderEngine renderObject={selectedModule.render_entity} />
+                        </Box>
                       ) : (
                         <CardMedia
                           className="versions__preview versions__preview_image"
