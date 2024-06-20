@@ -7,7 +7,7 @@ import LoadingAnim from "./LoadingAnim";
 import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 import "./styles/rendition.scss";
-import marriottLogo from './img/mi_button_logo.png'
+import marriottLogo from './img/mi_button_logo.png';
 
 export default function Rendition({ auth, renditionRequestID }) {
   const [treatment, setTreatment] = useState(null);
@@ -38,8 +38,8 @@ export default function Rendition({ auth, renditionRequestID }) {
 
   const loadTreatment = useCallback(async () => {
     try {
-      let endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}`;
-      if (renditionRequestID) endpoint = `${apiBaseUrl}/api/contentframework/treatment-by-tactic/${tactic}/${renditionRequestID}`;
+      let endpoint = `${apiBaseUrl}/api/render/treatment-by-tactic/${tactic}`;
+      if (renditionRequestID) endpoint = `${apiBaseUrl}/api/render/treatment-by-tactic/${tactic}/${renditionRequestID}`;
       let response = await axios.get(endpoint, authHeader);
       console.log(response.data);
       setTreatment(response.data);
@@ -186,7 +186,7 @@ export default function Rendition({ auth, renditionRequestID }) {
             />
           </Card>
           <Card className="main-display" component="section">
-            <Stack direction="row" className="title-bar">
+            <Stack className="title-bar" direction="row">
               <Button className="title-bar__back" onClick={navigateBack}>
                 <KeyboardBackspace className="title-bar__back-icon" />
               </Button>
