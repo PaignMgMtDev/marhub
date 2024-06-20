@@ -1,29 +1,35 @@
 import React from "react";
 
-export default function RenderEngine({ renderObject }) {
+const voidElements = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']);
 
-  const parseRenderEntity = (renderObject) => {
-    if (!renderObject) return null;
+function parseRenderEntity(renderObject, index) {
+  if (!renderObject) return null;
 
-    const { tag, attributes, children, content } = renderObject;
+  const { tag, attributes, children, content } = renderObject;
 
-    const style = attributes?.style || {};
-    const className = attributes?.class || '';
-    const src = attributes?.src || '';
-    const href = attributes?.href || '';
+  const style = attributes?.style || {};
+  const className = attributes?.class || '';
+  const src = attributes?.src || '';
+  const href = attributes?.href || '';
 
-    const Tag = tag;
+  const Tag = tag;
 
-    return (
-      <Tag style={style} className={className} src={src} href={href}>
-        {content || children?.map((child, index) => parseRenderEntity(child))}
-      </Tag>
-    );
+  // Handle void elements separately
+  if (voidElements.has(tag)) {
+    return <Tag key={index} style={style} className={className} src={src} href={href} />;
   }
 
   return (
+    <Tag key={index} style={style} className={className} src={src} href={href}>
+      {content || children?.map((child, childIndex) => parseRenderEntity(child, `${index}-${childIndex}`))}
+    </Tag>
+  );
+}
+
+export default function RenderEngine({ renderObject }) {
+  return (
     <>
-      {parseRenderEntity(renderObject)}
+      {parseRenderEntity(renderObject, 0)}
     </>
   );
 }
