@@ -44,7 +44,7 @@ export default function DashLanding({
     campName: campaign.name,
     status: campaign.current_status.toUpperCase(),
     // owner: owner,
-    newcontent: "Add New Content",
+    // newcontent: "Add New Content",
     createrendition: "Create Rendition"
   }));
 
@@ -89,6 +89,8 @@ export default function DashLanding({
       headerName: "",
       width: 300,
       renderCell: (params) => (
+        
+        params.row.status === "APPROVED" || params.row.status === "IN_MARKET" ?
         <Button
           variant='contained'
           sx={{ 
@@ -100,6 +102,7 @@ export default function DashLanding({
         >
           {params.value}
         </Button>
+          :null
       ),
     },
   ];
