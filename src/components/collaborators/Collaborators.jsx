@@ -174,6 +174,18 @@ export default function Collaborators({
     },
   ];
 
+  const formatTableName = (name) => {   
+    if (name.startsWith('MarD_')) {
+      name = name.substring(5); 
+    }
+    return name.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
+  const formatAttributeName = (name) => {
+    let result = name.replace('iglobal_', '').replace('_id', ''); // Remove prefix and suffix
+    return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase(); // Capitalize first letter
+  };
+
   const buttonDisabled = selectedTable === null || selectedAttribute === null || selectedFlags?.length === 0 ? true : false
 
   const style = {
@@ -208,6 +220,20 @@ export default function Collaborators({
           </Grid>
         </div>
       </div>
+      <Grid sx={{ paddingTop: "20px"}} container justifyContent="center">  
+      <Paper sx={{
+        
+        height: "50px",
+        width: "600px",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',  
+        padding: 1,
+        color: "secondary.dark"
+      }}>
+        <Typography variant="h5">Please Select How Recipients Will Be Assigned</Typography>
+      </Paper>
+    </Grid>
       <Grid
         container
         spacing={2}
@@ -253,7 +279,7 @@ export default function Collaborators({
               id="tags-standard"
               onChange={handleSetTable}
               options={tables}
-              getOptionLabel={(table) => `${table.name}`}
+              getOptionLabel={(option) => formatTableName(option.name)}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -271,7 +297,7 @@ export default function Collaborators({
             <Autocomplete
               id="tags-standard"
               options={attributes}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => formatAttributeName(option.name)}
               onChange={handleSetAttribute}
               renderInput={(params) => (
                 <TextField
@@ -309,7 +335,7 @@ export default function Collaborators({
       </Grid>
       <Grid
         container
-        justifyContent="center"
+        justifyContent="flex-end"
         style={{ marginTop: 20, marginBottom: 20, paddingRight: "155px" }}>
         <Button
           variant="contained"
