@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
-import { Box, Grid, AppBar, Toolbar, Paper, IconButton, InputBase, Popover, Button, Typography } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { 
+    Box, 
+    Grid, 
+    AppBar, 
+    Toolbar, Paper, 
+    IconButton, 
+    // InputBase, 
+    Popover, 
+    Button, 
+    // Typography 
+} from '@mui/material';
+// import SearchIcon from '@mui/icons-material/Search';
+// import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -10,6 +20,7 @@ export default function Header() {
     const [openSettings, setOpenSettings] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState(null)
     const { logout } = useAuth()
+    const { auth } = useAuth()
 
     const handleClick = (event) => {
       setOpenSettings(!openSettings)
@@ -51,13 +62,14 @@ export default function Header() {
                                 sx={{
                                     height: 100,
                                     width: 'auto',
+                                    paddingTop: "10px"
                                 }}
-                                alt="Paign Management logo"
-                                src="https://campaignapistorage.blob.core.windows.net/media/organization_logos/Logo_RGB.png"/>
+                                alt="Marriott Bonvoy logo"
+                                src="marbonlogo.png"/>
                             </Grid>
                             <Grid item lg={9}>
                                 <Paper sx={paperStyles}>
-                                    <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
+                                    {/* <Paper component="form" sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}>
                                         <InputBase
                                         sx={{ ml: 1, flex: 1 }}
                                         placeholder="Search"
@@ -68,12 +80,14 @@ export default function Header() {
                                     <IconButton
                                     sx={{color: '#FF8D6B'}}>
                                         <NotificationsIcon/>
-                                    </IconButton>
+                                    </IconButton> */}
+                                    { auth ?
                                     <IconButton
                                     onClick={handleClick}
-                                    sx={{color: '#FF8D6B'}}>
+                                    sx={{color: 'primary.main'}}>
                                         <SettingsIcon/>
                                     </IconButton>
+                                    :null}
                                 </Paper>
                             </Grid>
                         </Grid>
@@ -90,8 +104,8 @@ export default function Header() {
                     horizontal: 'left',
                     }}
                 >
-                    <Typography sx={{ p: 2 }}>Settings</Typography>
-                    <Button onClick={logout}>Logout</Button>
+                    {/* <Typography sx={{ p: 2 }}>Settings</Typography> */}
+                    <Button sx={{color: '#FF8D6B'}} onClick={logout}>Logout</Button>
                 </Popover>}
             </Box>
         </div>

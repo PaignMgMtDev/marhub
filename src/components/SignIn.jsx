@@ -12,11 +12,11 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
-const defaultTheme = createTheme();
+
+
+
 
 export default function SignIn({  getAccessToken }) {
   
@@ -53,7 +53,7 @@ export default function SignIn({  getAccessToken }) {
   // const passwordErrorMessage = "Please input a valid password."
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -64,7 +64,7 @@ export default function SignIn({  getAccessToken }) {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -110,7 +110,7 @@ export default function SignIn({  getAccessToken }) {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, }}
               disabled={email && password ? false : true}
               // onSubmit={(e) => getAccessToken(e, email, password)}
             >
@@ -131,6 +131,6 @@ export default function SignIn({  getAccessToken }) {
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
+   
   );
 }

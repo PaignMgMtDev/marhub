@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import axios from "axios"
+
 
 export default function DashLanding({
   authHeader,
@@ -11,17 +12,13 @@ export default function DashLanding({
   handleCampaignID,
   handleCreateRendition
 }) {
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "PLANNED":
-        return "status-planned";
-      case "ACTIVE":
-        return "status-active";
-      case "DRAFT":
-        return "status-draft";
-      default:
-        return "status-default";
-    }
+  console.log(campaignData)
+  const statusStyles = {
+    PLANNED: { color: 'primary.light' },
+    APPROVED: { color: 'primary.dark' },
+    IN_MARKET: { color: 'primary.main' },
+    ON_HOLD: { color: 'primary.light' },
+    COMPLETED: { color: 'secondary.main' },
   };
 
   const getCampaigns = useCallback(async () => {
@@ -47,7 +44,7 @@ export default function DashLanding({
     campName: campaign.name,
     status: campaign.current_status.toUpperCase(),
     // owner: owner,
-    newcontent: "Add New Content",
+    // newcontent: "Add New Content",
     createrendition: "Create Rendition"
   }));
 
@@ -62,45 +59,58 @@ export default function DashLanding({
       field: "status",
       headerName: "Status",
       width: 200,
-      renderCell: (params) => (
-        <span className={getStatusClass(params.value)}>{params.value}</span>
-      ),
+      renderCell: (params) => {
+        const formattedValue = params.value.replace(/_/g, ' ');
+        const style = statusStyles[params.value]; // Get the style for the current status
+        return (
+          <Typography sx={{ textAlign: "left", paddingTop: "12px", ...style }}>
+            {formattedValue}
+          </Typography>
+        );
+      },
     },
     // { field: "owner", headerName: "Owner", width: 300 },
-    {
-      field: "newcontent",
-      headerName: "",
-      width: 300,
-      renderCell: (params) => (
-        <Button
-          variant="link"
-          color="primary"
-          onClick={() => {handleAddNewContent(params.row.campName); handleCampaignID(params.row.id)}}
-        >
-          {params.value}
-        </Button>
-      ),
-    },
+    // {
+    //   field: "newcontent",
+    //   headerName: "",
+    //   width: 300,
+    //   renderCell: (params) => (
+    //     <Button
+    //       variant="link"
+    //       color="primary"
+    //       onClick={() => {handleAddNewContent(params.row.campName); handleCampaignID(params.row.id)}}
+    //     >
+    //       {params.value}
+    //     </Button>
+    //   ),
+    // },
     {
       field: "createrendition",
       headerName: "",
       width: 300,
       renderCell: (params) => (
+        
+        params.row.status === "APPROVED" || params.row.status === "IN_MARKET" ?
         <Button
-          variant="link"
-          color="primary"
+          variant='contained'
+          sx={{ 
+            ':hover': {
+              backgroundColor: 'primary.light'
+            },
+            backgroundColor: 'secondary.light', color: 'primary.dark' }}
           onClick={() => {handleCreateRendition(params.row.campName); handleCampaignID(params.row.id)}}
         >
           {params.value}
         </Button>
+          :null
       ),
     },
   ];
 
   return (
     <div>
-      <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%"}}>
-        <DataGridPro rows={rows} columns={columns} />
+      <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%", paddingTop: "10px"}}>
+        <DataGridPro rows={rows} columns={columns} hideFooterRowCount={true} />
       </div>
     </div>
   );

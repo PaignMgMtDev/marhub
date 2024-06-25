@@ -69,7 +69,7 @@ export default function CampTactics({
     },
     { field: "startdate", headerName: "Start Date", width: 300 },
     { field: "enddate", headerName: "End Date", width: 300 },
-    { field: "language", headerName: "Language", width: 300 },
+    // { field: "language", headerName: "Language", width: 300 },
   ];
 
   return (
@@ -89,6 +89,7 @@ export default function CampTactics({
         rows={tacticRows}
         columns={columns}
         onRowSelectionModelChange={handleSelectionChange}
+        hideFooterRowCount={true}
       />
       </div>
       </div>

@@ -5,7 +5,7 @@ import {
   FormControlLabel,
   Button,
   FormControl,
-  FormLabel,
+  // FormLabel,
   Typography,
   IconButton,
   Grid,
@@ -131,7 +131,7 @@ export default function RendReqConfig({
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <FormControl component="fieldset">
-              <FormLabel component="legend">Select A Placement</FormLabel>
+              <Typography variant="h6" gutterBottom>Select Placements for Rendition</Typography>
               <FormGroup value={placementID} onChange={handleSetPlacementType}>
                 {placementData
                   .reduce((unique, item) => {
