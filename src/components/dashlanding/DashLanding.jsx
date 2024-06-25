@@ -90,7 +90,7 @@ export default function DashLanding({
       width: 300,
       renderCell: (params) => (
         
-        params.row.status === "APPROVED" || params.row.status === "IN_MARKET" ?
+        params.row.status === "APPROVED" || params.row.status === "IN_MARKET" || params.row.status === "PLANNED" ?
         <Button
           variant='contained'
           sx={{ 
