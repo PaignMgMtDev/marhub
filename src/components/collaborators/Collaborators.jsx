@@ -12,6 +12,7 @@ export default function Collaborators({
   rendition,
   renditionDetails,
 }){
+  console.log({renditionDetails})
   const [collaborators, setCollaborators] = useState([])
   const [selectedUserId, setSelectedUserId] = useState(null)
 
