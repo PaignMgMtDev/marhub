@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Paper, Button, Typography, Grid, Autocomplete, TextField } from "@mui/material";
+import { Paper, Button, Typography, Grid, Autocomplete, TextField, Popover } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import axios from "axios";
 import { DataGridPro } from "@mui/x-data-grid-pro";
@@ -126,6 +126,7 @@ export default function Collaborators({
       const res = await axios.post(url, body, authHeader)
       const data = res?.data 
       data && console.log(data)
+      handleClick()
     }catch(e){
       console.log('error while sending the form: ', e)
     }
@@ -166,7 +167,18 @@ export default function Collaborators({
   ];
 
   const buttonDisabled = selectedTable === null || selectedAttribute === null || selectedFlags?.length === 0 ? true : false
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
   return (
     <div>
       <div>
@@ -297,6 +309,18 @@ export default function Collaborators({
       {collaboratorRenditions?.length > 0 && (
         <DataGridPro rows={renditionRows} columns={renditionColumns} />
       )}
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Typography sx={{ p: 2 }}>Rendition Request Received</Typography>
+      </Popover>
     </div>
   );
 }
