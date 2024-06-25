@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Paper, Button, Typography, Grid, Autocomplete, TextField, Popover } from "@mui/material";
+import { Paper, Button, Typography, Grid, Autocomplete, TextField, Modal, Box } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import axios from "axios";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { useNavigate } from "react-router-dom";
 
 export default function Collaborators({
   authHeader,
@@ -12,9 +13,11 @@ export default function Collaborators({
   rendition,
   renditionDetails,
 }){
-  console.log({renditionDetails})
+  const navigate = useNavigate()
+
   const [collaborators, setCollaborators] = useState([])
   const [selectedUserId, setSelectedUserId] = useState(null)
+  const [selectedUserName, setSelectedUserName] = useState("")
 
   const [tables, setTables] = useState([])
   const [selectedTable, setSelectedTable] = useState(null)
@@ -26,6 +29,10 @@ export default function Collaborators({
   const [selectedFlags, setSelectedFlags] = useState([])
 
   const [collaboratorRenditions, setCollaboratorRenditions] = useState([])
+
+  const [collabRendition, setCollabRendition] = useState(null)
+  
+  const [toggleModal, setToggleModal] = useState(false)
 
   const getCollaborators = useCallback(async () => {
     try{
@@ -110,10 +117,10 @@ export default function Collaborators({
     setAttributes([])
     setFlags([])
     //end rendering values
-
     setSelectedUserId(user?.id);
     getRenditionsByUser(user?.id)
     getAttributeTableValues(user?.id)
+    setSelectedUserName(`${user?.user?.first_name}, ${user?.user?.last_name}`)
   }
 
   const sendForm = async () => {
@@ -126,8 +133,8 @@ export default function Collaborators({
       })
       const res = await axios.post(url, body, authHeader)
       const data = res?.data 
-      data && console.log(data)
-      handleClick()
+      data && setCollabRendition(data)
+      data && setToggleModal(!toggleModal)
     }catch(e){
       console.log('error while sending the form: ', e)
     }
@@ -168,18 +175,23 @@ export default function Collaborators({
   ];
 
   const buttonDisabled = selectedTable === null || selectedAttribute === null || selectedFlags?.length === 0 ? true : false
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
   };
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setToggleModal(!toggleModal)
+    navigate('/dashlanding')
+  }
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
   return (
     <div>
       <div>
@@ -310,18 +322,16 @@ export default function Collaborators({
       {collaboratorRenditions?.length > 0 && (
         <DataGridPro rows={renditionRows} columns={renditionColumns} />
       )}
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
+      <Modal
+        open={toggleModal}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <Typography sx={{ p: 2 }}>Rendition Request Received</Typography>
-      </Popover>
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description">
+        <Box sx={style}>
+          <Typography sx={{ p: 2 }}>You have created Rendition Request ID {collabRendition?.rendition_collaborator?.id} and a Workfront task has been delivered to the following user: {selectedUserName}</Typography>
+          <Button onClick={handleClose}>OKAY</Button>
+        </Box>
+      </Modal>
     </div>
   );
 }
