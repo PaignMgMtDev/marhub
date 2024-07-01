@@ -44,7 +44,7 @@ export default function DashLanding({
     campName: campaign.name,
     status: campaign.current_status.toUpperCase(),
     // owner: owner,
-    // newcontent: "Add New Content",
+    newcontent: "Add New Content",
     createrendition: "Create Rendition"
   }));
 
