@@ -70,20 +70,20 @@ export default function DashLanding({
       },
     },
     // { field: "owner", headerName: "Owner", width: 300 },
-    // {
-    //   field: "newcontent",
-    //   headerName: "",
-    //   width: 300,
-    //   renderCell: (params) => (
-    //     <Button
-    //       variant="link"
-    //       color="primary"
-    //       onClick={() => {handleAddNewContent(params.row.campName); handleCampaignID(params.row.id)}}
-    //     >
-    //       {params.value}
-    //     </Button>
-    //   ),
-    // },
+    {
+      field: "newcontent",
+      headerName: "",
+      width: 300,
+      renderCell: (params) => (
+        <Button
+          variant="link"
+          color="primary"
+          onClick={() => {handleAddNewContent(params.row.campName); handleCampaignID(params.row.id)}}
+        >
+          {params.value}
+        </Button>
+      ),
+    },
     {
       field: "createrendition",
       headerName: "",
