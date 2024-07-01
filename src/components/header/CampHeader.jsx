@@ -2,7 +2,7 @@ import React from "react";
 import { 
   Button, 
   Box, 
-  // Typography 
+  Typography 
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -38,7 +38,7 @@ export default function CampHeader({
       </Button>
  
    
-        {/* <Typography
+        <Typography
           variant="caption"
           sx={{ opacity: 0.7, paddingLeft: "35px" }}
         >
@@ -53,7 +53,7 @@ export default function CampHeader({
           sx={{ opacity: 0.7, paddingLeft: "35px" }}
         >
           Add New Content
-        </Typography> */}
+        </Typography>
        
       
     </Box>
