@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react"
 import { DataGridPro } from "@mui/x-data-grid-pro"
-import { Button } from "@mui/material"
+import { Button, Typography } from "@mui/material"
 import CampHeader from "../header/CampHeader"
 import axios from "axios"
 import { DateTime } from 'luxon';
@@ -56,11 +56,15 @@ export default function CampTactics({
       field: "id",
       headerName: "ID",
       width: 300,
+      
     },
     {
       field: "tactName",
       headerName: "Tactic Name",
       width: 300,
+      renderCell: (params) => (
+        <div>{params.value.replace(/_/g, ' ')}</div>
+      ),
     },
     {
       field: "status",
