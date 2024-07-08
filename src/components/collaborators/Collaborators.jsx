@@ -176,6 +176,7 @@ export default function Collaborators({
       if (data) {
         console.log(data);
         setToggleModal(true);
+        setCollabRendition(true)
       }
     } catch (e) {
       console.log("error while sending the form: ", e);
