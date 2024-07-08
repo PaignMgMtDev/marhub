@@ -3,6 +3,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro"
 import { Button } from "@mui/material"
 import CampHeader from "../header/CampHeader"
 import axios from "axios"
+import { DateTime } from 'luxon';
 
 export default function CampTactics({
   authHeader,
@@ -48,6 +49,8 @@ export default function CampTactics({
     }
   };
 
+  
+
   const columns = [
     {
       field: "id",
@@ -67,10 +70,38 @@ export default function CampTactics({
         <strong className={getStatusClass(params.value)}>{params.value}</strong>
       ),
     },
-    { field: "startdate", headerName: "Start Date", width: 300 },
-    { field: "enddate", headerName: "End Date", width: 300 },
-    // { field: "language", headerName: "Language", width: 300 },
+    {
+      field: "startdate",
+      headerName: "Start Date",
+      width: 300,
+      renderCell: (params) => formatDate(params.value),
+    },
+    {
+      field: "enddate",
+      headerName: "End Date",
+      width: 300,
+      renderCell: (params) => formatDate(params.value),
+    },
   ];
+
+  const formatDate = (dateString) => {
+    console.log("Date string received:", dateString);
+    try {
+      const date = DateTime.fromISO(dateString);
+      if (date.isValid) {
+        return date.toLocaleString(DateTime.DATE_MED);
+      } else {
+        console.error('Invalid date:', dateString); // Log the problematic date string
+        return 'Invalid date'; // Provide a default/fallback message
+      }
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Error formatting date'; // Handle unexpected errors gracefully
+    }
+  };
+  
+  
+  
 
   return (
     <div>
