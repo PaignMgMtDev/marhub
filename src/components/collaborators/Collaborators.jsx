@@ -65,7 +65,7 @@ export default function Collaborators({
 
   const getCollaborators = useCallback(async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborators/`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborator/`;
       const res = await axios.get(url, authHeader);
       const data = res?.data;
       data && setCollaborators(data?.collaborators);
@@ -165,7 +165,7 @@ export default function Collaborators({
 
   const sendForm = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-collaborator/`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-collaborators/`;
       const body = JSON.stringify({
         rendition_request: renditionDetails.rendition_request_log.id,
         collaborators: queuedCollaborators,
