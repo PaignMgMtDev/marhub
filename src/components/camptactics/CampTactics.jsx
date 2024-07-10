@@ -96,16 +96,17 @@ export default function CampTactics({
     try {
       const date = DateTime.fromISO(dateString);
       if (date.isValid) {
-        return date.toLocaleString(DateTime.DATE_MED);
+        return date.toFormat('MM/dd/yyyy'); 
       } else {
-        console.error('Invalid date:', dateString); // Log the problematic date string
-        return 'Invalid date'; // Provide a default/fallback message
+        console.error('Invalid date:', dateString); 
+        return 'Invalid date'; 
       }
     } catch (error) {
       console.error('Error formatting date:', error);
-      return 'Error formatting date'; // Handle unexpected errors gracefully
+      return 'Error formatting date'; 
     }
   };
+  
   
   
   

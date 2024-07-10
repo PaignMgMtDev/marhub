@@ -12,7 +12,7 @@ export default function DashLanding({
   handleCampaignID,
   handleCreateRendition
 }) {
-  
+  console.log(campaignData)
   const statusStyles = {
     PLANNED: { color: 'primary.light' },
     APPROVED: { color: 'primary.dark' },
@@ -53,7 +53,10 @@ export default function DashLanding({
     {
       field: "campName",
       headerName: "Campaign Name",
-      width: 300,
+      width: 500,
+      renderCell: (params) => (
+        <div>{params.value.replace(/_/g, ' ')}</div>
+      ),
     },
     {
       field: "status",
