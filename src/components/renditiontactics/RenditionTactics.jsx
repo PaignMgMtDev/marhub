@@ -51,18 +51,13 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
         p: 4,
       };
 
-    const getStatusClass = (status) => {
-    switch (status) {
-        case "PLANNED":
-        return "status-planned";
-        case "ACTIVE":
-        return "status-active";
-        case "DRAFT":
-        return "status-draft";
-        default:
-        return "status-default";
-    }
-    };
+      const statusStyles = {
+        PLANNED: { color: 'primary.light' },
+        APPROVED: { color: 'primary.dark' },
+        IN_MARKET: { color: 'primary.main' },
+        ON_HOLD: { color: 'primary.light' },
+        COMPLETED: { color: 'secondary.main' },
+      };
 
     const tacticRows = renditionTactics?.map((tactic) => ({
         id: tactic.id,
@@ -83,29 +78,49 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
     {
         field: "tactName",
         headerName: "Tactic Name",
-        width: 200,
-    },
+        width: 500,
+        renderCell: (params) => (
+          <div>{params.value.replace(/_/g, ' ')}</div>
+        ),
+      },
     {
         field: "status",
         headerName: "Status",
-        width: 100,
-        renderCell: (params) => (
-        <strong className={getStatusClass(params.value)}>{params.value}</strong>
-        ),
+        width: 200,
+        renderCell: (params) => {
+            const formattedValue = params.value.replace(/_/g, ' ');
+            const style = statusStyles[params.value]; // Get the style for the current status
+            return (
+              <Typography sx={{ textAlign: "left", paddingTop: "12px", ...style }}>
+                {formattedValue}
+              </Typography>
+            );
+          },
     },
-    { field: "startdate", headerName: "Start Date", width: 300 },
-    { field: "enddate", headerName: "End Date", width: 300 },
-    { field: "language", headerName: "Language", width: 300 },
-    { 
-        field: "actions", 
+    { field: "startdate", headerName: "Start Date", width: 200 },
+    { field: "enddate", headerName: "End Date", width: 200 },
+    // { field: "language", headerName: "Language", width: 300 },
+    {
         width: 300,
         renderCell: (params) => (
-            <>
-            <Button onClick={() => {toggleModal(); setApprovedTacticId(params.value)}}>Approve Tactic</Button>
-            <Button onClick={() => editTactic(params.value)}>Edit Tactic</Button>
-            </>
+          <>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 1 }} 
+              onClick={() => { toggleModal(); setApprovedTacticId(params.value) }}
+            >
+              Approve Tactic
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => editTactic(params.value)}
+            >
+              Edit Tactic
+            </Button>
+          </>
         )
-    }
+      }
+      
     ];
     
     return(
@@ -114,6 +129,7 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
                 <DataGridPro
                     rows={tacticRows}
                     columns={columns}
+                    hideFooterRowCount={true}
                 />}
             {openModal &&
                 <Modal

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react"
 import { DataGridPro } from "@mui/x-data-grid-pro"
-import { Button } from "@mui/material"
+import { Button, Typography } from "@mui/material"
 import CampHeader from "../header/CampHeader"
 import axios from "axios"
 import { DateTime } from 'luxon';
@@ -20,6 +20,14 @@ export default function CampTactics({
   handleReqConfig,  
 }){
 
+  const statusStyles = {
+    PLANNED: { color: 'primary.light' },
+    APPROVED: { color: 'primary.dark' },
+    IN_MARKET: { color: 'primary.main' },
+    ON_HOLD: { color: 'primary.light' },
+    COMPLETED: { color: 'secondary.main' },
+  };
+
   const getTactics = useCallback(async () => {
     try{
       const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaign-${campaignID}/tactics/`
@@ -36,18 +44,7 @@ export default function CampTactics({
     getTactics()
   }, [getTactics]);
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "PLANNED":
-        return "status-planned";
-      case "ACTIVE":
-        return "status-active";
-      case "DRAFT":
-        return "status-draft";
-      default:
-        return "status-default";
-    }
-  };
+ 
 
   
 
@@ -55,13 +52,13 @@ export default function CampTactics({
     {
       field: "id",
       headerName: "ID",
-      width: 300,
+      width: 100,
       
     },
     {
       field: "tactName",
       headerName: "Tactic Name",
-      width: 300,
+      width: 500,
       renderCell: (params) => (
         <div>{params.value.replace(/_/g, ' ')}</div>
       ),
@@ -70,20 +67,26 @@ export default function CampTactics({
       field: "status",
       headerName: "Status",
       width: 200,
-      renderCell: (params) => (
-        <strong className={getStatusClass(params.value)}>{params.value}</strong>
-      ),
+      renderCell: (params) => {
+        const formattedValue = params.value.replace(/_/g, ' ');
+        const style = statusStyles[params.value]; // Get the style for the current status
+        return (
+          <Typography sx={{ textAlign: "left", paddingTop: "12px", ...style }}>
+            {formattedValue}
+          </Typography>
+        );
+      },
     },
     {
       field: "startdate",
       headerName: "Start Date",
-      width: 300,
+      width: 200,
       renderCell: (params) => formatDate(params.value),
     },
     {
       field: "enddate",
       headerName: "End Date",
-      width: 300,
+      width: 200,
       renderCell: (params) => formatDate(params.value),
     },
   ];

@@ -12,7 +12,7 @@ export default function DashLanding({
   handleCampaignID,
   handleCreateRendition
 }) {
-  console.log(campaignData)
+  
   const statusStyles = {
     PLANNED: { color: 'primary.light' },
     APPROVED: { color: 'primary.dark' },
