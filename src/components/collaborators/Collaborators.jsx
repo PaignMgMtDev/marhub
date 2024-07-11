@@ -75,7 +75,7 @@ export default function Collaborators({
 
   const getCollaborators = useCallback(async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborator/`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborators/`;
       const res = await axios.get(url, authHeader);
       const data = res?.data;
       data && setCollaborators(data?.collaborators);
