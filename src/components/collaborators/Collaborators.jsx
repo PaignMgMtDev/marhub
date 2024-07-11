@@ -8,11 +8,13 @@ import {
   TextField,
   Modal,
   Box,
+  IconButton,
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import axios from "axios";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { useNavigate } from "react-router-dom";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Collaborators({
   authHeader,
@@ -27,7 +29,6 @@ export default function Collaborators({
   const [collaborators, setCollaborators] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedUserName, setSelectedUserName] = useState("");
-  
 
   const [tables, setTables] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
@@ -49,11 +50,17 @@ export default function Collaborators({
   const handleAddToQueue = () => {
     const newEntry = {
       collaboratorName: selectedUserName, // Already formatted as First Name Last Name
-      tableName: formatTableName(tables.find(table => table.id === selectedTable.id)?.name), // Format and store the table name
-      attributeName: formatAttributeName(attributes.find(attribute => attribute.id === selectedAttribute)?.name), // Format and store the attribute name
-      flagNames: selectedFlags.map(flagId => flags.find(flag => flag.id === flagId)?.name).map(formatAttributeName), // Format and store each flag name
+      tableName: formatTableName(
+        tables.find((table) => table.id === selectedTable.id)?.name
+      ), // Format and store the table name
+      attributeName: formatAttributeName(
+        attributes.find((attribute) => attribute.id === selectedAttribute)?.name
+      ), // Format and store the attribute name
+      flagNames: selectedFlags
+        .map((flagId) => flags.find((flag) => flag.id === flagId)?.name)
+        .map(formatAttributeName), // Format and store each flag name
     };
-  
+
     setQueuedCollaborators((prev) => [...prev, newEntry]);
     // Reset selections after adding to queue
     setSelectedUserId(null);
@@ -61,7 +68,10 @@ export default function Collaborators({
     setSelectedAttribute(null);
     setSelectedFlags([]);
   };
-  
+
+  const handleRemoveCollaborator = (index) => {
+    setQueuedCollaborators((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const getCollaborators = useCallback(async () => {
     try {
@@ -160,12 +170,16 @@ export default function Collaborators({
     setSelectedUserId(user?.id);
     getRenditionsByUser(user?.id);
     getAttributeTableValues(user?.id);
-    setSelectedUserName(`${user?.user?.first_name}, ${user?.user?.last_name}`);
+    setSelectedUserName(`${user?.user?.first_name} ${user?.user?.last_name}`);
   };
 
   const sendForm = async () => {
     try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-collaborators/`;
+
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-collaborators-v2/`;
+
+     
+
       const body = JSON.stringify({
         rendition_request: renditionDetails.rendition_request_log.id,
         collaborators: queuedCollaborators,
@@ -176,7 +190,7 @@ export default function Collaborators({
       if (data) {
         console.log(data);
         setToggleModal(true);
-        setCollabRendition(true)
+        setCollabRendition(true);
       }
     } catch (e) {
       console.log("error while sending the form: ", e);
@@ -404,34 +418,44 @@ export default function Collaborators({
       </Grid>
 
       <Grid container spacing={2} style={{ padding: 20 }}>
-  {queuedCollaborators.map((item, index) => (
-    <Grid item key={index}>
-      <Paper elevation={3} sx={{ padding: 2, minHeight: "150px", width: "300px" }}>
-        <Typography variant="h6">Collaborator: {item.collaboratorName}</Typography>
-        <Typography>Table: {item.tableName}</Typography>
-        <Typography>Attribute: {item.attributeName}</Typography>
-        <Typography>Flags: {item.flagNames.join(", ")}</Typography>
-      </Paper>
-    </Grid>
-  ))}
-</Grid>
+        {queuedCollaborators.map((item, index) => (
+          <Grid item key={index}>
+            <Paper
+              elevation={3}
+              sx={{ padding: 2, minHeight: "150px", width: "300px" }}
+            >
+              <Typography variant="h6">
+                Collaborator: {item.collaboratorName}
+              </Typography>
+              <Typography>Table: {item.tableName}</Typography>
+              <Typography>Attribute: {item.attributeName}</Typography>
+              <Typography>Flags: {item.flagNames.join(", ")}</Typography>
+              <IconButton
+                onClick={() => handleRemoveCollaborator(index)}
+                sx={{ position: "absolute" }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
 
       <Grid
         container
         justifyContent="flex-end"
         style={{ marginTop: 20, marginBottom: 20, paddingRight: "155px" }}
       >
-{queuedCollaborators?.length > 0 ? 
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: "#FF7F50" }}
-          onClick={sendForm}
-          // disabled={buttonDisabled}
-        >
-          Submit Rendition Request
-        </Button>
-        :null}
-
+        {queuedCollaborators?.length > 0 ? (
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "#FF7F50" }}
+            onClick={sendForm}
+            // disabled={buttonDisabled}
+          >
+            Submit Rendition Request
+          </Button>
+        ) : null}
       </Grid>
       {collaboratorRenditions?.length > 0 && (
         <DataGridPro rows={renditionRows} columns={renditionColumns} />
@@ -446,7 +470,10 @@ export default function Collaborators({
           <Typography sx={{ p: 2 }}>
             You have created Rendition Request ID{" "}
             {collabRendition?.rendition_collaborator?.id} and a Workfront task
-            has been delivered to the following user: {selectedUserName}
+            has been delivered to the following users:{" "}
+            {queuedCollaborators
+              .map((collab) => collab.collaboratorName)
+              .join(", ")}
           </Typography>
           <Button onClick={handleClose}>OKAY</Button>
         </Box>

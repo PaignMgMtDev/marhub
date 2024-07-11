@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react"
 import { DataGridPro } from "@mui/x-data-grid-pro"
-import { Button } from "@mui/material"
+import { Button, Typography } from "@mui/material"
 import CampHeader from "../header/CampHeader"
 import axios from "axios"
 import { DateTime } from 'luxon';
@@ -20,6 +20,14 @@ export default function CampTactics({
   handleReqConfig,  
 }){
 
+  const statusStyles = {
+    PLANNED: { color: 'primary.light' },
+    APPROVED: { color: 'primary.dark' },
+    IN_MARKET: { color: 'primary.main' },
+    ON_HOLD: { color: 'primary.light' },
+    COMPLETED: { color: 'secondary.main' },
+  };
+
   const getTactics = useCallback(async () => {
     try{
       const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaign-${campaignID}/tactics/`
@@ -36,18 +44,7 @@ export default function CampTactics({
     getTactics()
   }, [getTactics]);
 
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "PLANNED":
-        return "status-planned";
-      case "ACTIVE":
-        return "status-active";
-      case "DRAFT":
-        return "status-draft";
-      default:
-        return "status-default";
-    }
-  };
+ 
 
   
 
@@ -55,54 +52,64 @@ export default function CampTactics({
     {
       field: "id",
       headerName: "ID",
-      width: 300,
+      width: 100,
+      renderCell: (params) => (
+        <div style={{ fontWeight: "bold"}}>{params.value}</div>
+      ),
       
     },
     {
       field: "tactName",
       headerName: "Tactic Name",
-      width: 300,
+      width: 500,
       renderCell: (params) => (
-        <div>{params.value.replace(/_/g, ' ')}</div>
+        <div style={{ fontWeight: "bold"}}>{params.value.replace(/_/g, ' ')}</div>
       ),
     },
     {
       field: "status",
       headerName: "Status",
       width: 200,
-      renderCell: (params) => (
-        <strong className={getStatusClass(params.value)}>{params.value}</strong>
-      ),
+      renderCell: (params) => {
+        const formattedValue = params.value.replace(/_/g, ' ');
+        const style = statusStyles[params.value]; 
+        return (
+          <Typography sx={{ textAlign: "left", paddingTop: "12px", ...style }}>
+            {formattedValue}
+          </Typography>
+        );
+      },
     },
     {
       field: "startdate",
       headerName: "Start Date",
-      width: 300,
+      width: 200,
       renderCell: (params) => formatDate(params.value),
     },
     {
       field: "enddate",
       headerName: "End Date",
-      width: 300,
+      width: 200,
       renderCell: (params) => formatDate(params.value),
     },
   ];
 
   const formatDate = (dateString) => {
-    console.log("Date string received:", dateString);
+   
     try {
       const date = DateTime.fromISO(dateString);
       if (date.isValid) {
-        return date.toLocaleString(DateTime.DATE_MED);
+        return date.toFormat('MM/dd/yyyy'); 
       } else {
-        console.error('Invalid date:', dateString); // Log the problematic date string
-        return 'Invalid date'; // Provide a default/fallback message
+        console.error('Invalid date:', dateString); 
+        return 'Invalid date'; 
       }
     } catch (error) {
       console.error('Error formatting date:', error);
-      return 'Error formatting date'; // Handle unexpected errors gracefully
+      return 'Error formatting date'; 
     }
   };
+  
   
   
   
@@ -118,7 +125,7 @@ export default function CampTactics({
         newContent={newContent}
         />
       </div>
-      <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%"}}>
+      <div style={{ height: "500px", width: "auto", paddingLeft:"3%", paddingRight:"3%", paddingTop: "3%"}}>
       <DataGridPro
         checkboxSelection
         rows={tacticRows}
