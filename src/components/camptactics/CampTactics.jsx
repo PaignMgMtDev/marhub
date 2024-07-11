@@ -53,6 +53,9 @@ export default function CampTactics({
       field: "id",
       headerName: "ID",
       width: 100,
+      renderCell: (params) => (
+        <div style={{ fontWeight: "bold"}}>{params.value}</div>
+      ),
       
     },
     {
@@ -60,7 +63,7 @@ export default function CampTactics({
       headerName: "Tactic Name",
       width: 500,
       renderCell: (params) => (
-        <div>{params.value.replace(/_/g, ' ')}</div>
+        <div style={{ fontWeight: "bold"}}>{params.value.replace(/_/g, ' ')}</div>
       ),
     },
     {
@@ -69,7 +72,7 @@ export default function CampTactics({
       width: 200,
       renderCell: (params) => {
         const formattedValue = params.value.replace(/_/g, ' ');
-        const style = statusStyles[params.value]; // Get the style for the current status
+        const style = statusStyles[params.value]; 
         return (
           <Typography sx={{ textAlign: "left", paddingTop: "12px", ...style }}>
             {formattedValue}
@@ -92,7 +95,7 @@ export default function CampTactics({
   ];
 
   const formatDate = (dateString) => {
-    console.log("Date string received:", dateString);
+   
     try {
       const date = DateTime.fromISO(dateString);
       if (date.isValid) {
@@ -122,7 +125,7 @@ export default function CampTactics({
         newContent={newContent}
         />
       </div>
-      <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%"}}>
+      <div style={{ height: "500px", width: "auto", paddingLeft:"3%", paddingRight:"3%", paddingTop: "3%"}}>
       <DataGridPro
         checkboxSelection
         rows={tacticRows}
