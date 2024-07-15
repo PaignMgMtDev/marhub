@@ -248,12 +248,12 @@ export default function Collaborators({
     return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase(); 
   };
 
-  const buttonDisabled =
-    selectedTable === null ||
-    selectedAttribute === null ||
-    selectedFlags?.length === 0
-      ? true
-      : false;
+  // const buttonDisabled =
+  //   selectedTable === null ||
+  //   selectedAttribute === null ||
+  //   selectedFlags?.length === 0
+  //     ? true
+  //     : false;
 
   const style = {
     position: "absolute",
@@ -417,14 +417,16 @@ export default function Collaborators({
         justifyContent="flex-end"
         style={{ marginTop: 20, marginBottom: 20, paddingRight: "155px" }}
       >
+        {selectedUserId ?
         <Button
           variant="contained"
           sx={{ backgroundColor: "primary.main", marginTop: 2 }}
           onClick={handleAddToQueue}
-          disabled={buttonDisabled}
+          // disabled={buttonDisabled}
         >
           Add Collaborator to Queue
         </Button>
+        :null}
       </Grid>
 
       <Grid container spacing={2} style={{ padding: 20 }}>
