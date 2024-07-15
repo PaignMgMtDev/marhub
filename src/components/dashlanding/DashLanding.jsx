@@ -105,20 +105,31 @@ export default function DashLanding({
       },
     },
     // { field: "owner", headerName: "Owner", width: 300 },
-    // {
-    //   field: "newcontent",
-    //   headerName: "",
-    //   width: 300,
-    //   renderCell: (params) => (
-    //     <Button
-    //       variant="link"
-    //       color="primary"
-    //       onClick={() => {handleAddNewContent(params.row.campName); handleCampaignID(params.row.id)}}
-    //     >
-    //       {params.value}
-    //     </Button>
-    //   ),
-    // },
+    {
+      field: "newcontent",
+      headerName: "",
+      width: 300,
+      renderCell: (params) => 
+        params.row.status === "APPROVED" ||
+        params.row.status === "IN_MARKET" ||
+        params.row.status === "PLANNED" ?
+        (
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            ":hover": {
+              backgroundColor: "primary.light",
+            },
+            backgroundColor: "secondary.light",
+            color: "primary.dark",
+          }}
+          onClick={() => {handleAddNewContent(params.row.campName); handleCampaignID(params.row.id)}}
+        >
+          {params.value}
+        </Button>
+      ):null,
+    },
     {
       field: "createrendition",
       headerName: "",

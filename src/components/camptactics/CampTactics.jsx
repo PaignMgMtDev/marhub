@@ -142,7 +142,7 @@ export default function CampTactics({
             variant="contained"
             onClick={editTactics}
             disabled={selectedRows.length === 0}
-            sx={{ backgroundColor: "#FF7F50" }}
+            sx={{ backgroundColor: "primary.main" }}
           >
             Configure Content Request
           </Button>
@@ -153,7 +153,7 @@ export default function CampTactics({
         variant="contained"
             onClick={handleReqConfig}
             disabled={selectedRows.length === 0}
-            sx={{ backgroundColor: "#FF7F50"}}
+            sx={{ backgroundColor: "primary.main"}}
         >Configure Rendition Request</Button>
         ) : null}
       </div>
