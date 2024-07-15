@@ -9,6 +9,7 @@ import {
   Modal,
   Box,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import axios from "axios";
@@ -32,10 +33,11 @@ export default function Collaborators({
 
   const [tables, setTables] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
+  
 
   const [attributes, setAttributes] = useState([]);
   const [selectedAttribute, setSelectedAttribute] = useState(null);
-
+  console.log(selectedAttribute)
   const [flags, setFlags] = useState([]);
   const [selectedFlags, setSelectedFlags] = useState([]);
 
@@ -49,16 +51,16 @@ export default function Collaborators({
 
   const handleAddToQueue = () => {
     const newEntry = {
-      collaboratorName: selectedUserName, // Already formatted as First Name Last Name
+      collaboratorName: selectedUserName, 
       tableName: formatTableName(
         tables.find((table) => table.id === selectedTable.id)?.name
-      ), // Format and store the table name
+      ), 
       attributeName: formatAttributeName(
-        attributes.find((attribute) => attribute.id === selectedAttribute)?.name
-      ), // Format and store the attribute name
+        attributes.find((attribute) => attribute.id === selectedAttribute.id)?.name
+      ), 
       flagNames: selectedFlags
         .map((flagId) => flags.find((flag) => flag.id === flagId)?.name)
-        .map(formatAttributeName), // Format and store each flag name
+        .map(formatAttributeName), 
     };
 
     setQueuedCollaborators((prev) => [...prev, newEntry]);
@@ -121,9 +123,9 @@ export default function Collaborators({
   );
 
   const getAttributeFlags = useCallback(
-    async (attributeSelected) => {
+    async (selectedAttribute) => {
       try {
-        const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable?.id}/attribute-${attributeSelected}/`;
+        const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/collaborator-attributes-flow/collaborator-${selectedUserId}/table-${selectedTable?.id}/attribute-${selectedAttribute.id}/`;
         const res = await axios.get(url, authHeader);
         const data = res?.data;
         data && setFlags(data?.attribute_flags);
@@ -140,8 +142,8 @@ export default function Collaborators({
   };
 
   const handleSetAttribute = (event, value) => {
-    value && setSelectedAttribute(value?.id);
-    value && getAttributeFlags(value?.id);
+    value && setSelectedAttribute(value);
+    value && getAttributeFlags(value);
   };
 
   const getRenditionsByUser = useCallback(
@@ -242,8 +244,8 @@ export default function Collaborators({
   };
 
   const formatAttributeName = (name) => {
-    let result = name.replace("iglobal_", "").replace("_id", ""); // Remove prefix and suffix
-    return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase(); // Capitalize first letter
+    let result = name.replace("iglobal_", "").replace("_id", ""); 
+    return result.charAt(0).toUpperCase() + result.slice(1).toLowerCase(); 
   };
 
   const buttonDisabled =
@@ -343,26 +345,33 @@ export default function Collaborators({
         {tables?.length > 0 && (
           <Grid item>
             <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <Tooltip title={selectedTable ? selectedTable.name : null}>
               <Autocomplete
                 id="tags-standard"
                 onChange={handleSetTable}
                 options={tables}
                 getOptionLabel={(option) => formatTableName(option.name)}
                 renderInput={(params) => (
+                 
+                  
                   <TextField
                     {...params}
                     variant="standard"
                     label="Select Tables"
                     placeholder=""
                   />
+                 
+               
                 )}
               />
+              </Tooltip>
             </Paper>
           </Grid>
         )}
         {attributes?.length > 0 && (
           <Grid item>
             <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
+            <Tooltip title={selectedAttribute ? selectedAttribute.name : null}>
               <Autocomplete
                 id="tags-standard"
                 options={attributes}
@@ -377,6 +386,7 @@ export default function Collaborators({
                   />
                 )}
               />
+              </Tooltip>
             </Paper>
           </Grid>
         )}
@@ -409,7 +419,7 @@ export default function Collaborators({
       >
         <Button
           variant="contained"
-          sx={{ backgroundColor: "#FF7F50", marginTop: 2 }}
+          sx={{ backgroundColor: "primary.main", marginTop: 2 }}
           onClick={handleAddToQueue}
           disabled={buttonDisabled}
         >
@@ -449,7 +459,7 @@ export default function Collaborators({
         {queuedCollaborators?.length > 0 ? (
           <Button
             variant="contained"
-            sx={{ backgroundColor: "#FF7F50" }}
+            sx={{ backgroundColor: "primary.main" }}
             onClick={sendForm}
             // disabled={buttonDisabled}
           >
