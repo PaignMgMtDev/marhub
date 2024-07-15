@@ -174,10 +174,10 @@
 //                       ))}
 //                     {/* {placementData.map((item) => (
 //                   <FormControlLabel
-//                     key={item.placement_type.id} 
-//                     value={item.placement_type.id} 
+//                     key={item.placement_type.id}
+//                     value={item.placement_type.id}
 //                     control={<CheckBox defaultChecked />}
-//                     label={item.placement_type.placement_type_name} 
+//                     label={item.placement_type.placement_type_name}
 //                   />
 //                 ))} */}
 //                   </FormGroup>
@@ -279,7 +279,7 @@ import {
   Grid,
   Checkbox,
   FormGroup,
-  Box
+  Box,
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import CloseIcon from "@mui/icons-material/Close";
@@ -302,8 +302,10 @@ export default function RendReqConfig({
   const [translationsChecked, setTranslationsChecked] = useState(false);
   const [placementData, setPlacementData] = useState([]);
 
-  const handleLocalizationChange = () => setLocalizationChecked(!localizationChecked);
-  const handleTranslationsChange = () => setTranslationsChecked(!translationsChecked);
+  const handleLocalizationChange = () =>
+    setLocalizationChecked(!localizationChecked);
+  const handleTranslationsChange = () =>
+    setTranslationsChecked(!translationsChecked);
 
   const handleSetPlacementType = (event) => {
     setPlacementID(event.target.value);
@@ -369,19 +371,34 @@ export default function RendReqConfig({
           rendition={rendition}
         />
       </Grid>
-      <Grid container spacing={2} style={{ padding: 20, paddingTop: "25px" }} justifyContent="center">
+      <Grid
+        container
+        spacing={2}
+        style={{ padding: 20, paddingTop: "25px" }}
+        justifyContent="center"
+      >
         {!next ? (
           <>
             <Grid item xs={12} md={6}>
               <Paper sx={{ padding: 2 }}>
-                <Typography variant="h6" gutterBottom>Selected Tactics</Typography>
+                <Typography variant="h6" gutterBottom>
+                  Selected Tactics
+                </Typography>
                 {selectedRows.map((tactic) => (
-                  <Grid container key={tactic.id} alignItems="center" spacing={1}>
+                  <Grid
+                    container
+                    key={tactic.id}
+                    alignItems="center"
+                    spacing={1}
+                  >
                     <Grid item xs>
                       <Typography>{tactic.tactName}</Typography>
                     </Grid>
                     <Grid item>
-                      <IconButton onClick={() => handleRemoveTactic(tactic)} size="small">
+                      <IconButton
+                        onClick={() => handleRemoveTactic(tactic)}
+                        size="small"
+                      >
                         <CloseIcon />
                       </IconButton>
                     </Grid>
@@ -392,42 +409,101 @@ export default function RendReqConfig({
             <Grid item xs={12} md={6}>
               <Paper sx={{ padding: 2 }}>
                 <FormControl component="fieldset">
-                  <Typography variant="h6" gutterBottom>Select Placements for Rendition</Typography>
+                  <Typography variant="h6" gutterBottom>
+                    Select Placements for Rendition
+                  </Typography>
                   <FormGroup>
                     {placementData.map((item) => (
                       <FormControlLabel
                         key={item.placement_type.id}
-                        control={<CheckBox checked={placementID === item.placement_type.id} onChange={handleSetPlacementType} value={item.placement_type.id} />}
+                        control={
+                          <CheckBox
+                            checked={placementID === item.placement_type.id}
+                            onChange={handleSetPlacementType}
+                            value={item.placement_type.id}
+                          />
+                        }
                         label={item.placement_type.placement_type_name}
                       />
                     ))}
                   </FormGroup>
                 </FormControl>
-                
               </Paper>
-              <Box display="flex" justifyContent="flex-end"> 
-                  <Button variant="contained" sx={{ marginTop: 2, backgroundColor: "primary.main" }} onClick={handleNext}>Next</Button>
-                </Box>
+              <Box display="flex" justifyContent="flex-end">
+                <Button
+                  variant="contained"
+                  sx={{ marginTop: 2, backgroundColor: "primary.main" }}
+                  onClick={handleNext}
+                >
+                  Next
+                </Button>
+              </Box>
             </Grid>
           </>
         ) : (
           <Grid item xs={12} md={8}>
             <Paper sx={{ padding: 2 }}>
-              <Typography variant="h6" gutterBottom>Select Rendition Type</Typography>
-              <FormControlLabel control={<Checkbox checked={localizationChecked} onChange={handleLocalizationChange} />} label="Localization" />
-              <FormControlLabel control={<Checkbox checked={translationsChecked} onChange={handleTranslationsChange} />} label="Translations" />
-              <Typography variant="h6" gutterBottom>Rendition Description</Typography>
-              <TextField label="Description" multiline rows={4} fullWidth value={description} onChange={handleDesc} />
-              
+              <Typography variant="h6" gutterBottom>
+                Select Rendition Type
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={localizationChecked}
+                    onChange={handleLocalizationChange}
+                  />
+                }
+                label="Localization"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={translationsChecked}
+                    onChange={handleTranslationsChange}
+                  />
+                }
+                label="Translations"
+              />
+              <Typography variant="h6" gutterBottom>
+                Rendition Description
+              </Typography>
+              <TextField
+                label="Description"
+                multiline
+                rows={4}
+                fullWidth
+                value={description}
+                onChange={handleDesc}
+              />
             </Paper>
-            
-<div>
-  <Box sx={{ padding: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Button variant="contained" sx={{ marginTop: 2, backgroundColor: "primary.main"}} onClick={handlePrev}>Prev</Button>
-              {(translationsChecked || localizationChecked) && (<Button variant="contained" sx={{ marginTop: 2, backgroundColor: "primary.main" }} onClick={sendForm}>Select Collaborators</Button>)}
-                </Box>
-                </div>
-              
+
+            <div>
+              <Box
+                sx={{
+                  padding: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  sx={{ marginTop: 2, backgroundColor: "primary.main" }}
+                  onClick={handlePrev}
+                >
+                  Prev
+                </Button>
+                {(translationsChecked || localizationChecked) && (
+                  <Button
+                    variant="contained"
+                    sx={{ marginTop: 2, backgroundColor: "primary.main" }}
+                    onClick={sendForm}
+                  >
+                    Select Collaborators
+                  </Button>
+                )}
+              </Box>
+            </div>
           </Grid>
         )}
       </Grid>

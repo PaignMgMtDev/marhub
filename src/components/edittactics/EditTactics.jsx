@@ -215,7 +215,7 @@ export default function EditTactics({
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <div className="audience-definition">
-              <h3>Define the Audience</h3>
+              <h3>Define the Audience Segment</h3>
               <TextField
                 sx={{ width: "360px" }}
                 onChange={handleAudience}
@@ -236,7 +236,7 @@ export default function EditTactics({
         >
           <Button
             variant="contained"
-            sx={{ backgroundColor: "#FF7F50" }}
+            sx={{ backgroundColor: "primary.main" }}
             onClick={sendForm}
           >
             Confirm
