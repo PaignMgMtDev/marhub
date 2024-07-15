@@ -16,6 +16,7 @@ import {
   Typography,
   IconButton,
   Grid,
+  Stack,
 } from "@mui/material"
 import CampHeader from "../header/CampHeader"
 import CloseIcon from "@mui/icons-material/Close"
@@ -132,11 +133,11 @@ export default function EditTactics({
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <div className="tactic-selection">
-              <h3>Selected Tactics</h3>
+              <FormLabel>Selected Tactics</FormLabel>
               {selectedRows.map((tactic) => (
                 <div
                   key={tactic.id}
-                  style={{ display: "flex", alignItems: "center" }}
+                  style={{ display: "flex", alignItems: "center", marginTop: "10px" }}
                 >
                   <Typography style={{ marginRight: "8px" }}>
                     {tactic.tactName}
@@ -175,10 +176,10 @@ export default function EditTactics({
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <div className="placement-details">
-              <h3>Add Placement Details</h3>
-
+              <FormLabel>Add Placement Details</FormLabel>
+<Stack direction="row" spacing={2} sx={{ marginTop: "10px"}}>
               <TextField
-                sx={{ paddingRight: "35px" }}
+                sx={{  }}
                 value={startDate}
                 onChange={handleStartDate}
                 id="start-date"
@@ -198,7 +199,7 @@ export default function EditTactics({
                   shrink: true,
                 }}
               />
-
+</Stack>
               <TextField
                 sx={{ paddingTop: "20px", width: "360px" }}
                 id="description"
@@ -215,13 +216,14 @@ export default function EditTactics({
         <Grid item>
           <Paper sx={{ padding: 2, minHeight: "150px", width: "400px" }}>
             <div className="audience-definition">
-              <h3>Define the Audience Segment</h3>
+              <FormLabel>Define the Audience Segment</FormLabel>
               <TextField
-                sx={{ width: "360px" }}
+                sx={{ width: "360px",  marginTop: "10px" }}
                 onChange={handleAudience}
                 value={audience}
                 id="audience-details"
                 placeholder="Audience details"
+              
                 // multiline
                 // rows={4}
               />
@@ -232,7 +234,7 @@ export default function EditTactics({
         <Grid
           container
           justifyContent="flex-end"
-          style={{ marginTop: 20, paddingRight: "155px" }}
+          style={{ marginTop: 20,  }}
         >
           <Button
             variant="contained"
