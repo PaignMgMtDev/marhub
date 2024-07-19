@@ -105,7 +105,7 @@ function App() {
     navigate("/collaborators")
     setRenditionDetails(data);
   }
-
+console.log(tacticData)
   const tacticRows = tacticData?.map((tactic) => ({
     id: tactic.id,
     tactName: tactic.name,
@@ -120,7 +120,7 @@ function App() {
     const selectedTactics = selectionModel
       .map((id) => {
         const row = tacticRows.find((row) => row.id === id);
-        return row ? { id: row.id, tactName: row.tactName } : null;
+        return row ? { id: row.id, tactName: row.tactName, startdate: row.startdate, enddate: row.enddate } : null;
       })
       .filter((tactic) => tactic !== null);
     
