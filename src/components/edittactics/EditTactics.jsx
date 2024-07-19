@@ -34,12 +34,12 @@ export default function EditTactics({
   const [openModal, setOpenModal] = useState(false);
   const [scrapeID, setScrapeID] = useState("");
   const [placementID, setPlacementID] = React.useState();
-  const [startDate, setStartDate] = useState("");
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
   const [audience, setAudience] = useState("");
   const [placementData, setPlacementData] = useState([]);
-
+console.log(selectedRows)
   const handleSetPlacementType = (event) => {
     setPlacementID(event.target.value);
   };
@@ -111,6 +111,15 @@ export default function EditTactics({
     const filteredTactics = selectedRows.filter((t) => t !== tactic);
     setSelectedRows(filteredTactics);
   };
+
+  useEffect(() => {
+    if (selectedRows.length > 0) {
+      const endDates = selectedRows.map(tactic => new Date(tactic.enddate));
+      const latestEndDate = new Date(Math.max(...endDates)).toISOString().split('T')[0];
+      setEndDate(latestEndDate);
+    }
+  }, [selectedRows]);
+
   return (
     <div>
       <Grid container justifyContent="center">

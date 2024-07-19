@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { Button, Paper, Typography } from "@mui/material";
+import { Button, Paper, Tooltip, Typography } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import axios from "axios";
 import { DateTime } from "luxon";
@@ -26,7 +26,7 @@ export default function CampTactics({
     ON_HOLD: { color: "primary.light" },
     COMPLETED: { color: "secondary.main" },
   };
-
+console.log(tacticRows)
   const getTactics = useCallback(async () => {
     try {
       const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaign-${campaignID}/tactics/`;
@@ -62,7 +62,12 @@ export default function CampTactics({
       width: 500,
       renderCell: (params) => (
         <div style={{ fontWeight: "bold" }}>
+          <Tooltip 
+          title={params.campaign}
+          // title={selectedTable ? selectedTable.name : null}
+          >
           {params.value.replace(/_/g, " ")}
+          </Tooltip>
         </div>
       ),
     },
