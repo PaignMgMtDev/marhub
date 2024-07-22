@@ -23,6 +23,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useNavigate } from "react-router-dom";
 
 export default function EditTactics({
   authHeader,
@@ -33,6 +34,8 @@ export default function EditTactics({
   backTact,
   rendition,
 }) {
+  const navigate = useNavigate();
+
   const [openModal, setOpenModal] = useState(false);
   const [scrapeID, setScrapeID] = useState("");
   const [placementID, setPlacementID] = React.useState();
@@ -107,6 +110,7 @@ export default function EditTactics({
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    navigate("/dashlanding");
   };
 
   const handleRemoveTactic = (tactic) => {
@@ -124,10 +128,9 @@ export default function EditTactics({
   //   }
   // }, [selectedRows]);
 
-  
   useEffect(() => {
     if (selectedRows.length > 0) {
-      const endDates = selectedRows.map(tactic => new Date(tactic.enddate));
+      const endDates = selectedRows.map((tactic) => new Date(tactic.enddate));
       const latestEndDate = new Date(Math.max.apply(null, endDates));
       setEndDate(latestEndDate);
     }
@@ -191,7 +194,7 @@ export default function EditTactics({
                     key={item.placement_type.id}
                     value={item.placement_type.id}
                     control={<Radio />}
-                    label={item.placement_type.placement_type_name} 
+                    label={item.placement_type.placement_type_name}
                   />
                 ))}
               </RadioGroup>
@@ -204,29 +207,29 @@ export default function EditTactics({
             <div className="placement-details">
               <FormLabel>Add Placement Details</FormLabel>
               <Stack direction="row" spacing={2} sx={{ marginTop: "10px" }}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  minDate={startDate}
-                  value={startDate}
-                  onChange={handleStartDate}
-                  id="start-date"
-                  label="Start"
-                  type="date"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-                <DatePicker
-                maxDate={endDate}
-                  value={endDate}
-                  onChange={handleEndDate}
-                  id="end-date"
-                  label="End"
-                  type="date"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    minDate={startDate}
+                    value={startDate}
+                    onChange={handleStartDate}
+                    id="start-date"
+                    label="Start"
+                    type="date"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <DatePicker
+                    maxDate={endDate}
+                    value={endDate}
+                    onChange={handleEndDate}
+                    id="end-date"
+                    label="End"
+                    type="date"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
                 </LocalizationProvider>
               </Stack>
               <TextField
