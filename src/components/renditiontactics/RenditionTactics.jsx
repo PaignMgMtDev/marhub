@@ -8,10 +8,10 @@ import axios from "axios"
 export default function RenditionTactics({authHeader, handleRenditionRequestID}){
     const { rendition } = useParams()
     const navigate = useNavigate()
-    const [renditionTactics, setRenditionTactics] = useState(null)
+    const [renditionTactics, setRenditionTactics] = useState([])
     const [approvedTacticId, setApprovedTacticId] = useState(null)
     const [openModal, setOpenModal] = useState(false)
-
+    
 
     const toggleModal = () => {
         setOpenModal(!openModal)
@@ -24,7 +24,7 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
             const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-request/v2/${rendition}/`
             const res = await axios.get(url, authHeader)
             const data = res?.data
-            data && setRenditionTactics(data?.rendition_tactics)
+            data && setRenditionTactics(data.rendition_tactics)
         }catch(e){
             console.log('error while getting tactics by rendition: ', e)
         }
@@ -113,7 +113,7 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
             </Button>
             <Button
               variant="contained"
-              onClick={() => editTactic(params.value)}
+              onClick={() => editTactic(params.id)}
             >
               Edit Tactic
             </Button>

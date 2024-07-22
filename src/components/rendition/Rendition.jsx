@@ -24,7 +24,7 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [detailsLoaded, setDetailsLoaded] = useState(false);
   const { tactic } = useParams();
   const isWideScreen = useMediaQuery('(min-width:1200px)');
-
+console.log(renditionRequestID)
   const navigate = useNavigate();
   // renditionRequestID = 5;
 

@@ -134,7 +134,7 @@ console.log(tacticData)
   const handleRenditionRequestID = (value) =>{
     setRenditionRequestID(value);
   }
-
+console.log(renditionRequestID)
   return (
     <div className="App">
       <Header />
