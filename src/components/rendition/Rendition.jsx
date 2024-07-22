@@ -27,7 +27,7 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [placementVersionList, setPlacementVersionList] = useState([]);
 
   const navigate = useNavigate();
-  renditionRequestID = 5;
+  // renditionRequestID = 5;
 
   const renditionRef = useRef(null);
 
@@ -195,7 +195,7 @@ export default function Rendition({ auth, renditionRequestID }) {
                 <KeyboardBackspace className="title-bar__back-icon" />
               </Button>
               <Typography className="title-bar__title" variant="h6">{treatment.vehicle_shells[0].tactic_name}</Typography>
-              <Button className="title-bar__submit" variant="text">Request Proof</Button>
+              {/* <Button className="title-bar__submit" variant="text">Request Proof</Button> */}
             </Stack>
             <Box className="main-display__panels">
               {(isWideScreen || step === 1) &&
@@ -274,7 +274,7 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersions={placementVersionList} />
+                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersions={placementVersionList} originalVersion={selectedModule.placement_version_id}/>
                 </Card>
               }
             </Box>

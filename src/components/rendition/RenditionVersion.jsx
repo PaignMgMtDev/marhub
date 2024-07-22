@@ -17,7 +17,8 @@ export default function RenditionVersion({
   loadRenditions,
   detailsLoaded,
   setDetailsLoaded,
-  placementVersions
+  placementVersions,
+  originalVersion
 }) {
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
@@ -128,9 +129,9 @@ export default function RenditionVersion({
   }, [detailsLoaded, loadAndInitializeVersion]);
 
   useEffect(() => {
-    const filteredVersions = placementVersions.filter(versionId => versionId !== selectedVersion.versionId);
+    const filteredVersions = placementVersions.filter(versionId => versionId !== originalVersion);
     setFilteredPlacementVersions(filteredVersions);
-  }, [placementVersions, selectedVersion.versionId]);
+  }, [placementVersions, originalVersion]);
 
   const handleInputChange = (event, detailId) => {
     const { value } = event.target;
@@ -283,12 +284,12 @@ export default function RenditionVersion({
         <DialogActions sx={{justifyContent:'space-between', padding: '1rem'}}>
           <Button sx={{textTransform:'unset', fontSize: '1rem'}} onClick={() => {
             setOpenProofDialog(false);
-            loadRenditions(module.placement_version_id);
+            loadRenditions(originalVersion);
           }}>Skip Proofing</Button>
           <Button sx={{textTransform:'unset', fontSize: '1rem'}} onClick={() => {
             setOpenProofDialog(false);
             sendProof();
-            loadRenditions(module.placement_version_id);
+            loadRenditions(originalVersion);
           }} color="primary">
             Request Proof
           </Button>
