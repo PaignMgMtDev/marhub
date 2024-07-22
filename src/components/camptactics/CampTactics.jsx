@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect } from "react"
-import { DataGridPro } from "@mui/x-data-grid-pro"
-import { Button } from "@mui/material"
-import CampHeader from "../header/CampHeader"
-import axios from "axios"
+import React, { useCallback, useEffect } from "react";
+import { DataGridPro } from "@mui/x-data-grid-pro";
+import { Button, Paper, Tooltip, Typography } from "@mui/material";
+import CampHeader from "../header/CampHeader";
+import axios from "axios";
+import { DateTime } from "luxon";
 
 export default function CampTactics({
   authHeader,
@@ -16,103 +17,176 @@ export default function CampTactics({
   newContent,
   rendition,
   backDash,
-  handleReqConfig,  
-}){
-
+  handleReqConfig,
+}) {
+  const statusStyles = {
+    PLANNED: { color: "primary.light" },
+    APPROVED: { color: "primary.dark" },
+    IN_MARKET: { color: "primary.main" },
+    ON_HOLD: { color: "primary.light" },
+    COMPLETED: { color: "secondary.main" },
+  };
+console.log(tacticRows)
   const getTactics = useCallback(async () => {
-    try{
-      const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaign-${campaignID}/tactics/`
-      const res = await axios.get(url, authHeader)
-      const data = res?.data 
-      const tactics = data && data?.tactics?.filter((tactic) => ["approved", "planned", "in_market"].includes(tactic.current_status))
-      setTacticData(tactics)
-    }catch(e){
-      console.log('error while getting tactics: ', e)
+    try {
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaign-${campaignID}/tactics/`;
+      const res = await axios.get(url, authHeader);
+      const data = res?.data;
+      const tactics =
+        data &&
+        data?.tactics?.filter((tactic) =>
+          ["approved", "planned", "in_market"].includes(tactic.current_status)
+        );
+      setTacticData(tactics);
+    } catch (e) {
+      console.log("error while getting tactics: ", e);
     }
-  }, [authHeader, campaignID, setTacticData])
+  }, [authHeader, campaignID, setTacticData]);
 
   useEffect(() => {
-    getTactics()
+    getTactics();
   }, [getTactics]);
-
-  const getStatusClass = (status) => {
-    switch (status) {
-      case "PLANNED":
-        return "status-planned";
-      case "ACTIVE":
-        return "status-active";
-      case "DRAFT":
-        return "status-draft";
-      default:
-        return "status-default";
-    }
-  };
 
   const columns = [
     {
       field: "id",
       headerName: "ID",
-      width: 300,
+      width: 100,
+      renderCell: (params) => (
+        <div style={{ fontWeight: "bold" }}>{params.value}</div>
+      ),
     },
     {
       field: "tactName",
       headerName: "Tactic Name",
-      width: 300,
+      width: 500,
+      renderCell: (params) => (
+        <div style={{ fontWeight: "bold" }}>
+          <Tooltip 
+          title={params.campaign}
+          // title={selectedTable ? selectedTable.name : null}
+          >
+          {params.value.replace(/_/g, " ")}
+          </Tooltip>
+        </div>
+      ),
     },
     {
       field: "status",
       headerName: "Status",
       width: 200,
-      renderCell: (params) => (
-        <strong className={getStatusClass(params.value)}>{params.value}</strong>
-      ),
+      renderCell: (params) => {
+        const formattedValue = params.value.replace(/_/g, " ");
+        const style = statusStyles[params.value];
+        return (
+          <Typography sx={{ textAlign: "left", paddingTop: "12px", ...style }}>
+            {formattedValue}
+          </Typography>
+        );
+      },
     },
-    { field: "startdate", headerName: "Start Date", width: 300 },
-    { field: "enddate", headerName: "End Date", width: 300 },
-    // { field: "language", headerName: "Language", width: 300 },
+    {
+      field: "startdate",
+      headerName: "Start Date",
+      width: 200,
+      renderCell: (params) => formatDate(params.value),
+    },
+    {
+      field: "enddate",
+      headerName: "End Date",
+      width: 200,
+      renderCell: (params) => formatDate(params.value),
+    },
   ];
+
+  const formatDate = (dateString) => {
+    try {
+      const date = DateTime.fromISO(dateString);
+      if (date.isValid) {
+        return date.toFormat("MM/dd/yyyy");
+      } else {
+        console.error("Invalid date:", dateString);
+        return "Invalid date";
+      }
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "Error formatting date";
+    }
+  };
 
   return (
     <div>
-    <div>
       <div>
-        <CampHeader 
-        campaignName={campaignName} 
-        backDash={backDash}
-        rendition={rendition}
-        newContent={newContent}
-        />
-      </div>
-      <div style={{ height: "auto", width: "auto", paddingLeft:"3%", paddingRight:"3%"}}>
-      <DataGridPro
-        checkboxSelection
-        rows={tacticRows}
-        columns={columns}
-        onRowSelectionModelChange={handleSelectionChange}
-        hideFooterRowCount={true}
-      />
-      </div>
+        <div>
+          <CampHeader
+            campaignName={campaignName}
+            backDash={backDash}
+            rendition={rendition}
+            newContent={newContent}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: "10px",
+          }}
+        >
+          <Paper sx={{ width: "400px", padding: "15px" }}>
+            <Typography fontWeight="bold" variant="subtitle1">
+              Please select the tactics to{" "}
+              {newContent ? "add new content to" : "create a rendtion for"}.
+              <br />
+              Select one or more.
+            </Typography>
+          </Paper>
+        </div>
+        <div
+          style={{
+            height: "500px",
+            width: "auto",
+            paddingLeft: "3%",
+            paddingRight: "3%",
+            paddingTop: "10px",
+          }}
+        >
+          <DataGridPro
+            checkboxSelection
+            rows={tacticRows}
+            columns={columns}
+            onRowSelectionModelChange={handleSelectionChange}
+            hideFooterRowCount={true}
+          />
+        </div>
       </div>
       <br />
-      <div style={{ display: "flex", justifyContent: "flex-end" ,paddingRight:"10%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          paddingRight: "3%",
+        }}
+      >
         {newContent ? (
           <Button
             variant="contained"
             onClick={editTactics}
             disabled={selectedRows.length === 0}
-            sx={{ backgroundColor: "#FF7F50" }}
+            sx={{ backgroundColor: "primary.main" }}
           >
             Configure Content Request
           </Button>
         ) : null}
 
         {rendition ? (
-        <Button
-        variant="contained"
+          <Button
+            variant="contained"
             onClick={handleReqConfig}
             disabled={selectedRows.length === 0}
-            sx={{ backgroundColor: "#FF7F50"}}
-        >Configure Rendition Request</Button>
+            sx={{ backgroundColor: "primary.main" }}
+          >
+            Configure Rendition Request
+          </Button>
         ) : null}
       </div>
     </div>

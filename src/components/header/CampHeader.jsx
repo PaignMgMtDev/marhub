@@ -1,8 +1,7 @@
 import React from "react";
 import { 
   Button, 
-  Box, 
-  Typography 
+  Box,  
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -36,26 +35,7 @@ export default function CampHeader({
       >
         {campaignName}
       </Button>
- 
-   
-        <Typography
-          variant="caption"
-          sx={{ opacity: 0.7, paddingLeft: "35px" }}
-        >
-          Create Rendition Request
-        </Typography>
-      
-       
-       
-       
-        <Typography
-          variant="caption"
-          sx={{ opacity: 0.7, paddingLeft: "35px" }}
-        >
-          Add New Content
-        </Typography>
-       
-      
+            
     </Box>
   );
 }
