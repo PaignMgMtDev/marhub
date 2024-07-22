@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Button, Stack, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, CircularProgress } from "@mui/material";
 import { Link } from '@mui/icons-material';
-// import { apiBaseUrl } from "../../api";
 import axios from 'axios';
-// import Header from "../header/Header";
 import "./styles/rendition.scss";
 
 export default function RenditionVersion({
@@ -19,12 +17,17 @@ export default function RenditionVersion({
   loadRenditions,
   detailsLoaded,
   setDetailsLoaded,
+  placementVersions,
+  originalVersion
 }) {
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
   const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [originalValues, setOriginalValues] = useState(null);
+  const [filteredPlacementVersions, setFilteredPlacementVersions] = useState([]);
+  const [openProofDialog, setOpenProofDialog] = useState(false);
+  const [newPlacementVersion, setNewPlacementVersion] = useState(0);
 
   const excludedKeywords = ["imgwidth", "imgheight", "contentstartdate", "contentenddate", "tactic_id", "product", "module", "cblock", "section", "linkid", "linkname"];
 
@@ -93,18 +96,42 @@ export default function RenditionVersion({
         renditionRef.current.scrollIntoView({ behavior: 'smooth' });
       }
       const response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader);
-      console.log(response.data);
-      loadRenditions(selectedVersion.versionId);
+      setNewPlacementVersion(response.data.placement_version_id);
       setSubmitting(false);
+      setOpenProofDialog(true);
     } catch (err) {
       console.log(err.message, err.code);
       setSubmitting(false);
     }
   };
 
+  const sendProof = async () => {
+    try {
+      // Create the all_placement_versions array
+      const allPlacementVersions = [...filteredPlacementVersions, newPlacementVersion];
+  
+      // Construct the request body
+      const requestBody = {
+        all_placement_versions: allPlacementVersions,
+        new_rendition_placement_version: newPlacementVersion,
+      };
+  
+      // Make the API request
+      const response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-proof/`, requestBody, authHeader);
+      console.log(response.data);
+    } catch (err) {
+      console.log(err.message, err.code);
+    }
+  };
+
   useEffect(() => {
     if (!detailsLoaded) loadAndInitializeVersion();
   }, [detailsLoaded, loadAndInitializeVersion]);
+
+  useEffect(() => {
+    const filteredVersions = placementVersions.filter(versionId => versionId !== originalVersion);
+    setFilteredPlacementVersions(filteredVersions);
+  }, [placementVersions, originalVersion]);
 
   const handleInputChange = (event, detailId) => {
     const { value } = event.target;
@@ -248,6 +275,26 @@ export default function RenditionVersion({
           </Stack>
         </Stack>
       )}
+
+      <Dialog
+        open={openProofDialog}
+        onClose={() => setOpenProofDialog(false)}
+      >
+        <DialogTitle sx={{paddingBottom:'0'}}>Request Email Proof for {selectedVersion.versionName}?</DialogTitle>
+        <DialogActions sx={{justifyContent:'space-between', padding: '1rem'}}>
+          <Button sx={{textTransform:'unset', fontSize: '1rem'}} onClick={() => {
+            setOpenProofDialog(false);
+            loadRenditions(originalVersion);
+          }}>Skip Proofing</Button>
+          <Button sx={{textTransform:'unset', fontSize: '1rem'}} onClick={() => {
+            setOpenProofDialog(false);
+            sendProof();
+            loadRenditions(originalVersion);
+          }} color="primary">
+            Request Proof
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

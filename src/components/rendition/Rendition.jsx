@@ -24,7 +24,8 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [detailsLoaded, setDetailsLoaded] = useState(false);
   const { tactic } = useParams();
   const isWideScreen = useMediaQuery('(min-width:1200px)');
-console.log(renditionRequestID)
+  const [placementVersionList, setPlacementVersionList] = useState([]);
+
   const navigate = useNavigate();
   // renditionRequestID = 5;
 
@@ -125,6 +126,8 @@ console.log(renditionRequestID)
     if (treatment) {
       const grouped = groupModulesByRow(treatment.vehicle_shells[0].module_coordinates);
       setGroupedModules(grouped);
+      const placementVersions = Object.values(treatment.vehicle_shells[0].module_coordinates).map(module => module.placement_version_id);
+      setPlacementVersionList(placementVersions)
     }
   }, [treatment]);
 
@@ -192,7 +195,7 @@ console.log(renditionRequestID)
                 <KeyboardBackspace className="title-bar__back-icon" />
               </Button>
               <Typography className="title-bar__title" variant="h6">{treatment.vehicle_shells[0].tactic_name}</Typography>
-              <Button className="title-bar__submit" variant="text">Request Proof</Button>
+              {/* <Button className="title-bar__submit" variant="text">Request Proof</Button> */}
             </Stack>
             <Box className="main-display__panels">
               {(isWideScreen || step === 1) &&
@@ -271,7 +274,7 @@ console.log(renditionRequestID)
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded}/>
+                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersions={placementVersionList} originalVersion={selectedModule.placement_version_id}/>
                 </Card>
               }
             </Box>
