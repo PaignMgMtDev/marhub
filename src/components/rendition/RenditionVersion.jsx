@@ -283,12 +283,12 @@ export default function RenditionVersion({
         <DialogActions sx={{justifyContent:'space-between', padding: '1rem'}}>
           <Button sx={{textTransform:'unset', fontSize: '1rem'}} onClick={() => {
             setOpenProofDialog(false);
-            loadRenditions(selectedVersion.versionId);
+            loadRenditions(module.placement_version_id);
           }}>Skip Proofing</Button>
           <Button sx={{textTransform:'unset', fontSize: '1rem'}} onClick={() => {
             setOpenProofDialog(false);
             sendProof();
-            loadRenditions(selectedVersion.versionId);
+            loadRenditions(module.placement_version_id);
           }} color="primary">
             Request Proof
           </Button>
