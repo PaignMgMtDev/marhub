@@ -24,9 +24,10 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [detailsLoaded, setDetailsLoaded] = useState(false);
   const { tactic } = useParams();
   const isWideScreen = useMediaQuery('(min-width:1200px)');
+  const [placementVersionList, setPlacementVersionList] = useState([]);
 
   const navigate = useNavigate();
-  // renditionRequestID = 5;
+  renditionRequestID = 5;
 
   const renditionRef = useRef(null);
 
@@ -125,6 +126,8 @@ export default function Rendition({ auth, renditionRequestID }) {
     if (treatment) {
       const grouped = groupModulesByRow(treatment.vehicle_shells[0].module_coordinates);
       setGroupedModules(grouped);
+      const placementVersions = Object.values(treatment.vehicle_shells[0].module_coordinates).map(module => module.placement_version_id);
+      setPlacementVersionList(placementVersions)
     }
   }, [treatment]);
 
@@ -271,7 +274,7 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded}/>
+                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersions={placementVersionList} />
                 </Card>
               }
             </Box>
