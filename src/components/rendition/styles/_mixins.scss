@@ -36,6 +36,12 @@
   }
 }
 
+@mixin extra-extra-wide-screen {
+  @media (min-width: 1536px) {
+    @content;
+  }
+}
+
 @mixin default-grid{
   display: grid;
   grid-auto-rows: auto;
@@ -69,6 +75,7 @@
 @mixin display-card{
   width: 29.5%;
   height: max-content;
+  margin-bottom: auto;
 }
 
 @mixin module-image{

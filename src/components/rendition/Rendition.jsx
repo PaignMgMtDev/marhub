@@ -23,11 +23,11 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [renditionsLoaded, setRenditionsLoaded] = useState(false);
   const [detailsLoaded, setDetailsLoaded] = useState(false);
   const { tactic } = useParams();
-  const isWideScreen = useMediaQuery('(min-width:1200px)');
+  const isWideScreen = useMediaQuery('(min-width:1536px)');
   const [placementVersionList, setPlacementVersionList] = useState([]);
 
   const navigate = useNavigate();
-  // renditionRequestID = 5;
+  renditionRequestID = 5;
 
   const renditionRef = useRef(null);
 
