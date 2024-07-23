@@ -63,7 +63,7 @@ body{
         box-shadow: unset;
         padding: 0.5rem 1rem;
 
-        @include mixins.wide-screen{
+        @include mixins.extra-extra-wide-screen{
             @include mixins.default-grid;
         }
 
@@ -83,9 +83,10 @@ body{
         width: 100%;
 
         &__panels{
+            @include mixins.default-grid;
             position: relative;
 
-            @include mixins.wide-screen{
+            @include mixins.extra-extra-wide-screen{
                 display: flex;
             }
         }
@@ -128,14 +129,17 @@ body{
         margin: 0 1rem;
         border-radius: 0.7rem;
         padding: 2rem 1rem;
+        width: 640px;
+        place-self: center center;
         
-        @include mixins.wide-screen{
+        @include mixins.extra-extra-wide-screen{
             padding: 1rem;
             @include mixins.display-card;
+            width: 640px;
         }
 
         &:hover{
-            @include mixins.wide-screen{
+            @include mixins.extra-extra-wide-screen{
                 .rendition .treatment .module{
                     opacity: 0.5;
                 }
@@ -157,14 +161,14 @@ body{
         &:hover{
             outline: 2px solid coral;
 
-            @include mixins.wide-screen{
+            @include mixins.extra-extra-wide-screen{
                 outline: none;
             }
 
             .module__name{
                 display: block;
 
-                @include mixins.wide-screen{
+                @include mixins.extra-extra-wide-screen{
                     display: none;
                 }
             }
@@ -197,7 +201,7 @@ body{
         grid-auto-rows: max-content;
         padding-bottom: 0.25rem;
 
-        @include mixins.wide-screen{
+        @include mixins.extra-extra-wide-screen{
             @include mixins.display-card;
         }
         
@@ -243,9 +247,9 @@ body{
         padding: 1rem 1rem 0.5rem 1rem;
 
 
-        @include mixins.wide-screen{
+        @include mixins.extra-extra-wide-screen{
             @include mixins.display-card;
-            margin-left: 1rem;
+            margin: 0 1rem;
         }
 
         &__heading{
