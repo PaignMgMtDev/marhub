@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { Button, Paper, Tooltip, Typography } from "@mui/material";
+import { Button, Paper, Typography } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import axios from "axios";
 import { DateTime } from "luxon";
+import Tooltip from '@mui/material/Tooltip';
 
 export default function CampTactics({
   authHeader,
@@ -32,12 +33,13 @@ console.log(tacticRows)
       const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaign-${campaignID}/tactics/`;
       const res = await axios.get(url, authHeader);
       const data = res?.data;
-      const tactics =
-        data &&
-        data?.tactics?.filter((tactic) =>
-          ["approved", "planned", "in_market"].includes(tactic.current_status)
+      if (data) {
+        const filteredTactics = data.tactics.filter(
+          (tactic) => tactic.current_status !== "completed" && tactic.current_status !== "cancelled"
         );
-      setTacticData(tactics);
+        setTacticData(filteredTactics);;
+      }
+      
     } catch (e) {
       console.log("error while getting tactics: ", e);
     }
@@ -63,7 +65,7 @@ console.log(tacticRows)
       renderCell: (params) => (
         <div style={{ fontWeight: "bold" }}>
           <Tooltip 
-          title={params.campaign}
+          title={params.row.description}
           // title={selectedTable ? selectedTable.name : null}
           >
           {params.value.replace(/_/g, " ")}

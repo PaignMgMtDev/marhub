@@ -281,10 +281,12 @@ import {
   FormGroup,
   Box,
 } from "@mui/material";
-import CampHeader from "../header/CampHeader";
+
 import CloseIcon from "@mui/icons-material/Close";
 import CheckBox from "@mui/icons-material/CheckBox";
 import axios from "axios";
+// import Header from "../header/Header";
+// import CampHeader from "../header/CampHeader";
 
 export default function RendReqConfig({
   campaignName,
@@ -364,12 +366,14 @@ export default function RendReqConfig({
   return (
     <div>
       <Grid container justifyContent="center">
-        <CampHeader
+        
+        {/* <CampHeader
           campaignName={campaignName}
           tacticForm={tacticForm}
           backTact={backTact}
           rendition={rendition}
-        />
+        /> */}
+        {/* <Header /> */}
       </Grid>
       <Grid
         container

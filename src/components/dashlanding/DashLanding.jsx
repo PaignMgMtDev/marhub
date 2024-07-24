@@ -25,7 +25,12 @@ export default function DashLanding({
       const url = `${process.env.REACT_APP_API_BASE_URL}/api/v2/default/mihp/campaigns/`;
       const res = await axios.get(url, authHeader);
       const data = res?.data;
-      data && setCampaignData(data?.campaigns);
+      if (data) {
+        const filteredCampaigns = data.campaigns.filter(
+          (campaign) => campaign.current_status !== "completed" && campaign.current_status !== "cancelled"
+        );
+        setCampaignData(filteredCampaigns);
+      }
     } catch (e) {
       console.log("error while getting campaigns: ", e);
     }
