@@ -1,0 +1,1384 @@
+{
+    "id": "86dt0ppj7",
+    "custom_id": null,
+    "custom_item_id": 1002,
+    "name": "Capabilities Roadmap Dashboard",
+    "text_content": "Spreadsheet: https://blocktackleconsulting.sharepoint.com/:x:/r/_layouts/15/Doc.aspx?sourcedoc=%7B0CD6083B-595F-483F-AEE1-59E80435B7D3%7D&file=2024%20Capabilities%20Roadmap.xlsx&action=default&mobileredirect=true\n\nTech design/ERD: https://lucid.app/lucidchart/a5ef237c-2d7b-43ed-8c38-784fd61261d8/edit?invitationId=inv_68100c55-deeb-4fe0-b891-ae755067f242&referringApp=slack&page=vwOnWOUpr3d1#\n\nWireframe: https://www.figma.com/file/yKrrEXBmj1Amdl8U2oNGRL/MI-Capabilities-Roadmap?type=design&node-id=0-1&mode=design&t=SeLgjBz8wnaaLdRo-0\n\nhttps://lucid.app/lucidspark/50f7aa8b-1bce-454a-a614-7765cbd27c32/edit?page=0_0&invitationId=inv_c85d4912-01ca-4247-b90b-0ab77375c575#",
+    "description": "Spreadsheet: https://blocktackleconsulting.sharepoint.com/:x:/r/_layouts/15/Doc.aspx?sourcedoc=%7B0CD6083B-595F-483F-AEE1-59E80435B7D3%7D&file=2024%20Capabilities%20Roadmap.xlsx&action=default&mobileredirect=true\n\nTech design/ERD: https://lucid.app/lucidchart/a5ef237c-2d7b-43ed-8c38-784fd61261d8/edit?invitationId=inv_68100c55-deeb-4fe0-b891-ae755067f242&referringApp=slack&page=vwOnWOUpr3d1#\n\nWireframe: https://www.figma.com/file/yKrrEXBmj1Amdl8U2oNGRL/MI-Capabilities-Roadmap?type=design&node-id=0-1&mode=design&t=SeLgjBz8wnaaLdRo-0\n\nhttps://lucid.app/lucidspark/50f7aa8b-1bce-454a-a614-7765cbd27c32/edit?page=0_0&invitationId=inv_c85d4912-01ca-4247-b90b-0ab77375c575#",
+    "status": {
+        "id": "sc901702404464_xKMNlgHM",
+        "status": "development & qa",
+        "color": "#4466ff",
+        "orderindex": 4,
+        "type": "custom"
+    },
+    "orderindex": "119420759.00000000000000000000000000000000",
+    "date_created": "1710790864352",
+    "date_updated": "1720527845973",
+    "date_closed": null,
+    "date_done": null,
+    "archived": false,
+    "creator": {
+        "id": 89177811,
+        "username": "Laura Stringer",
+        "color": "#536cfe",
+        "email": "lstringer@block-tackle.com",
+        "profilePicture": "https://attachments.clickup.com/profilePictures/89177811_Oj5.jpg"
+    },
+    "assignees": [
+        {
+            "id": 89177811,
+            "username": "Laura Stringer",
+            "color": "#536cfe",
+            "initials": "LS",
+            "email": "lstringer@block-tackle.com",
+            "profilePicture": "https://attachments.clickup.com/profilePictures/89177811_Oj5.jpg"
+        }
+    ],
+    "group_assignees": [],
+    "watchers": [
+        {
+            "id": 1446946,
+            "username": "Marcus",
+            "color": "#455963",
+            "initials": "M",
+            "email": "marcus@block-tackle.com",
+            "profilePicture": "https://attachments.clickup.com/profilePictures/1446946_yg1.jpg"
+        },
+        {
+            "id": 1447592,
+            "username": "Jareth Munoz",
+            "color": "#7b68ee",
+            "initials": "JM",
+            "email": "jareth@block-tackle.com",
+            "profilePicture": "https://attachments.clickup.com/profilePictures/1447592_Dl1.jpg"
+        },
+        {
+            "id": 1450660,
+            "username": "Michele Grant",
+            "color": "#ff897f",
+            "initials": "MG",
+            "email": "michele@block-tackle.com",
+            "profilePicture": "https://attachments.clickup.com/profilePictures/1450660_XP6.jpg"
+        },
+        {
+            "id": 26315583,
+            "username": "Joey Zelinka",
+            "color": "#0197a7",
+            "initials": "JZ",
+            "email": "joey@block-tackle.com",
+            "profilePicture": "https://attachments.clickup.com/profilePictures/26315583_ZbX.jpg"
+        },
+        {
+            "id": 89177811,
+            "username": "Laura Stringer",
+            "color": "#536cfe",
+            "initials": "LS",
+            "email": "lstringer@block-tackle.com",
+            "profilePicture": "https://attachments.clickup.com/profilePictures/89177811_Oj5.jpg"
+        }
+    ],
+    "checklists": [],
+    "tags": [],
+    "parent": null,
+    "priority": null,
+    "due_date": "1720771200000",
+    "start_date": null,
+    "points": null,
+    "time_estimate": null,
+    "time_spent": 21600000,
+    "custom_fields": [
+        {
+            "id": "a5abc80a-f1ee-42b7-8737-f8fa6016d1da",
+            "name": "AA Impact to Content Pantry",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "d856ca21-70e3-429e-a254-9b28284a9b90",
+                        "name": "0",
+                        "color": "#fbf2ff",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "94e996e3-433c-451a-9ab8-2ba124438216",
+                        "name": "25",
+                        "color": "#e0d1e7",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "da308f8a-a83d-4396-86b1-c2ed6773be25",
+                        "name": "50",
+                        "color": "#bf8cd4",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "e1c366fc-3a58-4d09-8e83-7e642a2d0c2b",
+                        "name": "75",
+                        "color": "#9b59b6",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "2d3aad16-b9eb-471d-9632-2a28f611224c",
+                        "name": "100",
+                        "color": "#661d78",
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715267285135",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "2df1e974-d1a8-47d6-adc6-a487f607dea2",
+            "name": "AB Impact to Workfront",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "db4a9a87-f098-417f-8092-52ffd840f7ff",
+                        "name": "0",
+                        "color": "#fbf2ff",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "bf0ebc3d-9350-4248-98f6-ca4127325920",
+                        "name": "25",
+                        "color": "#e0d1e7",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "0743d0f4-245f-47d8-8928-4240fc328f0d",
+                        "name": "50",
+                        "color": "#bf8cd4",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "10067834-3273-4b85-a1e3-22cc066e19bf",
+                        "name": "75",
+                        "color": "#9b59b6",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "a424b8a5-083d-4c73-93e6-07235211ed33",
+                        "name": "100",
+                        "color": "#661d78",
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715267378109",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "1af4496a-862c-4752-8421-e4a82f3147e6",
+            "name": "AC WF Impact Description",
+            "type": "short_text",
+            "type_config": {},
+            "date_created": "1715267664555",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "7acab492-d8c8-4b13-a8cc-1dc32b32e870",
+            "name": "AD Impact to ACC",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "e480424b-4bcd-472c-8549-224536d22fa2",
+                        "name": "0",
+                        "color": "#fbf2ff",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "2af07413-6836-4dba-ac2b-0334ba89cddc",
+                        "name": "25",
+                        "color": "#e0d1e7",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "0fb0a869-4eb6-458b-a7f4-9f6c80dc8695",
+                        "name": "50",
+                        "color": "#bf8cd4",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "e955675f-fbb8-401e-acc7-8df991e9a3a6",
+                        "name": "75",
+                        "color": "#9b59b6",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "c09f17cb-28ee-4274-9e3d-573ae36c0e85",
+                        "name": "100",
+                        "color": "#661d78",
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715267259722",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "12f974cc-c13b-4b2c-b0f1-47f8d6ad6dec",
+            "name": "AE Impact to PCM",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "5faa78fd-fd29-4d12-b846-800c5179b864",
+                        "name": "0",
+                        "color": "#fbf2ff",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "79859954-ec60-47d4-88e1-e3e0ebdf003f",
+                        "name": "25",
+                        "color": "#e0d1e7",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "877b145a-ab3d-4972-a08e-dcebfceceaca",
+                        "name": "50",
+                        "color": "#bf8cd4",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "959cbbb9-6aeb-4d79-84e6-3c0d978de6f8",
+                        "name": "75",
+                        "color": "#9b59b6",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "58da640c-1b23-4fa6-8890-1c89e359bd22",
+                        "name": "100",
+                        "color": "#661d78",
+                        "orderindex": 4
+                    },
+                    {
+                        "id": "17e80eb3-f63d-454d-8383-3fcce8286f72",
+                        "name": "Receive audience files coming out of TLP process at once, instead of random one-off",
+                        "color": "#600476",
+                        "orderindex": 5
+                    }
+                ]
+            },
+            "date_created": "1715267275263",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "e05a243e-7c3e-40a4-a032-59afb79d2136",
+            "name": "AH Workstream",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "73b6be44-15ba-4244-b473-6a60f83b2c4a",
+                        "name": "Process",
+                        "color": null,
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "1aa6b282-c109-4df3-a396-99b2bb9ce6e4",
+                        "name": "Workflow Optimization",
+                        "color": null,
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "d52dacf6-d136-4862-b167-6aa297921fc9",
+                        "name": "Supporting",
+                        "color": null,
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "9322d329-9e14-47a6-bc9c-32f5f70de703",
+                        "name": "Data",
+                        "color": null,
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "d3bc88a4-a7dd-444e-b5fc-0234c72deb08",
+                        "name": "Content",
+                        "color": null,
+                        "orderindex": 4
+                    },
+                    {
+                        "id": "e9d94c31-6ecd-4123-b930-e30cf7a4d4b8",
+                        "name": "Tracking + Analytics",
+                        "color": null,
+                        "orderindex": 5
+                    }
+                ]
+            },
+            "date_created": "1715016226215",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "959e522f-6b4b-45a7-aa1e-c9885d43b35a",
+            "name": "AI TL",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "ea74bcd2-64fa-4e84-bfcc-b0138b037d65",
+                        "name": "1",
+                        "color": null,
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "e9dfd259-5e35-4821-be9e-c0b56e848c1b",
+                        "name": "2",
+                        "color": null,
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "21e64222-d7b0-4674-9948-dd37e375d697",
+                        "name": "3",
+                        "color": null,
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "d9643c57-fcb7-4a42-90a0-b108d0ffabf0",
+                        "name": "4",
+                        "color": null,
+                        "orderindex": 3
+                    }
+                ]
+            },
+            "date_created": "1715016244729",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "2171d55c-2b1f-4e65-a657-7a40e045f23c",
+            "name": "Agency Contact(s)",
+            "type": "short_text",
+            "type_config": {},
+            "date_created": "1715015572698",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "ab2e0dfd-7766-4e22-8be9-998ba8d8d651",
+            "name": "Client Owner",
+            "type": "short_text",
+            "type_config": {},
+            "date_created": "1709850473104",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "56634e68-317e-4ec6-86b2-be1ce4127982",
+            "name": "Committed Timing",
+            "type": "short_text",
+            "type_config": {},
+            "date_created": "1715015854839",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "28879a6a-8eac-4321-9a03-a99e4414becf",
+            "name": "Dependencies",
+            "type": "text",
+            "type_config": {},
+            "date_created": "1679686544832",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "275b5c8d-2066-4b8a-b1dd-31bd67b0316b",
+            "name": "Requested TIming",
+            "type": "short_text",
+            "type_config": {},
+            "date_created": "1715015828469",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "7cd21af3-4f3d-4df5-9ac6-916dbd45d092",
+            "name": "S Maturity",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "4f736934-6c0d-44a6-83d6-84b74a7cfa1a",
+                        "name": "Low Maturity",
+                        "color": null,
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "c6c07078-4efb-4df3-8850-1a1897ad41af",
+                        "name": "Moderate Maturity",
+                        "color": null,
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "bceb1cee-a2d6-42fd-9d8d-2ac3d7d9d8b8",
+                        "name": "High Maturity",
+                        "color": null,
+                        "orderindex": 2
+                    }
+                ]
+            },
+            "date_created": "1715016146413",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "4d908d26-ac2f-4bd2-a9f8-64d6e44ceb3f",
+            "name": "U Impact to Campaign Owner",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "7ecb5fbc-05ae-4dea-9e3d-3c83d7a48392",
+                        "name": "0",
+                        "color": "#eefffb",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "03b7a955-b8f5-4d63-8c70-2c17611d9c3e",
+                        "name": "25",
+                        "color": "#cbfdf3",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "8e7de434-38b1-4d28-b42e-a822c75558b5",
+                        "name": "50",
+                        "color": "#25dab6",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "38265ba1-db4c-42c0-b5a8-b24428e6cc07",
+                        "name": "75",
+                        "color": "#00a987",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "658ecc9a-ca22-4b06-a4cc-16aea62e1e62",
+                        "name": "100",
+                        "color": "#008168",
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715267955441",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "814c14c1-6a46-442d-add7-825381ff5274",
+            "name": "V Impact to Creative Agency(ies)",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "d81b5716-cc1d-4398-963f-d3e05d9bf7c9",
+                        "name": "0",
+                        "color": "#eefffb",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "c544dca8-717a-4ac7-8ad7-326fd5566d6e",
+                        "name": "25",
+                        "color": "#cbfdf3",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "bab567f3-d2f8-44df-9e8e-84cd056c64f1",
+                        "name": "50",
+                        "color": "#25dab6",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "9c888d3e-d367-42b4-b431-182d2e28137b",
+                        "name": "75",
+                        "color": "#00a987",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "625485cf-1903-4bfc-9d5d-8b3ea4b5f3b5",
+                        "name": "100",
+                        "color": "#008168",
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715268224190",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "41272d48-6ac4-4be7-b55f-5fe88c0cb51f",
+            "name": "W Impact to Targeting Team",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "01892151-8756-4941-ad00-3682ae793a7d",
+                        "name": "0",
+                        "color": "#eefffb",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "773cfa87-6bda-4be5-8b4e-9f633e593a02",
+                        "name": "25",
+                        "color": "#cbfdf3",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "94dd86ac-deb5-4382-aa7a-dc1114dc419c",
+                        "name": "50",
+                        "color": "#25dab6",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "033e7bdb-04f5-4b4a-9a72-f8e9869c34e3",
+                        "name": "75",
+                        "color": "#00a987",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "e3be6c78-6bc8-488d-9e26-31df0963a19d",
+                        "name": "100",
+                        "color": "#008168",
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715268198942",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "22182e0f-712a-4cb0-926c-8d4c30713e5a",
+            "name": "X Impact to Fulfillment Team",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "ce5e64cc-3a5b-42f1-a4f3-9b8d23511ca1",
+                        "name": "0",
+                        "color": "#eefffb",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "6c3a98db-d256-4eb1-95fa-311f7d88d271",
+                        "name": "25",
+                        "color": "#cbfdf3",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "bbfefca2-df6c-4829-80f8-6bb039906a2b",
+                        "name": "50",
+                        "color": "#25dab6",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "fe9d553d-a113-4e34-b486-49ee99f59537",
+                        "name": "75",
+                        "color": "#00a987",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "d8a01fda-f6b6-4221-a7e2-428340bdde0b",
+                        "name": "100",
+                        "color": "#008168",
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715268178415",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "9779d52c-2f88-42b8-ad2e-e7428245b056",
+            "name": "Y Impact to Analytics Team",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "37c64c5f-02ea-4194-b6de-4b3199131e8a",
+                        "name": "0",
+                        "color": "#eefffb",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "45e1c222-d9e7-4c16-b233-463fa6891510",
+                        "name": "25",
+                        "color": "#cbfdf3",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "b45d5131-4871-4723-90a5-1dc1de390a86",
+                        "name": "50",
+                        "color": "#25dab6",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "b9998b79-4dc7-43a6-b05b-ddbef55c0e8c",
+                        "name": "75",
+                        "color": "#00a987",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "78d1d09e-bc4a-45b3-bf54-5543208f0365",
+                        "name": "100",
+                        "color": "#008168",
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715268211007",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "d643f418-8ae1-482d-95c3-7ae14e0f6d6c",
+            "name": "[Stages] Percent Complete",
+            "type": "number",
+            "type_config": {},
+            "date_created": "1715016331393",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "87eb79a7-5794-4734-a028-641f501aca22",
+            "name": "[Stages] Success Criteria",
+            "type": "text",
+            "type_config": {},
+            "date_created": "1715016306917",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "85c2aba3-cb89-4e24-a0b8-3c68dc312f4a",
+            "name": "zz Area of Expertise",
+            "type": "drop_down",
+            "type_config": {
+                "default": 0,
+                "placeholder": null,
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "5062c65d-9464-4683-93cd-20c9201bf9a5",
+                        "name": "Personal ",
+                        "color": null,
+                        "orderindex": 0
+                    }
+                ]
+            },
+            "date_created": "1580138536970",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "00196858-cb0c-412d-8b15-3cf6cce4c839",
+            "name": "zz Brief Approved",
+            "type": "checkbox",
+            "type_config": {},
+            "date_created": "1555436503795",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "93acc41d-18de-4cae-8bc0-ebebcbf59ec0",
+            "name": "zz Campaign End Date",
+            "type": "date",
+            "type_config": {},
+            "date_created": "1555439658269",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "9ff4481b-75a1-4107-a304-65531b7cbffe",
+            "name": "zz Creative Approved",
+            "type": "checkbox",
+            "type_config": {},
+            "date_created": "1555436569828",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "71dc2d61-ca00-4f39-be26-ccbf0fb150ed",
+            "name": "zz Deliverable Type",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "d429412e-5feb-4a73-874a-aef920937d54",
+                        "name": "Analysis",
+                        "color": "#e50000",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "51bde5ff-1cf7-4258-80f5-eab7020cb2f9",
+                        "name": "Campaign Setup",
+                        "color": "#7C4DFF",
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "690516cd-11e3-45db-a3ec-98113a11fed8",
+                        "name": "Client Approval",
+                        "color": "#bf55ec",
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "929df8dd-27e8-4b6a-944e-4e15c0caec3b",
+                        "name": "Data Integration",
+                        "color": "#3397dd",
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "d281be7e-c781-44cb-b778-76646fd16df6",
+                        "name": "Data Load/Update",
+                        "color": "#3397dd",
+                        "orderindex": 4
+                    },
+                    {
+                        "id": "c0c324f3-d757-4d55-987c-96120de4556f",
+                        "name": "Documentation",
+                        "color": "#b5bcc2",
+                        "orderindex": 5
+                    },
+                    {
+                        "id": "52674d66-8cb8-464d-92c2-4cfc09c797ae",
+                        "name": "Email To Client",
+                        "color": "#b5bcc2",
+                        "orderindex": 6
+                    },
+                    {
+                        "id": "321cd6c9-8ec8-4c24-9a8a-7d8b4bd2ee26",
+                        "name": "ETL Job",
+                        "color": "#3082B7",
+                        "orderindex": 7
+                    },
+                    {
+                        "id": "49ec9744-f877-4048-a5f5-db7d54a0d3a1",
+                        "name": "HTML Template",
+                        "color": "#2ecd6f",
+                        "orderindex": 8
+                    },
+                    {
+                        "id": "9ff144ab-4f2d-4377-aa46-08142db9a295",
+                        "name": "Landing Page",
+                        "color": "#2ecd6f",
+                        "orderindex": 9
+                    },
+                    {
+                        "id": "3608a879-78fc-4147-b600-80d56204959d",
+                        "name": "Automated Report",
+                        "color": "#f9d900",
+                        "orderindex": 10
+                    },
+                    {
+                        "id": "d5f04db9-0509-4f40-afd2-fedc202f51b2",
+                        "name": "Training/Support",
+                        "color": "#E65100",
+                        "orderindex": 11
+                    },
+                    {
+                        "id": "879306da-4c02-4adb-9a12-3b628252ba75",
+                        "name": "GA/Tag Manager",
+                        "color": "#2ecd6f",
+                        "orderindex": 12
+                    },
+                    {
+                        "id": "5ae33d9e-d6e9-44dd-b17e-ec6df9e4286f",
+                        "name": "Strategy",
+                        "color": "#7C4DFF",
+                        "orderindex": 13
+                    },
+                    {
+                        "id": "82cfbab4-fd58-4e00-8564-47133cf60b60",
+                        "name": "Requirements",
+                        "color": "#b5bcc2",
+                        "orderindex": 14
+                    },
+                    {
+                        "id": "edac63be-aec2-470b-a5f7-f765f86ba9ab",
+                        "name": "Project",
+                        "color": "#2d2727",
+                        "orderindex": 15
+                    },
+                    {
+                        "id": "448b1f95-b893-46c5-888c-a90fe6dd84e5",
+                        "name": "Project Management",
+                        "color": "#bf55ec",
+                        "orderindex": 16
+                    },
+                    {
+                        "id": "9fc62fcf-da23-41fe-aff7-c22fee2b473d",
+                        "name": "Query/Counts",
+                        "color": "#3397dd",
+                        "orderindex": 17
+                    },
+                    {
+                        "id": "be920ba5-9613-4627-9ffe-2a029ffb1135",
+                        "name": "Report/Insights",
+                        "color": "#FF4081",
+                        "orderindex": 18
+                    },
+                    {
+                        "id": "b05f3b0d-d4ad-4ab1-be28-c1c6de078694",
+                        "name": "POV",
+                        "color": "#AF7E2E",
+                        "orderindex": 19
+                    },
+                    {
+                        "id": "255c3185-d3c7-4e6a-8ad2-0a298a8342aa",
+                        "name": "Data Pull",
+                        "color": "#49A88C",
+                        "orderindex": 20
+                    },
+                    {
+                        "id": "b367b907-2313-4ac4-bffa-b9fff068571d",
+                        "name": "Testing/Validation",
+                        "color": "#ff7800",
+                        "orderindex": 21
+                    },
+                    {
+                        "id": "4d328146-7365-4d18-a366-a15aa57bcbb9",
+                        "name": "Attribution/Tracking/Campaign IDs",
+                        "color": "#87f46f",
+                        "orderindex": 22
+                    }
+                ]
+            },
+            "date_created": "1580264873910",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "c833f9cb-9ab9-49be-9cea-b7a5829ef17b",
+            "name": "zz Deployed",
+            "type": "checkbox",
+            "type_config": {},
+            "date_created": "1555436680797",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "a63988ba-8690-4e7d-a8ea-13c438b2ebbd",
+            "name": "zz Experiment",
+            "type": "drop_down",
+            "type_config": {
+                "default": 0,
+                "placeholder": null,
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "7f296974-8ca3-4d1a-881d-979972aa254e",
+                        "name": "Email List Buy",
+                        "color": null,
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "b7022850-b45f-4858-98e3-246d99237ca2",
+                        "name": "Facebook Leads",
+                        "color": null,
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "a0024386-9dd8-453c-b8d1-bd7c2249a453",
+                        "name": "Friends & Family",
+                        "color": null,
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "43889e67-4802-4140-bc34-890c1d0813b4",
+                        "name": "Facebook Organic",
+                        "color": null,
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "2cef02e7-c0a5-4b53-8645-a9383efefe32",
+                        "name": "Fluent Co-Reg",
+                        "color": null,
+                        "orderindex": 4
+                    },
+                    {
+                        "id": "9b85423f-2194-40ce-a993-a43671b3b43c",
+                        "name": "Opt-in Optimization",
+                        "color": null,
+                        "orderindex": 5
+                    },
+                    {
+                        "id": "20a1c721-193f-4fb1-9174-4fd9b28a0968",
+                        "name": "Retargeting",
+                        "color": null,
+                        "orderindex": 6
+                    },
+                    {
+                        "id": "2252577d-7f91-488b-89f0-c6f31f9cc340",
+                        "name": "Receipts Sweeps",
+                        "color": null,
+                        "orderindex": 7
+                    }
+                ]
+            },
+            "date_created": "1556027862847",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "5df50618-9c81-48b3-82fe-2c3f86536b50",
+            "name": "zz Lead Time",
+            "type": "drop_down",
+            "type_config": {
+                "default": 0,
+                "placeholder": null,
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "1ba1f0d2-60b8-4359-8461-c75d7c2d4568",
+                        "name": "Last Minute",
+                        "color": "#e50000",
+                        "orderindex": 0
+                    }
+                ]
+            },
+            "date_created": "1555511074336",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "69118a5e-c6bf-46d7-a68b-13efec921a58",
+            "name": "zz Open Time",
+            "type": "formula",
+            "type_config": {
+                "simple": true,
+                "formula": "",
+                "version": "1.9",
+                "reset_at": 1720638142359,
+                "is_dynamic": false,
+                "return_types": [
+                    "string",
+                    "null"
+                ],
+                "calculation_state": "ready"
+            },
+            "date_created": "1587924611430",
+            "hide_from_guests": true,
+            "value": "35.409999722222224",
+            "required": false
+        },
+        {
+            "id": "05540533-b7b5-4541-be9a-6fb018d87826",
+            "name": "zz Task Type",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "0eacf9ee-cbf7-4fad-a288-30b1e7c6b865",
+                        "name": "Analysis Request",
+                        "color": null,
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "5a5baae3-d1f6-40fb-88bc-9a855f5c3385",
+                        "name": "API",
+                        "color": null,
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "367c2cf1-5974-49c0-8e4c-02eb98241abf",
+                        "name": "Billing",
+                        "color": null,
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "a083b704-fb6c-4d34-90f5-fd0b718d067a",
+                        "name": "Client Tech Onboarding",
+                        "color": null,
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "eb356be0-1c57-48b9-aea8-3e930b520371",
+                        "name": "Data Architecture",
+                        "color": null,
+                        "orderindex": 4
+                    },
+                    {
+                        "id": "add6a125-4cfc-43f2-8a7b-05d3f0f62f43",
+                        "name": "Data Classification",
+                        "color": null,
+                        "orderindex": 5
+                    },
+                    {
+                        "id": "5219395a-91bd-41be-be04-ba0625f06947",
+                        "name": "Data Load",
+                        "color": null,
+                        "orderindex": 6
+                    },
+                    {
+                        "id": "122ecdf3-b40c-4b54-839e-c736c77c25f8",
+                        "name": "Data Update",
+                        "color": null,
+                        "orderindex": 7
+                    },
+                    {
+                        "id": "7b3dd470-4263-4537-8b3b-8e8bf88d8303",
+                        "name": "Documentation",
+                        "color": null,
+                        "orderindex": 8
+                    },
+                    {
+                        "id": "4cb355eb-7fe8-4a50-b73d-0fb45f067468",
+                        "name": "ETL",
+                        "color": null,
+                        "orderindex": 9
+                    },
+                    {
+                        "id": "82b45b41-376f-444e-a376-4e47534078ea",
+                        "name": "HTML Development",
+                        "color": null,
+                        "orderindex": 10
+                    },
+                    {
+                        "id": "0bb16c6d-ad29-49dd-bd2b-5bd37a9594dc",
+                        "name": "Insights",
+                        "color": null,
+                        "orderindex": 11
+                    },
+                    {
+                        "id": "323408c9-2804-48fb-a5cd-251fb66bff3c",
+                        "name": "Gap Analysis",
+                        "color": null,
+                        "orderindex": 12
+                    },
+                    {
+                        "id": "4f7b98fa-cefd-4a1b-a5ad-8c5cc058a7fd",
+                        "name": "List Pull",
+                        "color": null,
+                        "orderindex": 13
+                    },
+                    {
+                        "id": "965a3bce-5c94-42d2-b400-8728576a08d4",
+                        "name": "Project",
+                        "color": "#81B1FF",
+                        "orderindex": 14
+                    },
+                    {
+                        "id": "3ac69f1f-fed0-4a01-b568-0574f34e74d5",
+                        "name": "Project Management",
+                        "color": null,
+                        "orderindex": 15
+                    },
+                    {
+                        "id": "2cd2c98e-7b06-41e7-b23e-213b77512d1a",
+                        "name": "Query Development",
+                        "color": null,
+                        "orderindex": 16
+                    },
+                    {
+                        "id": "e6879f89-18e6-470f-9691-c43fe5744954",
+                        "name": "Query Execution",
+                        "color": null,
+                        "orderindex": 17
+                    },
+                    {
+                        "id": "a27e220e-8c5e-49de-af72-00fb6c6c5869",
+                        "name": "Report Deliverable",
+                        "color": null,
+                        "orderindex": 18
+                    },
+                    {
+                        "id": "47ef78ba-8b54-4a08-a439-fbb5439999a0",
+                        "name": "Report Development",
+                        "color": null,
+                        "orderindex": 19
+                    },
+                    {
+                        "id": "b9f26833-1382-4ebf-b054-578a3932fa45",
+                        "name": "Requirements",
+                        "color": null,
+                        "orderindex": 20
+                    },
+                    {
+                        "id": "93bd93b1-2892-4868-8a20-4a3fc7ee3768",
+                        "name": "System Integration",
+                        "color": null,
+                        "orderindex": 21
+                    },
+                    {
+                        "id": "9130b690-2545-4879-882a-a648f1624c16",
+                        "name": "Tracking (pixels, control tags, etc.)",
+                        "color": null,
+                        "orderindex": 22
+                    },
+                    {
+                        "id": "e6fb8f27-4e19-487b-b223-0217eea37984",
+                        "name": "UAT",
+                        "color": null,
+                        "orderindex": 23
+                    },
+                    {
+                        "id": "8af649aa-de6a-4639-80ab-7b8e83a672d2",
+                        "name": "Client Management",
+                        "color": null,
+                        "orderindex": 24
+                    },
+                    {
+                        "id": "1c5c7342-68af-4533-a83d-ae0e0810d780",
+                        "name": "Research",
+                        "color": null,
+                        "orderindex": 25
+                    },
+                    {
+                        "id": "e1d494c7-46e8-4e42-a683-a8248e67c509",
+                        "name": "Segment Building",
+                        "color": null,
+                        "orderindex": 26
+                    },
+                    {
+                        "id": "3836063a-2d8a-447a-8666-024dcd99ea24",
+                        "name": "Access Request",
+                        "color": "#f9d900",
+                        "orderindex": 27
+                    },
+                    {
+                        "id": "1f0e72a2-629c-4b7b-bae9-db09e4fafc90",
+                        "name": "Evaluation",
+                        "color": "#231D0B",
+                        "orderindex": 28
+                    }
+                ]
+            },
+            "date_created": "1580137851106",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "f82f16da-bf18-4f6a-a833-70b886387874",
+            "name": "zz Time Left",
+            "type": "formula",
+            "type_config": {
+                "version": "1.9",
+                "is_dynamic": false,
+                "return_types": [
+                    "null"
+                ],
+                "calculation_state": "ready"
+            },
+            "date_created": "1587925897346",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "14b0eca2-13e4-48be-9597-6bb537c9e048",
+            "name": "zz UAT Complete",
+            "type": "checkbox",
+            "type_config": {},
+            "date_created": "1555436611540",
+            "hide_from_guests": true,
+            "required": false
+        },
+        {
+            "id": "db44b1b2-0a8c-40e4-b47c-efd49e6f1a96",
+            "name": "Description",
+            "type": "text",
+            "type_config": {},
+            "date_created": "1705594191749",
+            "hide_from_guests": false,
+            "required": null
+        },
+        {
+            "id": "d446e077-9285-47f2-8871-7d41f0303daf",
+            "name": "Funding SOW",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "28531f52-893c-40a3-b257-081b9658d00f",
+                        "name": "TL3",
+                        "color": null,
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "37a503ce-570d-4399-9b39-36d0f931b65f",
+                        "name": "WF Squad 2024",
+                        "color": null,
+                        "orderindex": 1
+                    },
+                    {
+                        "id": "5a81e49a-096f-4ea6-b732-09ad0d8b2365",
+                        "name": "WF Cobrand 2024",
+                        "color": null,
+                        "orderindex": 2
+                    },
+                    {
+                        "id": "360c0ae1-89c2-4cc2-9fc1-1fbc004f27c8",
+                        "name": "DME",
+                        "color": null,
+                        "orderindex": 3
+                    },
+                    {
+                        "id": "0c7cc941-7dfd-4c33-84ad-995807227e6e",
+                        "name": "Steerco",
+                        "color": null,
+                        "orderindex": 4
+                    }
+                ]
+            },
+            "date_created": "1715015763785",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "a22c1b5b-38ac-4431-b9be-93321bcdc8fa",
+            "name": "Harvest Project",
+            "type": "short_text",
+            "type_config": {},
+            "date_created": "1711477971641",
+            "hide_from_guests": false,
+            "value": "TL3",
+            "required": false
+        },
+        {
+            "id": "7563d3b3-389e-4542-ad5f-a1c00685747b",
+            "name": "Harvest Task",
+            "type": "short_text",
+            "type_config": {},
+            "date_created": "1715015401607",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "03cc9109-2ebb-4839-90b5-202887677180",
+            "name": "Hours in Sprint",
+            "type": "number",
+            "type_config": {},
+            "date_created": "1717523777415",
+            "hide_from_guests": false,
+            "required": false
+        },
+        {
+            "id": "f17acd07-2b09-4b05-93bb-66df09e4c0d9",
+            "name": "MI Request Type",
+            "type": "drop_down",
+            "type_config": {
+                "new_drop_down": true,
+                "options": [
+                    {
+                        "id": "1118e782-50ea-40a7-b4fa-45ab97337a45",
+                        "name": "Maintenance",
+                        "color": "#e50000",
+                        "orderindex": 0
+                    },
+                    {
+                        "id": "18ef6e8b-4b34-488c-827b-c04234c55863",
+                        "name": "Enhancement/ Feature",
+                        "color": "#3397dd",
+                        "orderindex": 1
+                    }
+                ]
+            },
+            "date_created": "1718373256438",
+            "hide_from_guests": false,
+            "required": false
+        }
+    ],
+    "dependencies": [],
+    "linked_tasks": [],
+    "locations": [],
+    "team_id": "1269266",
+    "url": "https://app.clickup.com/t/86dt0ppj7",
+    "sharing": {
+        "public": false,
+        "public_share_expires_on": null,
+        "public_fields": [
+            "assignees",
+            "priority",
+            "due_date",
+            "content",
+            "comments",
+            "attachments",
+            "customFields",
+            "subtasks",
+            "tags",
+            "checklists",
+            "coverimage"
+        ],
+        "token": null,
+        "seo_optimized": false
+    },
+    "permission_level": "create",
+    "list": {
+        "id": "901702404464",
+        "name": "Capabilities Roadmap & Management",
+        "access": true
+    },
+    "project": {
+        "id": "90171421330",
+        "name": "Capabilities",
+        "hidden": false,
+        "access": true
+    },
+    "folder": {
+        "id": "90171421330",
+        "name": "Capabilities",
+        "hidden": false,
+        "access": true
+    },
+    "space": {
+        "id": "90170790771"
+    },
+    "attachments": [
+        {
+            "id": "9459351c-a623-481a-9eb6-fc960698d440.png",
+            "date": "1720522867221",
+            "title": "2024-07-09 07.00.47.png",
+            "type": 1,
+            "source": 1,
+            "version": 0,
+            "extension": "png",
+            "thumbnail_small": "https://t1269266.p.clickup-attachments.com/t1269266/9459351c-a623-481a-9eb6-fc960698d440_small.png",
+            "thumbnail_medium": "https://t1269266.p.clickup-attachments.com/t1269266/9459351c-a623-481a-9eb6-fc960698d440_medium.png",
+            "thumbnail_large": "https://t1269266.p.clickup-attachments.com/t1269266/9459351c-a623-481a-9eb6-fc960698d440/2024-07-09%2007.00.47.png",
+            "is_folder": null,
+            "mimetype": "image/png",
+            "hidden": false,
+            "parent_id": "86dt0ppj7",
+            "size": 79754,
+            "total_comments": 0,
+            "resolved_comments": 0,
+            "user": {
+                "id": 89177811,
+                "username": "Laura Stringer",
+                "email": "lstringer@block-tackle.com",
+                "initials": "LS",
+                "color": "#536cfe",
+                "profilePicture": "https://attachments.clickup.com/profilePictures/89177811_Oj5.jpg"
+            },
+            "deleted": false,
+            "orientation": null,
+            "url": "https://t1269266.p.clickup-attachments.com/t1269266/9459351c-a623-481a-9eb6-fc960698d440/2024-07-09%2007.00.47.png",
+            "email_data": null,
+            "url_w_query": "https://t1269266.p.clickup-attachments.com/t1269266/9459351c-a623-481a-9eb6-fc960698d440/2024-07-09%2007.00.47.png?view=open",
+            "url_w_host": "https://t1269266.p.clickup-attachments.com/t1269266/9459351c-a623-481a-9eb6-fc960698d440/2024-07-09%2007.00.47.png"
+        }
+    ]
+}

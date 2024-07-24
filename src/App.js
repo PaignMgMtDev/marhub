@@ -113,6 +113,7 @@ console.log(tacticData)
     startdate: tactic.planned_start_dt,
     enddate: tactic.planned_end_dt,
     language: tactic.language,
+    description: tactic.description
   }));
   const [selectedRows, setSelectedRows] = useState([]);
 

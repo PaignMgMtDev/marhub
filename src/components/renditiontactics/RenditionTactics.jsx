@@ -125,6 +125,7 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
     
     return(
         <Box className="rendition" component="main">
+          
             {renditionTactics &&
                 <DataGridPro
                     rows={tacticRows}
