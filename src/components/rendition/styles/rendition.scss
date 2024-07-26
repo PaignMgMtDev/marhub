@@ -131,6 +131,10 @@ body{
         padding: 2rem 1rem;
         width: 640px;
         place-self: center center;
+
+        a{
+            pointer-events: none;
+        }
         
         @include mixins.extra-extra-wide-screen{
             padding: 1rem;
@@ -200,9 +204,11 @@ body{
         @include mixins.default-grid;
         grid-auto-rows: max-content;
         padding-bottom: 0.25rem;
+        max-width: 640px;
 
         @include mixins.extra-extra-wide-screen{
             @include mixins.display-card;
+            max-width: 640px;
         }
         
 
