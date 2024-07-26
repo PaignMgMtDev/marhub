@@ -56,7 +56,13 @@ export default function Rendition({ auth, renditionRequestID }) {
     try {
       let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${placement_version_id}/${renditionRequestID}/`, authHeader);
       console.log('Renditions loaded:', response.data);
-      setRenditionList(response.data);
+      if (response.data.length > 0) {
+        setRenditionList(response.data.slice(0, 1));
+      }
+      else{
+        setRenditionList(response.data);
+      }
+      
       setRenditionsLoaded(true);
       setStep(2);
     } catch (err) {
@@ -205,10 +211,13 @@ export default function Rendition({ auth, renditionRequestID }) {
                     {Object.keys(groupedModules).map((row, rowIndex) => (
                       <Stack className="treatment__module-row" key={`row-${rowIndex}`} direction="row" spacing={2}>
                         {groupedModules[row].map((module, i) => {
-                          const moduleClass = `module module_${module.placement_version_id}`
+                          const moduleClass = `module module_${module.placement_version_id}`;
+                          const isDisabled = [2, 8, 5].includes(module.placement_type_id) ||
+                            (module.placement_version_name.toLowerCase().includes('pciq_') &&
+                            !module.placement_version_name.toLowerCase().includes('headline'));
 
                           return (
-                            <Box className={moduleClass} key={`${row}-${i}`} onMouseEnter={() => setHighlightedModule(module.placement_version_id)} onMouseLeave={() => setHighlightedModule('')} onClick={() => selectModule(module)}>
+                            <Box sx={{ pointerEvents: isDisabled ? 'none' : 'auto' }} className={moduleClass} key={`${row}-${i}`} onMouseEnter={() => setHighlightedModule(module.placement_version_id)} onMouseLeave={() => setHighlightedModule('')} onClick={() => selectModule(module)}>
                               {(module.placement_version_id !== selectedModule.placement_version_id && isWideScreen && highlightedModule !== '' && module.placement_version_id !== highlightedModule) && <Box className="module__dimmer"></Box>}
                               <Typography className="module__name">{module.placement_version_name}</Typography>
                               {module.render_entity ? (
