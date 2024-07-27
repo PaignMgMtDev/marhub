@@ -154,6 +154,10 @@ body{
             @include mixins.title-font;
             margin-bottom: 0.5rem;
         }
+
+        &__module-row{
+            background-color: rgb(249, 246, 244);
+        }
     }
 
     .module{
