@@ -502,10 +502,10 @@ import {
   Box,
   IconButton,
   Tooltip,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  // FormControl,
+  // InputLabel,
+  // Select,
+  // MenuItem,
 } from "@mui/material";
 import CampHeader from "../header/CampHeader";
 import axios from "axios";
@@ -554,7 +554,7 @@ export default function Collaborators({
       tableName: formatTableName(tables.find((table) => table.id === selectedTable.id)?.name),
       attributeName: formatAttributeName(attributes.find((attribute) => attribute.id === selectedAttribute.id)?.name),
       flagNames: selectedFlags.map((flagId) => flags.find((flag) => flag.id === flagId)?.name).map(formatAttributeName),
-      selectedTactics: [], 
+      // selectedTactics: [], 
     };
 
     setQueuedCollaborators((prev) => [...prev, newEntry]);
@@ -921,12 +921,15 @@ export default function Collaborators({
       <Grid container spacing={2} style={{ padding: 20 }}>
       {queuedCollaborators.map((item, index) => (
           <Grid item key={index}>
-            <Paper elevation={3} sx={{ padding: 2, height: "250px", width: "300px" }}>
+            <Paper elevation={3} sx={{ padding: 2, 
+              height: "150px", 
+              // height: "250px", 
+              width: "300px" }}>
               <Typography variant="h6">Collaborator: {item.collaboratorName}</Typography>
               <Typography>Table: {item.tableName}</Typography>
               <Typography>Attribute: {item.attributeName}</Typography>
               <Typography>Flags: {item.flagNames.join(", ")}</Typography>
-              <FormControl sx={{ marginTop: "20px"}} fullWidth>
+              {/* <FormControl sx={{ marginTop: "20px"}} fullWidth>
                 <InputLabel id="tactic-label">Assign Tactic</InputLabel> 
                 <Select
                   labelId="tactic-label"
@@ -936,12 +939,13 @@ export default function Collaborators({
                   label="Assign Tactic"
                   onChange={(event) => {
                     const newQueue = [...queuedCollaborators];
-                    newQueue[index].selectedTactics = event.target.value;
+                    newQueue[index].selectedTactic = event.target.value;
+                    // newQueue[index].selectedTactics = event.target.value;
                     setQueuedCollaborators(newQueue);
                   }}
                   sx={{ mb: 2 }}
                 >
-                  {selectedRows.map(tactic => (
+                  {tactics.map(tactic => (
                     <MenuItem key={tactic.id} value={tactic.id}>
                       {tactic.tactName}
                     </MenuItem>
@@ -951,8 +955,8 @@ export default function Collaborators({
                       Tactic {tactic}
                     </MenuItem>
                   ))} */}
-                </Select>
-              </FormControl>
+                {/* </Select>
+              </FormControl> */}
               <IconButton onClick={() => handleRemoveCollaborator(index)} sx={{  }}>
                 <CloseIcon />
               </IconButton>
