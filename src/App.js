@@ -105,7 +105,7 @@ function App() {
     navigate("/collaborators")
     setRenditionDetails(data);
   }
-console.log(tacticData)
+
   const tacticRows = tacticData?.map((tactic) => ({
     id: tactic.id,
     tactName: tactic.name,
@@ -135,7 +135,7 @@ console.log(tacticData)
   const handleRenditionRequestID = (value) =>{
     setRenditionRequestID(value);
   }
-console.log(renditionRequestID)
+
   return (
     <div className="App">
       <Header />

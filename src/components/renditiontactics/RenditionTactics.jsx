@@ -116,6 +116,7 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
               Approve Tactic
             </Button>
             <Button
+              
               variant="contained"
               onClick={() => editTactic(params.id)}
             >
@@ -131,11 +132,23 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
         <Box className="rendition" component="main">
           
             {renditionTactics &&
+            <div
+            style={{
+              height: "500px",
+              width: "auto",
+              paddingLeft: "3%",
+              paddingRight: "3%",
+              paddingTop: "10px",
+            }}
+            >
                 <DataGridPro
                     rows={tacticRows}
                     columns={columns}
                     hideFooterRowCount={true}
-                />}
+                />
+                </div>
+                }
+                
             {openModal &&
                 <Modal
                     open={openModal}

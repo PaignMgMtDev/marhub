@@ -317,6 +317,19 @@ export default function RendReqConfig({
     setDescription(event.target.value);
   };
 
+  // const getPlacementTypes = useCallback(async () => {
+  //   try {
+  //     const tacticsIds = selectedRows.map((tactic) => tactic.id);
+  //     const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/get-placement-types/`;
+  //     const body = JSON.stringify({ tactics: tacticsIds });
+  //     const res = await axios.post(url, body, authHeader);
+  //     const data = res?.data;
+  //     data && setPlacementData(data);
+  //   } catch (e) {
+  //     console.log("error while getting placement types: ", e);
+  //   }
+  // }, [selectedRows, authHeader]);
+
   const getPlacementTypes = useCallback(async () => {
     try {
       const tacticsIds = selectedRows.map((tactic) => tactic.id);
@@ -324,7 +337,18 @@ export default function RendReqConfig({
       const body = JSON.stringify({ tactics: tacticsIds });
       const res = await axios.post(url, body, authHeader);
       const data = res?.data;
-      data && setPlacementData(data);
+      if (data) {
+        // Filtering to remove duplicates based on placement_type.id
+        const seenIds = new Set();
+        const filteredData = data.filter(item => {
+          if (!seenIds.has(item.placement_type.id)) {
+            seenIds.add(item.placement_type.id);
+            return true;
+          }
+          return false;
+        });
+        setPlacementData(filteredData);
+      }
     } catch (e) {
       console.log("error while getting placement types: ", e);
     }
