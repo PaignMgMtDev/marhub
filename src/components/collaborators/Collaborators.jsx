@@ -520,6 +520,7 @@ export default function Collaborators({
   backTact,
   rendition,
   renditionDetails,
+  selectedRows,
 }) {
   
   const navigate = useNavigate();
@@ -545,7 +546,7 @@ export default function Collaborators({
 
   const [queuedCollaborators, setQueuedCollaborators] = useState([]);
  
-  const tactics = renditionDetails?.rendition_request_log?.tactics || [];
+  // const tactics = renditionDetails?.rendition_request_log?.tactics || [];
 
   const handleAddToQueue = () => {
     const newEntry = {
@@ -940,11 +941,16 @@ export default function Collaborators({
                   }}
                   sx={{ mb: 2 }}
                 >
-                  {tactics.map((tactic) => (
+                  {selectedRows.map(tactic => (
+                    <MenuItem key={tactic.id} value={tactic.id}>
+                      {tactic.tactName}
+                    </MenuItem>
+                  ))}
+                  {/* {tactics.map((tactic) => (
                     <MenuItem key={tactic} value={tactic}>
                       Tactic {tactic}
                     </MenuItem>
-                  ))}
+                  ))} */}
                 </Select>
               </FormControl>
               <IconButton onClick={() => handleRemoveCollaborator(index)} sx={{  }}>
