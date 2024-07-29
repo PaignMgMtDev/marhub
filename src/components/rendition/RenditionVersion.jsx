@@ -28,7 +28,6 @@ export default function RenditionVersion({
   const [originalValues, setOriginalValues] = useState(null);
   const [filteredPlacementVersions, setFilteredPlacementVersions] = useState([]);
   const [openProofDialog, setOpenProofDialog] = useState(false);
-  const [newPlacementVersion, setNewPlacementVersion] = useState(0);
 
   const excludedKeywords = ["imgwidth", "imgheight", "contentstartdate", "contentenddate", "tactic_id", "product", "module", "cblock", "section", "linkid", "linkname"];
 
@@ -97,7 +96,6 @@ export default function RenditionVersion({
         renditionRef.current.scrollIntoView({ behavior: 'smooth' });
       }
       const response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader);
-      setNewPlacementVersion(response.data.placement_version_id);
       const allPlacementVersions = [...filteredPlacementVersions, response.data.placement_version_id];
       setPlacementVersionList(allPlacementVersions);
       setSubmitting(false);
@@ -110,12 +108,9 @@ export default function RenditionVersion({
 
   const sendProof = async () => {
     try {
-      // Create the all_placement_versions array
-      const allPlacementVersions = [...filteredPlacementVersions, newPlacementVersion];
-  
       // Construct the request body
       const requestBody = {
-        all_placement_versions: allPlacementVersions,
+        all_placement_versions: placementVersionList,
         rendition_request_id: renditionRequestId,
       };
   
