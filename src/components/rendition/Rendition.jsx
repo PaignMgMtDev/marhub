@@ -10,7 +10,7 @@ import "./styles/rendition.scss";
 import marriottLogo from './img/mi_button_logo.png';
 import RenderEngine from "./RenderEngine";
 
-export default function Rendition({ auth, renditionRequestID }) {
+export default function Rendition({ auth, renditionRequestID, setLastProofedTreatment }) {
   const [treatment, setTreatment] = useState(null);
   const [selectedModule, setSelectedModule] = useState({});
   const [selectedVersion, setSelectedVersion] = useState(null);
@@ -284,7 +284,7 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersionList={placementVersionList} setPlacementVersionList={setPlacementVersionList} originalVersion={selectedModule.placement_version_id}/>
+                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersionList={placementVersionList} setPlacementVersionList={setPlacementVersionList} originalVersion={selectedModule.placement_version_id} setLastProofedTreatment={setLastProofedTreatment} />
                 </Card>
               }
             </Box>

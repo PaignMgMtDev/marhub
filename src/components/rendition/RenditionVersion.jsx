@@ -19,7 +19,8 @@ export default function RenditionVersion({
   setDetailsLoaded,
   placementVersionList,
   setPlacementVersionList,
-  originalVersion
+  originalVersion,
+  setLastProofedTreatment
 }) {
   const [placementVersion, setPlacementVersion] = useState({});
   const [linkEdit, setLinkEdit] = useState('');
@@ -117,6 +118,7 @@ export default function RenditionVersion({
       // Make the API request
       const response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-proof/`, requestBody, authHeader);
       console.log(response.data);
+      setLastProofedTreatment(response.data);
     } catch (err) {
       console.log(err.message, err.code);
     }
