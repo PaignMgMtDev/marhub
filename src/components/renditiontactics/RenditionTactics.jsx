@@ -9,7 +9,7 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
     const { rendition } = useParams()
     const navigate = useNavigate()
     const [renditionTactics, setRenditionTactics] = useState([])
-    const [approvedTacticId, setApprovedTacticId] = useState(null)
+    // const [approvedTacticId, setApprovedTacticId] = useState(null)
     const [openModal, setOpenModal] = useState(false)
     
 
@@ -106,12 +106,17 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
           <>
             <Button
               variant="contained"
+              disabled="true"
               sx={{ marginRight: 1 }} 
-              onClick={() => { toggleModal(); setApprovedTacticId(params.value) }}
+              onClick={() => { 
+                toggleModal(); 
+                // setApprovedTacticId(params.value) 
+              }}
             >
               Approve Tactic
             </Button>
             <Button
+              
               variant="contained"
               onClick={() => editTactic(params.id)}
             >
@@ -127,11 +132,23 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
         <Box className="rendition" component="main">
           
             {renditionTactics &&
+            <div
+            style={{
+              height: "500px",
+              width: "auto",
+              paddingLeft: "3%",
+              paddingRight: "3%",
+              paddingTop: "10px",
+            }}
+            >
                 <DataGridPro
                     rows={tacticRows}
                     columns={columns}
                     hideFooterRowCount={true}
-                />}
+                />
+                </div>
+                }
+                
             {openModal &&
                 <Modal
                     open={openModal}
@@ -144,7 +161,8 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
                         Are you sure you want to approve?
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        The following tactic will be approved and will no longer be editable: Tactic ID {approvedTacticId}
+                        The following tactic will be approved and will no longer be editable: Tactic ID 
+                        {/* {approvedTacticId} */}
                     </Typography>
                     </Box>
                 </Modal>}
