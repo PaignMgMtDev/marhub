@@ -20,11 +20,11 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [highlightedModule, setHighlightedModule] = useState('');
   const [groupedModules, setGroupedModules] = useState({});
-  const [renditionsLoaded, setRenditionsLoaded] = useState(false);
   const [detailsLoaded, setDetailsLoaded] = useState(false);
   const { tactic } = useParams();
   const isWideScreen = useMediaQuery('(min-width:1536px)');
   const [placementVersionList, setPlacementVersionList] = useState([]);
+  const [renditionListLoading, setRenditionListLoading] = useState(true);
 
   const navigate = useNavigate();
   // renditionRequestID = 5;
@@ -56,8 +56,13 @@ export default function Rendition({ auth, renditionRequestID }) {
     try {
       let response = await axios.get(`${apiBaseUrl}/api/mihp/rendition-version/${placement_version_id}/${renditionRequestID}/`, authHeader);
       console.log('Renditions loaded:', response.data);
-      setRenditionList(response.data);
-      setRenditionsLoaded(true);
+      if (response.data.length > 0) {
+        setRenditionList(response.data.slice(0, 1));
+      }
+      else{
+        setRenditionList(response.data);
+      }
+      setRenditionListLoading(false);
       setStep(2);
     } catch (err) {
       console.log(err.message, err.code);
@@ -90,6 +95,8 @@ export default function Rendition({ auth, renditionRequestID }) {
   }, [selectedVersion]);
 
   const selectModule = (module) => {
+    setRenditionListLoading(true);
+    setRenditionList([]);
     setSelectedModule(module);
     loadRenditions(module.placement_version_id);
 
@@ -205,10 +212,13 @@ export default function Rendition({ auth, renditionRequestID }) {
                     {Object.keys(groupedModules).map((row, rowIndex) => (
                       <Stack className="treatment__module-row" key={`row-${rowIndex}`} direction="row" spacing={2}>
                         {groupedModules[row].map((module, i) => {
-                          const moduleClass = `module module_${module.placement_version_id}`
+                          const moduleClass = `module module_${module.placement_version_id}`;
+                          const isDisabled = [2, 8, 5].includes(module.placement_type_id) ||
+                            (module.placement_version_name.toLowerCase().includes('pciq_') &&
+                            !module.placement_version_name.toLowerCase().includes('headline'));
 
                           return (
-                            <Box className={moduleClass} key={`${row}-${i}`} onMouseEnter={() => setHighlightedModule(module.placement_version_id)} onMouseLeave={() => setHighlightedModule('')} onClick={() => selectModule(module)}>
+                            <Box sx={{ pointerEvents: isDisabled ? 'none' : 'auto' }} className={moduleClass} key={`${row}-${i}`} onMouseEnter={() => setHighlightedModule(module.placement_version_id)} onMouseLeave={() => setHighlightedModule('')} onClick={() => selectModule(module)}>
                               {(module.placement_version_id !== selectedModule.placement_version_id && isWideScreen && highlightedModule !== '' && module.placement_version_id !== highlightedModule) && <Box className="module__dimmer"></Box>}
                               <Typography className="module__name">{module.placement_version_name}</Typography>
                               {module.render_entity ? (
@@ -234,8 +244,8 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {(step === 2 || (isWideScreen && step > 1)) &&
                 <Card className="versions">
-                  {!renditionsLoaded && <CircularProgress />}
-                  {renditionsLoaded &&
+                  {renditionListLoading && <CircularProgress />}
+                  {!renditionListLoading &&
                     <>
                       <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
                       {selectedModule.render_entity ? (
@@ -266,7 +276,7 @@ export default function Rendition({ auth, renditionRequestID }) {
                       </List>
                       <Stack className="versions__button-row" direction="row">
                         <Button className="versions__add" variant="text" onClick={() => setStep(1)}>Unselect</Button>
-                        <Button className="versions__add" variant="text" onClick={() => selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, renditionList.length + 1, selectedModule?.placement_version_id)}>Add Rendition</Button>
+                        {(!renditionListLoading && renditionList?.length === 0) && <Button className="versions__add" variant="text" onClick={() => selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, renditionList.length + 1, selectedModule?.placement_version_id)}>Add Rendition</Button>}
                       </Stack>                     
                     </>
                   }
@@ -274,7 +284,7 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersions={placementVersionList} originalVersion={selectedModule.placement_version_id}/>
+                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersionList={placementVersionList} setPlacementVersionList={setPlacementVersionList} originalVersion={selectedModule.placement_version_id}/>
                 </Card>
               }
             </Box>
