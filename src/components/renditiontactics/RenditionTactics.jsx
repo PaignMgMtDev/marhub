@@ -9,7 +9,7 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
     const { rendition } = useParams()
     const navigate = useNavigate()
     const [renditionTactics, setRenditionTactics] = useState([])
-    const [approvedTacticId, setApprovedTacticId] = useState(null)
+    // const [approvedTacticId, setApprovedTacticId] = useState(null)
     const [openModal, setOpenModal] = useState(false)
     
 
@@ -104,13 +104,13 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
         width: 300,
         renderCell: (params) => (
           <>
-            <Button
+            {/* <Button
               variant="contained"
               sx={{ marginRight: 1 }} 
               onClick={() => { toggleModal(); setApprovedTacticId(params.value) }}
             >
               Approve Tactic
-            </Button>
+            </Button> */}
             <Button
               variant="contained"
               onClick={() => editTactic(params.id)}
@@ -144,7 +144,8 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
                         Are you sure you want to approve?
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        The following tactic will be approved and will no longer be editable: Tactic ID {approvedTacticId}
+                        The following tactic will be approved and will no longer be editable: Tactic ID 
+                        {/* {approvedTacticId} */}
                     </Typography>
                     </Box>
                 </Modal>}
