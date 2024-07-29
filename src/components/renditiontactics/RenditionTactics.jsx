@@ -104,13 +104,17 @@ export default function RenditionTactics({authHeader, handleRenditionRequestID})
         width: 300,
         renderCell: (params) => (
           <>
-            {/* <Button
+            <Button
               variant="contained"
+              disabled="true"
               sx={{ marginRight: 1 }} 
-              onClick={() => { toggleModal(); setApprovedTacticId(params.value) }}
+              onClick={() => { 
+                toggleModal(); 
+                // setApprovedTacticId(params.value) 
+              }}
             >
               Approve Tactic
-            </Button> */}
+            </Button>
             <Button
               variant="contained"
               onClick={() => editTactic(params.id)}
