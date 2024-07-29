@@ -55,6 +55,7 @@ function App() {
   const [campaignID, setCampaignID] = useState("");
   const [campaignData, setCampaignData] = useState([]);
   const [tacticData, setTacticData] = useState([]);
+  const [lastProofedTreatment, setLastProofedTreatment] = useState("");
 
   const handleCampaignID = (params) => {
     setCampaignID(params);
@@ -241,6 +242,7 @@ console.log(renditionRequestID)
                 <Rendition 
                   auth={auth}
                   renditionRequestID={renditionRequestID}
+                  setLastProofedTreatment={setLastProofedTreatment}
                 />
               </ProtectedRoute>
             }
