@@ -17,7 +17,8 @@ export default function RenditionVersion({
   loadRenditions,
   detailsLoaded,
   setDetailsLoaded,
-  placementVersions,
+  placementVersionList,
+  setPlacementVersionList,
   originalVersion
 }) {
   const [placementVersion, setPlacementVersion] = useState({});
@@ -97,6 +98,8 @@ export default function RenditionVersion({
       }
       const response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`, detailValues, authHeader);
       setNewPlacementVersion(response.data.placement_version_id);
+      const allPlacementVersions = [...filteredPlacementVersions, response.data.placement_version_id];
+      setPlacementVersionList(allPlacementVersions);
       setSubmitting(false);
       setOpenProofDialog(true);
     } catch (err) {
@@ -113,7 +116,7 @@ export default function RenditionVersion({
       // Construct the request body
       const requestBody = {
         all_placement_versions: allPlacementVersions,
-        new_rendition_placement_version: newPlacementVersion,
+        rendition_request_id: renditionRequestId,
       };
   
       // Make the API request
@@ -129,9 +132,9 @@ export default function RenditionVersion({
   }, [detailsLoaded, loadAndInitializeVersion]);
 
   useEffect(() => {
-    const filteredVersions = placementVersions.filter(versionId => versionId !== originalVersion);
+    const filteredVersions = placementVersionList.filter(versionId => versionId !== originalVersion);
     setFilteredPlacementVersions(filteredVersions);
-  }, [placementVersions, originalVersion]);
+  }, [placementVersionList, originalVersion]);
 
   const handleInputChange = (event, detailId) => {
     const { value } = event.target;

@@ -20,14 +20,14 @@ export default function Rendition({ auth, renditionRequestID }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [highlightedModule, setHighlightedModule] = useState('');
   const [groupedModules, setGroupedModules] = useState({});
-  const [renditionsLoaded, setRenditionsLoaded] = useState(false);
   const [detailsLoaded, setDetailsLoaded] = useState(false);
   const { tactic } = useParams();
   const isWideScreen = useMediaQuery('(min-width:1536px)');
   const [placementVersionList, setPlacementVersionList] = useState([]);
+  const [renditionListLoading, setRenditionListLoading] = useState(true);
 
   const navigate = useNavigate();
-  // renditionRequestID = 5;
+  renditionRequestID = 5;
 
   const renditionRef = useRef(null);
 
@@ -62,8 +62,7 @@ export default function Rendition({ auth, renditionRequestID }) {
       else{
         setRenditionList(response.data);
       }
-      
-      setRenditionsLoaded(true);
+      setRenditionListLoading(false);
       setStep(2);
     } catch (err) {
       console.log(err.message, err.code);
@@ -96,6 +95,8 @@ export default function Rendition({ auth, renditionRequestID }) {
   }, [selectedVersion]);
 
   const selectModule = (module) => {
+    setRenditionListLoading(true);
+    setRenditionList([]);
     setSelectedModule(module);
     loadRenditions(module.placement_version_id);
 
@@ -243,8 +244,8 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {(step === 2 || (isWideScreen && step > 1)) &&
                 <Card className="versions">
-                  {!renditionsLoaded && <CircularProgress />}
-                  {renditionsLoaded &&
+                  {renditionListLoading && <CircularProgress />}
+                  {!renditionListLoading &&
                     <>
                       <Typography className="versions__heading">{selectedModule.placement_version_name}</Typography>
                       {selectedModule.render_entity ? (
@@ -275,7 +276,7 @@ export default function Rendition({ auth, renditionRequestID }) {
                       </List>
                       <Stack className="versions__button-row" direction="row">
                         <Button className="versions__add" variant="text" onClick={() => setStep(1)}>Unselect</Button>
-                        <Button className="versions__add" variant="text" onClick={() => selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, renditionList.length + 1, selectedModule?.placement_version_id)}>Add Rendition</Button>
+                        {(!renditionListLoading && renditionList?.length === 0) && <Button className="versions__add" variant="text" onClick={() => selectVersion(selectedModule?.placement_version_id, selectedModule?.placement_version_name, renditionList.length + 1, selectedModule?.placement_version_id)}>Add Rendition</Button>}
                       </Stack>                     
                     </>
                   }
@@ -283,7 +284,7 @@ export default function Rendition({ auth, renditionRequestID }) {
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersions={placementVersionList} originalVersion={selectedModule.placement_version_id}/>
+                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersionList={placementVersionList} setPlacementVersionList={setPlacementVersionList} originalVersion={selectedModule.placement_version_id}/>
                 </Card>
               }
             </Box>
