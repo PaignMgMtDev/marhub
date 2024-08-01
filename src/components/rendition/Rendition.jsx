@@ -25,6 +25,8 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
   const isWideScreen = useMediaQuery('(min-width:1536px)');
   const [placementVersionList, setPlacementVersionList] = useState([]);
   const [renditionListLoading, setRenditionListLoading] = useState(true);
+  const [originalValues, setOriginalValues] = useState(null);
+  const [placementVersion, setPlacementVersion] = useState({content_details: []});
 
   const navigate = useNavigate();
   // renditionRequestID = 6;
@@ -281,7 +283,28 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
               }
               {step === 3 &&
                 <Card className="edit" component="section">
-                  <RenditionVersion renditionRef={renditionRef} apiBaseUrl={apiBaseUrl} authHeader={authHeader} selectedVersion={selectedVersion} renditionList={renditionList} setStep={setStep} detailValues={detailValues} setDetailValues={setDetailValues} renditionRequestId={renditionRequestID} loadRenditions={loadRenditions} detailsLoaded={detailsLoaded} setDetailsLoaded={setDetailsLoaded} placementVersionList={placementVersionList} setPlacementVersionList={setPlacementVersionList} originalVersion={selectedModule.placement_version_id} setLastProofedTreatment={setLastProofedTreatment} />
+                  <RenditionVersion 
+                    renditionRef={renditionRef} 
+                    apiBaseUrl={apiBaseUrl} 
+                    authHeader={authHeader} 
+                    selectedVersion={selectedVersion} 
+                    renditionList={renditionList} 
+                    setStep={setStep} 
+                    detailValues={detailValues} 
+                    setDetailValues={setDetailValues} 
+                    renditionRequestId={renditionRequestID} 
+                    loadRenditions={loadRenditions} 
+                    detailsLoaded={detailsLoaded} 
+                    setDetailsLoaded={setDetailsLoaded} 
+                    placementVersionList={placementVersionList} 
+                    setPlacementVersionList={setPlacementVersionList} 
+                    originalVersion={selectedModule.placement_version_id} 
+                    setLastProofedTreatment={setLastProofedTreatment} 
+                    originalValues={originalValues} 
+                    setOriginalValues={setOriginalValues}
+                    placementVersion={placementVersion}
+                    setPlacementVersion={setPlacementVersion}
+                  />
                 </Card>
               }
             </Box>
