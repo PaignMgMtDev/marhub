@@ -27,7 +27,8 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
   const [renditionListLoading, setRenditionListLoading] = useState(true);
 
   const navigate = useNavigate();
-  // renditionRequestID = 5;
+  // renditionRequestID = 6;
+  // const apiBaseUrl = 'http://localhost:8000'
 
   const renditionRef = useRef(null);
 
@@ -70,10 +71,10 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
   }, [authHeader, renditionRequestID]);
 
   const selectVersion = (versionId, versionName, versionNumber, originalVersion) => {
+    setDetailsLoaded(false);
     setSelectedVersion({ versionId, versionName, versionNumber, originalVersion });
     setStep(3);
-    setDetailsLoaded(false);
-
+    
     // Scroll to the top of the .rendition element
     if (renditionRef.current) {
       renditionRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -86,13 +87,9 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
     }
   }, [step, tactic, loadTreatment]);
 
-  useEffect(() => {
-    console.log(detailValues);
-  }, [detailValues]);
-
-  useEffect(() => {
-    console.log(selectedVersion);
-  }, [selectedVersion]);
+  // useEffect(() => {
+  //   console.log(detailValues);
+  // }, [detailValues]);
 
   const selectModule = (module) => {
     setRenditionListLoading(true);

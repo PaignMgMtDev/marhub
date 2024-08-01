@@ -55,7 +55,7 @@ function App() {
   const [campaignID, setCampaignID] = useState("");
   const [campaignData, setCampaignData] = useState([]);
   const [tacticData, setTacticData] = useState([]);
-  const [lastProofedTreatment, setLastProofedTreatment] = useState("");
+  const [setLastProofedTreatment] = useState("");
 
   const handleCampaignID = (params) => {
     setCampaignID(params);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Button, Stack, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, CircularProgress } from "@mui/material";
 import { Link } from '@mui/icons-material';
 import axios from 'axios';
@@ -22,7 +22,7 @@ export default function RenditionVersion({
   originalVersion,
   setLastProofedTreatment
 }) {
-  const [placementVersion, setPlacementVersion] = useState({});
+  const [placementVersion, setPlacementVersion] = useState({content_details: []});
   const [linkEdit, setLinkEdit] = useState('');
   const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -30,7 +30,11 @@ export default function RenditionVersion({
   const [filteredPlacementVersions, setFilteredPlacementVersions] = useState([]);
   const [openProofDialog, setOpenProofDialog] = useState(false);
 
-  const excludedKeywords = ["imgwidth", "imgheight", "contentstartdate", "contentenddate", "tactic_id", "product", "module", "cblock", "section", "linkid", "linkname"];
+  const excludedKeywords = useMemo(() => [
+    "imgwidth", "imgheight", "contentstartdate", "contentenddate", 
+    "tactic_id", "product", "module", "cblock", "section", 
+    "linkid", "linkname", "logoimg", "terms"
+  ], []);
 
   const updateDetailValues = useCallback((contentDetails) => {
     const newDetailValues = {};
@@ -59,7 +63,7 @@ export default function RenditionVersion({
         destination_url: destinationUrl,
         detail_type: detailType,
         detail_name: detailName,
-        clickable: detail.clickable,
+        clickable: detail?.clickable,
       };
 
       if (!originalValuesCopy) {
@@ -68,7 +72,7 @@ export default function RenditionVersion({
           destination_url: destinationUrl,
           detail_type: detailType,
           detail_name: detailName,
-          clickable: detail.clickable,
+          clickable: detail?.clickable,
         };
       }
     });
@@ -81,14 +85,19 @@ export default function RenditionVersion({
   const loadAndInitializeVersion = useCallback(async () => {
     try {
       const response = await axios.get(`${apiBaseUrl}/api/contentframework/placement-version-content/${selectedVersion.versionId}/`, authHeader);
-      console.log(response.data);
-      setPlacementVersion(response.data);
+      const filteredContents = response.data.content_details.filter(detailValue => 
+        detailValue?.text !== "" && 
+        !excludedKeywords.some(keyword => detailValue?.detail_name?.toLowerCase().includes(keyword))
+      );
+      const filteredPV = {
+        "content_details": filteredContents
+      }
+      setPlacementVersion(filteredPV);
       updateDetailValues(response.data.content_details);
     } catch (err) {
       console.log(err.message, err.code);
-      setDetailsLoaded(true);
     }
-  }, [apiBaseUrl, authHeader, updateDetailValues, selectedVersion.versionId, setDetailsLoaded]);
+  }, [apiBaseUrl, authHeader, updateDetailValues, selectedVersion.versionId, excludedKeywords]);
 
   const submitRenditionVersion = async () => {
     setSubmitting(true);
@@ -117,7 +126,6 @@ export default function RenditionVersion({
   
       // Make the API request
       const response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-proof/`, requestBody, authHeader);
-      console.log(response.data);
       setLastProofedTreatment(response.data);
     } catch (err) {
       console.log(err.message, err.code);
@@ -188,85 +196,87 @@ export default function RenditionVersion({
             {placementVersion.content_details.map((detail) => {
               const detailId = detail.detail_id;
               const detailValue = detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId];
-  
-              if (detailValue?.text !== undefined && !excludedKeywords.some(keyword => detailValue?.detail_name?.toLowerCase().includes(keyword))) {
-                return (
-                  <Stack className="edit-form__input-row" direction="row" key={detailId}>
-                    <TextField
-                      className="edit-form__text-input"
-                      label={detail.detail_name}
-                      value={detailValue?.text || ""}
-                      onChange={(event) => handleInputChange(event, detailId)}
-                    />
-                    {(detailValue.clickable || detailValue?.destination_url !== undefined) && (
-                      <Button className="edit-form__link-button" onClick={() => {
-                        setLinkEdit(detailId);
-                        setOriginalDestinationUrl(detailValue?.destination_url || "");
-                      }}>
-                        <Link className="edit-form__link-icon" />
-                      </Button>
-                    )}
-                    <Dialog
-                      className="link-popup"
-                      open={linkEdit === detailId}
-                      onClose={() => setLinkEdit('')}
-                      PaperProps={{ component: 'form' }}
-                    >
-                      <DialogTitle className="link-popup__title">{detail.detail_name} Destination URL</DialogTitle>
-                      <DialogContent className="link-popup__content">
-                        <TextField
-                          className="link-popup__input"
-                          autoFocus
-                          required
-                          margin="dense"
-                          id="destination-url"
-                          name="destination-url"
-                          label="Destination URL"
-                          fullWidth
-                          variant="standard"
-                          value={detailValue?.destination_url || ""}
-                          onChange={(event) => handleUrlChange(event, detailId)}
-                        />
-                      </DialogContent>
-                      <DialogActions className="link-popup__button-row">
-                        <Button
-                          className="link-popup__button link-popup__button_cancel"
-                          onClick={() => {
-                            setLinkEdit('');
-                            setDetailValues((prevValues) => ({
-                              ...prevValues,
-                              [selectedVersion.versionId]: {
-                                ...prevValues[selectedVersion.versionId],
-                                [selectedVersion.versionNumber]: {
-                                  ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
-                                  [detail.detail_id]: {
-                                    ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detail.detail_id],
-                                    destination_url: originalDestinationUrl, // Revert to the original value
-                                  },
+
+              return (
+                <Stack className="edit-form__input-row" direction="row" key={detailId}>
+                  <TextField
+                    className="edit-form__text-input"
+                    label={detail.detail_name}
+                    value={detailValue?.text || ""}
+                    onChange={(event) => handleInputChange(event, detailId)}
+                  />
+                  <Button className="edit-form__link-button" 
+                    sx={{
+                      opacity: detailValue?.clickable || detailValue?.destination_url !== '' ? 1 : 0,
+                        pointerEvents: detailValue?.clickable || detailValue?.destination_url !== '' ? 'auto' : 'none'
+                      
+                    }}
+                    onClick={() => {
+                      setLinkEdit(detailId);
+                      setOriginalDestinationUrl(detailValue?.destination_url || "");
+                    }}
+                  >
+                    <Link className="edit-form__link-icon" />
+                  </Button>
+                  <Dialog
+                    className="link-popup"
+                    open={linkEdit === detailId}
+                    onClose={() => setLinkEdit('')}
+                    PaperProps={{ component: 'form' }}
+                  >
+                    <DialogTitle className="link-popup__title">{detail.detail_name} Destination URL</DialogTitle>
+                    <DialogContent className="link-popup__content">
+                      <TextField
+                        className="link-popup__input"
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="destination-url"
+                        name="destination-url"
+                        label="Destination URL"
+                        fullWidth
+                        variant="standard"
+                        value={detailValue?.destination_url || ""}
+                        onChange={(event) => handleUrlChange(event, detailId)}
+                      />
+                    </DialogContent>
+                    <DialogActions className="link-popup__button-row">
+                      <Button
+                        className="link-popup__button link-popup__button_cancel"
+                        onClick={() => {
+                          setLinkEdit('');
+                          setDetailValues((prevValues) => ({
+                            ...prevValues,
+                            [selectedVersion.versionId]: {
+                              ...prevValues[selectedVersion.versionId],
+                              [selectedVersion.versionNumber]: {
+                                ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
+                                [detail.detail_id]: {
+                                  ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detail.detail_id],
+                                  destination_url: originalDestinationUrl, // Revert to the original value
                                 },
                               },
-                            }));
-                          }}
-                          color="primary"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          className="link-popup__button link-popup__button_save"
-                          onClick={() => {
-                            setLinkEdit('');
-                            // Save the changes
-                          }}
-                          color="primary"
-                        >
-                          Save
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </Stack>
-                );
-              }
-              else return null;
+                            },
+                          }));
+                        }}
+                        color="primary"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        className="link-popup__button link-popup__button_save"
+                        onClick={() => {
+                          setLinkEdit('');
+                          // Save the changes
+                        }}
+                        color="primary"
+                      >
+                        Save
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </Stack>
+              );
             })}
             <Stack className="edit-form__button-row" direction="row">
               <Button className="edit-form__button edit-form__button_cancel" onClick={resetToOriginalValues}>Cancel</Button>
