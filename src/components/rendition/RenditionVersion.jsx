@@ -189,7 +189,7 @@ export default function RenditionVersion({
               const detailId = detail.detail_id;
               const detailValue = detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId];
   
-              if (detailValue?.text !== undefined && !excludedKeywords.some(keyword => detailValue?.detail_name?.toLowerCase().includes(keyword))) {
+              if (detailValue?.text !== "" && !excludedKeywords.some(keyword => detailValue?.detail_name?.toLowerCase().includes(keyword))) {
                 return (
                   <Stack className="edit-form__input-row" direction="row" key={detailId}>
                     <TextField
@@ -198,14 +198,19 @@ export default function RenditionVersion({
                       value={detailValue?.text || ""}
                       onChange={(event) => handleInputChange(event, detailId)}
                     />
-                    {(detailValue.clickable || detailValue?.destination_url !== undefined) && (
-                      <Button className="edit-form__link-button" onClick={() => {
+                    <Button className="edit-form__link-button" 
+                      sx={{
+                        opacity: detailValue.clickable || detailValue?.destination_url !== '' ? 1 : 0,
+                         pointerEvents: detailValue.clickable || detailValue?.destination_url !== '' ? 'auto' : 'none'
+                        
+                      }}
+                      onClick={() => {
                         setLinkEdit(detailId);
                         setOriginalDestinationUrl(detailValue?.destination_url || "");
-                      }}>
-                        <Link className="edit-form__link-icon" />
-                      </Button>
-                    )}
+                      }}
+                    >
+                      <Link className="edit-form__link-icon" />
+                    </Button>
                     <Dialog
                       className="link-popup"
                       open={linkEdit === detailId}

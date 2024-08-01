@@ -4,7 +4,7 @@ import { KeyboardBackspace, Close } from '@mui/icons-material';
 import { useParams, useNavigate } from "react-router-dom";
 import RenditionVersion from "./RenditionVersion";
 import LoadingAnim from "./LoadingAnim";
-import { apiBaseUrl } from "../../api";
+// import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 import "./styles/rendition.scss";
 import marriottLogo from './img/mi_button_logo.png';
@@ -27,7 +27,8 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
   const [renditionListLoading, setRenditionListLoading] = useState(true);
 
   const navigate = useNavigate();
-  // renditionRequestID = 5;
+  // renditionRequestID = 6;
+  const apiBaseUrl = 'http://localhost:8000'
 
   const renditionRef = useRef(null);
 
