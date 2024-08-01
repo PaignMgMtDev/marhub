@@ -20,15 +20,13 @@ export default function RenditionVersion({
   placementVersionList,
   setPlacementVersionList,
   originalVersion,
-  setLastProofedTreatment,
-  originalValues,
-  setOriginalValues,
-  placementVersion,
-  setPlacementVersion
+  setLastProofedTreatment
 }) {
+  const [placementVersion, setPlacementVersion] = useState({content_details: []});
   const [linkEdit, setLinkEdit] = useState('');
   const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [originalValues, setOriginalValues] = useState(null);
   const [filteredPlacementVersions, setFilteredPlacementVersions] = useState([]);
   const [openProofDialog, setOpenProofDialog] = useState(false);
 
@@ -82,7 +80,7 @@ export default function RenditionVersion({
     setDetailValues(newDetailValues);
     if (!originalValues) setOriginalValues(originalValuesCopy);
     setDetailsLoaded(true);
-  }, [originalValues, selectedVersion, setDetailValues, setDetailsLoaded, setOriginalValues]);
+  }, [originalValues, selectedVersion, setDetailValues, setDetailsLoaded]);
 
   const loadAndInitializeVersion = useCallback(async () => {
     try {
@@ -99,7 +97,7 @@ export default function RenditionVersion({
     } catch (err) {
       console.log(err.message, err.code);
     }
-  }, [apiBaseUrl, authHeader, updateDetailValues, selectedVersion.versionId, excludedKeywords, setPlacementVersion]);
+  }, [apiBaseUrl, authHeader, updateDetailValues, selectedVersion.versionId, excludedKeywords]);
 
   const submitRenditionVersion = async () => {
     setSubmitting(true);
