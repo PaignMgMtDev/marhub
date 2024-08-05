@@ -4,7 +4,7 @@ import { KeyboardBackspace, Close } from '@mui/icons-material';
 import { useParams, useNavigate } from "react-router-dom";
 import RenditionVersion from "./RenditionVersion";
 import LoadingAnim from "./LoadingAnim";
-// import { apiBaseUrl } from "../../api";
+import { apiBaseUrl } from "../../api";
 import axios from 'axios';
 import "./styles/rendition.scss";
 import marriottLogo from './img/mi_button_logo.png';
