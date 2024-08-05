@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
-import { Button, Stack, TextField, Dialog, DialogActions, DialogTitle, Typography, CircularProgress } from "@mui/material";
+import { Button, Stack, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Typography, CircularProgress } from "@mui/material";
+import { Link } from '@mui/icons-material';
 import axios from 'axios';
 import "./styles/rendition.scss";
 
@@ -22,6 +23,8 @@ export default function RenditionVersion({
   setLastProofedTreatment
 }) {
   const [placementVersion, setPlacementVersion] = useState({content_details: []});
+  const [linkEdit, setLinkEdit] = useState('');
+  const [originalDestinationUrl, setOriginalDestinationUrl] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [originalValues, setOriginalValues] = useState(null);
   const [filteredPlacementVersions, setFilteredPlacementVersions] = useState([]);
@@ -29,7 +32,7 @@ export default function RenditionVersion({
 
   const excludedKeywords = useMemo(() => [
     "imgwidth", "imgheight", "contentstartdate", "contentenddate", 
-    "tactic_id", "product", "module", "section", "cntblkdesturl",
+    "tactic_id", "product", "module", "cblock", "section", 
     "linkid", "linkname", "logoimg", "terms"
   ], []);
 
@@ -56,7 +59,7 @@ export default function RenditionVersion({
       const detailName = nameKey ? detail[nameKey] : "";
 
       newDetailValues[versionId][versionNumber][detail.detail_id] = {
-        text: detailName === "CBLOCK" ? destinationUrl : textContent,
+        text: textContent,
         destination_url: destinationUrl,
         detail_type: detailType,
         detail_name: detailName,
@@ -86,22 +89,8 @@ export default function RenditionVersion({
         detailValue?.text !== "" && 
         !excludedKeywords.some(keyword => detailValue?.detail_name?.toLowerCase().includes(keyword))
       );
-      
-      // Sort content details to ensure SUBJECTLINE, PREHEADER, and CBLOCK come first
-      const sortedContents = filteredContents.sort((a, b) => {
-        const order = ["SUBJECTLINE", "PREHEADER"];
-        const aIndex = order.indexOf(a.detail_name);
-        const bIndex = order.indexOf(b.detail_name);
-  
-        if (aIndex === -1 && bIndex === -1) return 0;
-        if (aIndex === -1) return 1;
-        if (bIndex === -1) return -1;
-  
-        return aIndex - bIndex;
-      });
-  
       const filteredPV = {
-        "content_details": sortedContents
+        "content_details": filteredContents
       }
       setPlacementVersion(filteredPV);
       updateDetailValues(response.data.content_details);
@@ -129,11 +118,13 @@ export default function RenditionVersion({
 
   const sendProof = async () => {
     try {
+      // Construct the request body
       const requestBody = {
         all_placement_versions: placementVersionList,
         rendition_request_id: renditionRequestId,
       };
   
+      // Make the API request
       const response = await axios.post(`${apiBaseUrl}/api/mihp/rendition-proof/`, requestBody, authHeader);
       setLastProofedTreatment(response.data);
     } catch (err) {
@@ -160,8 +151,24 @@ export default function RenditionVersion({
           ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
           [detailId]: {
             ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId],
-            text: prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId]?.detail_name === "CBLOCK" ? prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId]?.text : value,
-            destination_url: prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId]?.detail_name === "CBLOCK" ? value : prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId]?.destination_url,
+            text: value,
+          },
+        },
+      },
+    }));
+  };
+
+  const handleUrlChange = (event, detailId) => {
+    const { value } = event.target;
+    setDetailValues((prevValues) => ({
+      ...prevValues,
+      [selectedVersion.versionId]: {
+        ...prevValues[selectedVersion.versionId],
+        [selectedVersion.versionNumber]: {
+          ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
+          [detailId]: {
+            ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId],
+            destination_url: value,
           },
         },
       },
@@ -191,12 +198,84 @@ export default function RenditionVersion({
               const detailValue = detailValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detailId];
 
               return (
-                <TextField
-                  className="edit-form__text-input"
-                  label={detail.detail_name === "CBLOCK" ? "CNTBLKDESTURL" : detail.detail_name}
-                  value={detail.detail_name === "CBLOCK" ? detailValue?.destination_url || "" : detailValue?.text || ""}
-                  onChange={(event) => handleInputChange(event, detailId)}
-                />
+                <Stack className="edit-form__input-row" direction="row" key={detailId}>
+                  <TextField
+                    className="edit-form__text-input"
+                    label={detail.detail_name}
+                    value={detailValue?.text || ""}
+                    onChange={(event) => handleInputChange(event, detailId)}
+                  />
+                  <Button className="edit-form__link-button" 
+                    sx={{
+                      opacity: detailValue?.clickable || detailValue?.destination_url !== '' ? 1 : 0,
+                        pointerEvents: detailValue?.clickable || detailValue?.destination_url !== '' ? 'auto' : 'none'
+                      
+                    }}
+                    onClick={() => {
+                      setLinkEdit(detailId);
+                      setOriginalDestinationUrl(detailValue?.destination_url || "");
+                    }}
+                  >
+                    <Link className="edit-form__link-icon" />
+                  </Button>
+                  <Dialog
+                    className="link-popup"
+                    open={linkEdit === detailId}
+                    onClose={() => setLinkEdit('')}
+                    PaperProps={{ component: 'form' }}
+                  >
+                    <DialogTitle className="link-popup__title">{detail.detail_name} Destination URL</DialogTitle>
+                    <DialogContent className="link-popup__content">
+                      <TextField
+                        className="link-popup__input"
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="destination-url"
+                        name="destination-url"
+                        label="Destination URL"
+                        fullWidth
+                        variant="standard"
+                        value={detailValue?.destination_url || ""}
+                        onChange={(event) => handleUrlChange(event, detailId)}
+                      />
+                    </DialogContent>
+                    <DialogActions className="link-popup__button-row">
+                      <Button
+                        className="link-popup__button link-popup__button_cancel"
+                        onClick={() => {
+                          setLinkEdit('');
+                          setDetailValues((prevValues) => ({
+                            ...prevValues,
+                            [selectedVersion.versionId]: {
+                              ...prevValues[selectedVersion.versionId],
+                              [selectedVersion.versionNumber]: {
+                                ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber],
+                                [detail.detail_id]: {
+                                  ...prevValues[selectedVersion.versionId]?.[selectedVersion.versionNumber]?.[detail.detail_id],
+                                  destination_url: originalDestinationUrl, // Revert to the original value
+                                },
+                              },
+                            },
+                          }));
+                        }}
+                        color="primary"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        className="link-popup__button link-popup__button_save"
+                        onClick={() => {
+                          setLinkEdit('');
+                          // Save the changes
+                        }}
+                        color="primary"
+                      >
+                        Save
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                </Stack>
               );
             })}
             <Stack className="edit-form__button-row" direction="row">

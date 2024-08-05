@@ -28,7 +28,7 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
 
   const navigate = useNavigate();
   // renditionRequestID = 6;
-  // const apiBaseUrl = 'http://localhost:8000'
+  // const apiBaseUrl = 'http://localhost:8000';
 
   const renditionRef = useRef(null);
 
