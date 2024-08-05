@@ -4,14 +4,11 @@ import {
     Grid, 
     AppBar, 
     Toolbar, Paper, 
-    IconButton, 
-    // InputBase, 
+    IconButton,  
     Popover, 
     Button, 
-    // Typography 
+     
 } from '@mui/material';
-// import SearchIcon from '@mui/icons-material/Search';
-// import NotificationsIcon from '@mui/icons-material/Notifications';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -105,7 +102,7 @@ export default function Header() {
                     }}
                 >
                     {/* <Typography sx={{ p: 2 }}>Settings</Typography> */}
-                    <Button sx={{color: '#FF8D6B'}} onClick={logout}>Logout</Button>
+                    <Button sx={{color: 'primary.main'}} onClick={logout}>Logout</Button>
                 </Popover>}
             </Box>
         </div>
