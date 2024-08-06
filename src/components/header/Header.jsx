@@ -62,7 +62,7 @@ export default function Header() {
                                     paddingTop: "10px"
                                 }}
                                 alt="Marriott Bonvoy logo"
-                                src="marbonlogo.png"/>
+                                src="/marbonlogo.png"/>
                             </Grid>
                             <Grid item lg={9}>
                                 <Paper sx={paperStyles}>
