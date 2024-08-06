@@ -14,7 +14,9 @@ export default function RenditionTactics({
   const [renditionTactics, setRenditionTactics] = useState([]);
   const [approvedTacticId, setApprovedTacticId] = useState('');
   const [openModal, setOpenModal] = useState(false);
-  const [disableButton, setDisableButton] = useState(false)
+  // const [disableButton, setDisableButton] = useState(false)
+
+  
 
 
   const toggleModal = (tacticId) => {
@@ -22,45 +24,51 @@ export default function RenditionTactics({
     setApprovedTacticId(tacticId)
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false)
-  }
+  const handleCloseModal = async () => {
+    
+    setOpenModal(false);
+    
+  };
+  
   
 
- const sendRenditionTactic = () => {
-    const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-localization-approval/${rendition}/${approvedTacticId}/`;
-    // const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-tactic-test-endpoint/`;
 
-    const body = JSON.stringify({
-      rendition_id: rendition,
-      tactic_id: approvedTacticId,
-    });
+const sendRenditionTactic = async () => {
+  const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-localization-approval/${rendition}/${approvedTacticId}/`;
+  const body = JSON.stringify({
+    rendition_id: rendition,
+    tactic_id: approvedTacticId,
+  });
 
-    const res = axios.post(
-      url, 
-      body, 
-      authHeader);
+  try {
+      const res = await axios.post(url, body, authHeader);
+      const data = res.data;
+      if (data) {
+          console.log("Response data:", data);
+          setOpenModal(false); 
+          // setDisableButton(true); 
+      }
+  } catch (error) {
+      console.error("Error while sending rendition tactic:", error);
+      
+  }
+}
+
+
+
+const getTactics = useCallback(async () => {
+  try {
+    const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-request/v2/${rendition}/`;
+    const res = await axios.get(url, authHeader);
     const data = res?.data;
     if (data) {
-      console.log(data);
-      setOpenModal(false)
-      setDisableButton(true)
+      
+      setRenditionTactics(data.rendition_tactics);
     }
-
-    console.log("error: ");
+  } catch (e) {
+    console.log("error while getting tactics by rendition: ", e);
   }
-
-
-  const getTactics = useCallback(async () => {
-    try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/api/mihp/rendition-request/v2/${rendition}/`;
-      const res = await axios.get(url, authHeader);
-      const data = res?.data;
-      data && setRenditionTactics(data.rendition_tactics);
-    } catch (e) {
-      console.log("error while getting tactics by rendition: ", e);
-    }
-  }, [authHeader, rendition]);
+}, [authHeader, rendition]);
 
   useEffect(() => {
     getTactics();
@@ -71,6 +79,14 @@ export default function RenditionTactics({
     navigate(url);
     handleRenditionRequestID(rendition);
   };
+
+  useEffect(() => {
+    if (!openModal) {
+      console.log("Modal closed, fetching tactics...");
+      getTactics();
+    }
+  }, [openModal, getTactics]);
+
 
   const modalBoxtyles = {
     position: "absolute",
@@ -143,7 +159,7 @@ export default function RenditionTactics({
                         toggleModal();
                         setApprovedTacticId(params.id);
                     }}
-                    disabled={!(tactic.rendition_tactic_status === 3 || tactic.rendition_tactic_status === 5) || disableButton} 
+                    disabled={!(tactic.rendition_tactic_status === 3 || tactic.rendition_tactic_status === 5)} 
                 >
                     Approve Tactic
                 </Button>
