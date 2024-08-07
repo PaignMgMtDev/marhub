@@ -90,9 +90,12 @@ export default function RenditionVersion({
       // Set cntblkdesturl to the destination_url of the content detail with detail_name "CBLOCK"
       const cblockDetail = response.data.content_details.find(detail => detail.detail_name === "CBLOCK");
       if (cblockDetail) {
-        const destinationUrlKey = Object.keys(cblockDetail).find(key => key.includes("destination_url"));
+        const destinationUrlKey = Object.keys(cblockDetail).find(key => key === "destination_url");
         const destinationUrl = destinationUrlKey ? cblockDetail[destinationUrlKey] : "";
+        const destinationUrlParamsKey = Object.keys(cblockDetail).find(key => key.includes("destination_url_qparam"));
+        const destinationUrlParams = destinationUrlParamsKey ? cblockDetail[destinationUrlParamsKey] : "";
         setCntblkdesturl(destinationUrl);
+        setUrlParams(destinationUrlParams);
       }
       
       const filteredContents = response.data.content_details.filter(detailValue => 
@@ -139,6 +142,7 @@ export default function RenditionVersion({
           Object.keys(updatedDetailValues[versionId][versionNumber]).forEach(detailId => {
             const detail = updatedDetailValues[versionId][versionNumber][detailId];
               detail.destination_url = cntblkdesturl;
+              detail.destination_url_params = urlParams;
           });
         });
       });
