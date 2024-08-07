@@ -27,7 +27,7 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
   const [renditionListLoading, setRenditionListLoading] = useState(true);
 
   const navigate = useNavigate();
-  // renditionRequestID = 52;
+  // renditionRequestID = 273;
   // const apiBaseUrl = 'http://localhost:8000';
 
   const renditionRef = useRef(null);
@@ -216,7 +216,7 @@ export default function Rendition({ auth, renditionRequestID, setLastProofedTrea
 
                           return (
                             <Box sx={{ pointerEvents: isDisabled ? 'none' : 'auto' }} className={moduleClass} key={`${row}-${i}`} onMouseEnter={() => setHighlightedModule(module.placement_version_id)} onMouseLeave={() => setHighlightedModule('')} onClick={() => selectModule(module)}>
-                              {(module.placement_version_id !== selectedModule.placement_version_id && isWideScreen && highlightedModule !== '' && module.placement_version_id !== highlightedModule) && <Box className="module__dimmer"></Box>}
+                              {(isWideScreen && highlightedModule !== '' && module.placement_version_id !== highlightedModule) && <Box className="module__dimmer"></Box>}
                               <Typography className="module__name">{module.placement_version_name}</Typography>
                               {module.render_entity ? (
                                 <Box className="module__render">

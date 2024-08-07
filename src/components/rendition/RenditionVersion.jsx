@@ -29,6 +29,7 @@ export default function RenditionVersion({
   const [filteredPlacementVersions, setFilteredPlacementVersions] = useState([]);
   const [openProofDialog, setOpenProofDialog] = useState(false);
   const [cntblkdesturl, setCntblkdesturl] = useState("");
+  const [urlParams, setUrlParams] = useState("");
 
   const excludedKeywords = useMemo(() => [
     "imgwidth", "imgheight", "contentstartdate", "contentenddate", 
@@ -137,13 +138,11 @@ export default function RenditionVersion({
         Object.keys(updatedDetailValues[versionId]).forEach(versionNumber => {
           Object.keys(updatedDetailValues[versionId][versionNumber]).forEach(detailId => {
             const detail = updatedDetailValues[versionId][versionNumber][detailId];
-            if (detail.destination_url) {
               detail.destination_url = cntblkdesturl;
-            }
           });
         });
       });
-  
+
       const response = await axios.post(
         `${apiBaseUrl}/api/mihp/rendition-version/${selectedVersion.versionId}/${renditionRequestId}/`,
         updatedDetailValues,
@@ -224,6 +223,22 @@ export default function RenditionVersion({
                 label="CNTBLKDESTURL"
                 value={cntblkdesturl}
                 onChange={(e) => setCntblkdesturl(e.target.value)}
+              />
+              <Button className="edit-form__link-button" 
+                sx={{
+                  opacity: 0,
+                  pointerEvents: 'none'
+                }}
+              >
+                <Link className="edit-form__link-icon" />
+              </Button>
+            </Stack>
+            <Stack className="edit-form__input-row" direction="row">
+              <TextField
+                className="edit-form__text-input"
+                label="CNTBLKDESTURLPARAMS"
+                value={urlParams}
+                onChange={(e) => setUrlParams(e.target.value)}
               />
               <Button className="edit-form__link-button" 
                 sx={{
